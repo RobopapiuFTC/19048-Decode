@@ -58,15 +58,16 @@ public class Robot {
 
     }
     public void dualControls(){
-        if(g1.x){
-            if(sTimer.getElapsedTimeSeconds()>0.3){
-                s.pornit=!s.pornit;
-                sTimer.resetTimer();
+        if(g1.dpad_up)s.target=100;
+        if(g1.dpad_right)s.target=50;
+        if(g1.dpad_down)s.target=0;
+        if(g1.b)s.hoodfar();
+        if(g1.y){
+            if(iTimer.getElapsedTimeSeconds()>0.3){
+                i.pornit=!i.pornit;
+                iTimer.resetTimer();
             }
         }
-       if(g1.dpad_up)s.target=100;
-       if(g1.dpad_right)s.target=50;
-       if(g1.dpad_down)s.target=0;
-       if(g1.b)s.hoodfar();
+
     }
 }
