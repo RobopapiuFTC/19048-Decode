@@ -53,7 +53,6 @@ public class Robot {
         m.periodic(g1);
         i.periodic();
         s.periodic();
-        ballstate();
         t.update();
     }
     public void tInit(){
@@ -66,27 +65,18 @@ public class Robot {
         if(g1.b)s.hoodfar();
         if(g1.y){
             if(iTimer.getElapsedTimeSeconds()>0.3){
-                state=false;
+                s.target=0;
+                i.pornit=true;
                 iTimer.resetTimer();
             }
         }
         if(g1.x){
             if(iTimer.getElapsedTimeSeconds()>0.3){
-                state=true;
+                i.pornit=false;
+                s.target=100;
                 iTimer.resetTimer();
             }
         }
-
-    }
-    public void ballstate(){
-        if(state){
-            i.pornit=false;
-            s.target=100;
-            if(g1.a)i.pornit=true;
-        }
-        else{
-            s.target=0;
-            i.pornit=true;
-        }
+        if(g1.a)i.pornit=true;
     }
 }
