@@ -46,6 +46,7 @@ public class Robot {
         rTimer = new Timer();
         rsTimer = new Timer();
         sTimer = new Timer();
+        this.t.addData("Velocity: ", s.SD.getVelocity());
     }
 
     public void tPeriodic() {
