@@ -17,7 +17,7 @@ public class Intake {
     public boolean pornit=false;
     public Intake(HardwareMap hardwareMap, Telemetry telemetry){
 
-        //intake=hardwareMap.get(DcMotorEx.class, "i");
+        intake=hardwareMap.get(DcMotorEx.class, "i");
 
     }
     public void periodic(){
@@ -26,9 +26,9 @@ public class Intake {
 
     public void run(){
         if(pornit){
-            //intake.setPower(1);
+            intake.setPower(1);
         }else{
-            //intake.setPower(0);
+            intake.setPower(0);
         }
     }
 }

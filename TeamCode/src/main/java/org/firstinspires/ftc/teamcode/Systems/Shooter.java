@@ -20,7 +20,7 @@ public class Shooter {
     public DcMotorEx SS,SD;
     public Servo SVS,SVD;
     public Telemetry telemetry;
-    public boolean pornit=false;
+    public boolean pornit=false,yea=false;
     public double p,i,d;
     public double output,target;
     public ControlSystem pid;
@@ -42,7 +42,6 @@ public class Shooter {
     public void periodic(){
         run();
     }
-
     public void run(){
         output = pid.calculate(
                new KineticState(SS.getCurrentPosition(), target,20)

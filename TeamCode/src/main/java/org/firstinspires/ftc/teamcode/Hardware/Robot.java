@@ -26,7 +26,7 @@ public class Robot {
     private boolean ro = true;
     public double speed = 0.9;
     public Timer iTimer,rTimer,rsTimer,sTimer;
-    public boolean da=true,r,y,b,need=false,running = false,ts=false,spec=false,daS=false;
+    public boolean da=true,r,y,b,need=false,state = false,ts=false,spec=false,daS=false;
     public int flip = 1, iState = -1;
     public static int offset=20;
 
@@ -52,6 +52,7 @@ public class Robot {
         m.periodic(g1);
         i.periodic();
         s.periodic();
+        ballstate();
         t.update();
     }
     public void tInit(){
@@ -64,10 +65,21 @@ public class Robot {
         if(g1.b)s.hoodfar();
         if(g1.y){
             if(iTimer.getElapsedTimeSeconds()>0.3){
-                i.pornit=!i.pornit;
+                state=!state;
                 iTimer.resetTimer();
             }
         }
 
+    }
+    public void ballstate(){
+        if(state){
+            i.pornit=false;
+            s.target=100;
+            if(g1.x)i.pornit=true;
+        }
+        else{
+            s.target=0;
+            i.pornit=true;
+        }
     }
 }
