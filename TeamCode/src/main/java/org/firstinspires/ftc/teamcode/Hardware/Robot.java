@@ -65,7 +65,13 @@ public class Robot {
         if(g1.b)s.hoodfar();
         if(g1.y){
             if(iTimer.getElapsedTimeSeconds()>0.3){
-                state=!state;
+                state=false;
+                iTimer.resetTimer();
+            }
+        }
+        if(g1.x){
+            if(iTimer.getElapsedTimeSeconds()>0.3){
+                state=true;
                 iTimer.resetTimer();
             }
         }
@@ -75,7 +81,7 @@ public class Robot {
         if(state){
             i.pornit=false;
             s.target=100;
-            if(g1.x)i.pornit=true;
+            if(g1.a)i.pornit=true;
         }
         else{
             s.target=0;
