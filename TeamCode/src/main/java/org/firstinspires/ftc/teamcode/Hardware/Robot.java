@@ -7,6 +7,7 @@ import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.teamcode.Systems.Camera;
 import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
 
 import org.firstinspires.ftc.teamcode.Systems.Shooter;
@@ -19,6 +20,7 @@ public class Robot {
     private Shooter s;
     private Intake i;
     private Movement m;
+    private Camera c;
     public static double red,blue,green;
     public Gamepad g1,g2;
     public Follower f;
@@ -41,6 +43,7 @@ public class Robot {
         s=new Shooter(this.h,this.t);
         m=new Movement(this.h, this.t);
         i=new Intake(this.h,this.t);
+        c=new Camera(this.h,this.t,blue);
 
         iTimer = new Timer();
         rTimer = new Timer();
@@ -79,7 +82,17 @@ public class Robot {
         }
         if(g1.a)i.pornit=true;
     }
-    public void turret(){
-
+    public void turret() {
+        double cameramaxy = 0;
+        double turretmaxdegree = 0;
+        double ticksfor360 = 0;
+        double maxticks = 1000;
+        double ticksperdegree = ticksfor360 / 360;
+        double tickspercameradegree = ticksperdegree / (cameramaxy / turretmaxdegree);
+        double ticksneeded = c.ty * tickspercameradegree;
+        if (s.turret.getCurrentPosition() + ticksneeded > maxticks)
+            s.targett = s.turret.getCurrentPosition() + ticksneeded - maxticks;
+        else if (s.turret.getCurrentPosition()+ticksneeded<0)s.targett=s.turret.getCurrentPosition()+ticksneeded+maxticks;
+        else s.targett=s.turret.getCurrentPosition()+ticksneeded;
     }
 }

@@ -23,6 +23,7 @@ public class Camera {
 
     public void periodic(){
         detect();
+        telemetry.update();
     }
     public void start(){
         limelight.start();
