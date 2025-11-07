@@ -79,4 +79,7 @@ public class Robot {
         }
         if(g1.a)i.pornit=true;
     }
+    public void turret(){
+
+    }
 }

@@ -3,8 +3,10 @@ package org.firstinspires.ftc.teamcode.Systems;
 import android.service.controls.Control;
 
 import com.ThermalEquilibrium.homeostasis.Controllers.Feedback.BangBang;
+import com.ThermalEquilibrium.homeostasis.Controllers.Feedback.BasicPID;
 import com.ThermalEquilibrium.homeostasis.Filters.FilterAlgorithms.KalmanFilter;
 import com.ThermalEquilibrium.homeostasis.Parameters.BangBangParameters;
+import com.ThermalEquilibrium.homeostasis.Parameters.PIDCoefficients;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
@@ -21,9 +23,13 @@ import dev.nextftc.control.KineticState;
 
 public class Shooter {
     public DcMotorEx SS,SD;
+    public DcMotorEx turret;
+    public double Kp=0,Ki=0,Kd=0;
+    public PIDCoefficients coefficients = new PIDCoefficients(Kp,Ki,Kd);
+    public BasicPID controllert = new BasicPID(coefficients);
     public Servo SVS,SVD;
     public Telemetry telemetry;
-    public double target;
+    public double target,targett;
     public boolean pornit=false,yea=false;
     public double p,i,d;
     double maxOutput = 1;
@@ -46,6 +52,9 @@ public class Shooter {
         SVD.setPosition(0.5);
         SD.setDirection(DcMotorSimple.Direction.REVERSE);
 
+        turret=hardwareMap.get(DcMotorEx.class, "turret");
+        turret.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
     }
     public void periodic(){
         run();
@@ -55,6 +64,10 @@ public class Shooter {
         estimate = filter.estimate(command);
         SD.setPower(command);
         SS.setPower(command);
+    }
+    public void runt(){
+        double putere = controllert.calculate(targett,turret.getCurrentPosition());
+        turret.setPower(putere);
     }
     public void hoodfar(){
         SVD.setPosition(0.75);
