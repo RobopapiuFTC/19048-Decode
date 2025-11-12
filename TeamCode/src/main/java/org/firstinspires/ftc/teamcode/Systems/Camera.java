@@ -31,7 +31,7 @@ public class Camera {
     public void detect(){
         LLResult result = limelight.getLatestResult();
         if(result!=null && result.isValid()){
-            telemetry.addData("Target Y", result.getTy());
+            telemetry.addData("Target Position", result.getTx());
             telemetry.addData("Target Area", result.getTa());
             tx= result.getTx();
             ty= result.getTy();
