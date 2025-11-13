@@ -61,6 +61,7 @@ public class Shooter {
         turret=hardwareMap.get(DcMotorEx.class, "turret");
         turret.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         turret.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        turret.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
     }
     public void periodic(){
@@ -87,5 +88,8 @@ public class Shooter {
     }
     public void hoodfar(){
         SVD.setPosition(1);
+    }
+    public void hoodclose(){
+        SVD.setPosition(0.6);
     }
 }

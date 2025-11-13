@@ -31,14 +31,17 @@ public class Robot {
     public static double red,blue,green;
     public Gamepad g1,g2;
     public Follower f;
-    private boolean a,shoot,oks;
+    private boolean a,shoot,oks,aim;
     private boolean ro = true;
     public double speed = 0.9;
     public Timer iTimer,rTimer,rsTimer,sTimer;
     public boolean da=true,r,y,b,need=false,state = false,ts=false,spec=false,daS=false;
     public int flip = 1, iState = -1;
     public static int offset=20;
-
+    double degreestointake=90;
+    double ticksfor360 = 1900;
+    double maxticks = 1900;
+    double ticksperdegree = ticksfor360 / 360;
     public Robot(HardwareMap h, Telemetry t, Gamepad g1, Gamepad g2, boolean blue,boolean spec) {
         this.h = h;
         this.t = t;
@@ -67,7 +70,9 @@ public class Robot {
         t.addData("Power", s.power);
         sequenceshoot();
       //  c.periodic();
-        turret();
+        f.update();
+        if(aim)turret();
+        else s.targett=degreestointake*ticksperdegree;
         t.addData("Pose x", f.getPose().getX());
         t.addData("Pose y", f.getPose().getY());
         t.addData("Pose heading", Math.toDegrees(f.getPose().getHeading()));
@@ -101,6 +106,7 @@ public class Robot {
         if(g1.a)i.pornit=true;
     }
     public void sequenceintake(){
+        aim=false;
         s.target=-200;
         i.intake.setDirection(DcMotorSimple.Direction.FORWARD);
         i.pornit=true;
@@ -108,50 +114,37 @@ public class Robot {
     public void sequenceshoot(){
         if(shoot) {
             if(oks){
+                aim=true;
                 sTimer.resetTimer();
                 oks=false;
             }
             if(sTimer.getElapsedTimeSeconds()<0.2){
                 i.intake.setDirection(DcMotorSimple.Direction.REVERSE);
                 i.pornit=true;
-                s.target=-200;
             }
             if(sTimer.getElapsedTimeSeconds()>0.2 && sTimer.getElapsedTimeSeconds()<1){
                 i.pornit=false;
                 i.intake.setDirection(DcMotorSimple.Direction.FORWARD);
-                s.target=1500;
                 shoot=false;
                 oks=false;
             }
         }
     }
     public void turret() {
-       /* double cameramaxy = 26;
-        double turretmaxdegree = 26;
-        double ticksfor360 = 1900;
-        double maxticks = 1900;
-        double ticksperdegree = ticksfor360 / 360;
-        double tickspercameradegree = ticksperdegree / (cameramaxy / turretmaxdegree);
-        double ticksneeded = -c.tx * tickspercameradegree;
-        if (s.turret.getCurrentPosition() + ticksneeded > maxticks) {
-            sTimer.resetTimer();
-            s.targett = s.turret.getCurrentPosition() + ticksneeded - maxticks;
-        }
-        else if (s.turret.getCurrentPosition()+ticksneeded<0){
-            sTimer.resetTimer();
-            s.targett=s.turret.getCurrentPosition()+ticksneeded+maxticks;
-        }
-        else s.targett=s.turret.getCurrentPosition()+ticksneeded; */
         f.update();
         double c1 = f.getPose().getX()-shootp.getX();
         double c2 = shootp.getY()-f.getPose().getY();
         double ipoten = Math.sqrt(c1*c1+c2*c2);
         double unghi = Math.toDegrees(asin(c1/ipoten));
-        double degreestointake=90;
-        double ticksfor360 = 1900;
-        double maxticks = 1900;
-        double ticksperdegree = ticksfor360 / 360;
         double ticksneeded=(unghi+degreestointake-Math.toDegrees(f.getPose().getHeading()))*ticksperdegree;
+        if(f.getPose().getX()+f.getPose().getY()>144){
+            s.hoodclose();
+            s.target=700;
+        }
+        else {
+            s.hoodfar();
+            s.target=1500;
+        }
         s.targett=ticksneeded;
 
     }
