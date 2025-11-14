@@ -72,7 +72,6 @@ public class Robot {
       //  c.periodic();
         f.update();
         if(aim)turret();
-        else s.targett=degreestointake*ticksperdegree;
         t.addData("Pose x", f.getPose().getX());
         t.addData("Pose y", f.getPose().getY());
         t.addData("Pose heading", Math.toDegrees(f.getPose().getHeading()));
