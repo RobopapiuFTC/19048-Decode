@@ -26,7 +26,7 @@ public class Robot {
     private Intake i;
     private Movement m;
     private Camera c;
-    public static Pose startingPose = new Pose(72,135,0);
+    public static Pose startingPose = new Pose(72,135,90);
     public static Pose shootp = new Pose(5,130,0);
     public static double red,blue,green;
     public Gamepad g1,g2;
@@ -64,7 +64,7 @@ public class Robot {
     }
 
     public void tPeriodic() {
-        //t.addData("Velocity: ", s.SD.getVelocity());
+        t.addData("Velocity: ", s.SD.getVelocity());
         t.addData("Turret Ticks", s.turret.getCurrentPosition());
         t.addData("Target", s.targett);
         t.addData("Power", s.power);
