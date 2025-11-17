@@ -84,10 +84,6 @@ public class Robot {
        // c.start();
     }
     public void dualControls(){
-        if(g1.dpad_up)s.target=2000;
-        if(g1.dpad_right)s.target=1500;
-        if(g1.dpad_down)s.target=-500;
-        if(g1.dpad_left)s.turret.setPower(1);
         if(g1.b)s.hoodfar();
         if(g1.y){
             if(iTimer.getElapsedTimeSeconds()>0.3){
@@ -106,7 +102,7 @@ public class Robot {
     }
     public void sequenceintake(){
         aim=false;
-        s.target=-200;
+        s.latchup();
         i.intake.setDirection(DcMotorSimple.Direction.FORWARD);
         i.pornit=true;
     }
@@ -116,6 +112,7 @@ public class Robot {
                 aim=true;
                 sTimer.resetTimer();
                 oks=false;
+                s.latchdown();
             }
             if(sTimer.getElapsedTimeSeconds()<0.2){
                 i.intake.setDirection(DcMotorSimple.Direction.REVERSE);

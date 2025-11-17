@@ -26,7 +26,7 @@ import dev.nextftc.control.KineticState;
 @Configurable
 public class Shooter {
     public DcMotorEx SS,SD;
-    public Servo SVS,SVD;
+    public Servo SVS,SVD,latch;
     public Telemetry telemetry;
     public double target;
     public double power;
@@ -47,25 +47,26 @@ public class Shooter {
     BangBang controller = new BangBang(parameters);
     public Shooter(HardwareMap hardwareMap, Telemetry telemetry){
 
-       /* SS=hardwareMap.get(DcMotorEx.class, "SS");
+        SS=hardwareMap.get(DcMotorEx.class, "SS");
         SD=hardwareMap.get(DcMotorEx.class, "SD");
         //SVS=hardwareMap.get(Servo.class, "SVS");
         SVD=hardwareMap.get(Servo.class, "SVD");
+        latch=hardwareMap.get(Servo.class,"latch");
 
         SD.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         SVD.setPosition(0.5);
         SD.setDirection(DcMotorSimple.Direction.REVERSE);
-*/
+        latch.setPosition(0.25);
+
         pid = new PIDController(p , i , d);
 
         turret=hardwareMap.get(DcMotorEx.class, "turret");
         turret.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         turret.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        turret.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
     }
     public void periodic(){
-       // run();
+        run();
         runt();
     }
     public void run(){
@@ -87,9 +88,15 @@ public class Shooter {
         turret.setPower(pid_output);
     }
     public void hoodfar(){
-        SVD.setPosition(1);
+        SVD.setPosition(0);
     }
     public void hoodclose(){
-        SVD.setPosition(0.6);
+        SVD.setPosition(0.4);
+    }
+    public void latchdown(){
+        latch.setPosition(0.25);
+    }
+    public void latchup(){
+        latch.setPosition(0.35);
     }
 }
