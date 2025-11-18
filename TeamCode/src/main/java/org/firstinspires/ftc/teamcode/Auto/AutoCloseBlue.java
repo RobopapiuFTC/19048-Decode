@@ -32,7 +32,7 @@ public class AutoCloseBlue extends OpMode{
                 .addPath(
                         new BezierLine(startPose, scorePose)
                 )
-                .setLinearHeadingInterpolation(Math.toRadians(54), Math.toRadians(180))
+                .setLinearHeadingInterpolation(Math.toRadians(234), Math.toRadians(180))
                 .build();
 
         grabPickup1 = follower
