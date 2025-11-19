@@ -88,15 +88,15 @@ public class Shooter {
         turret.setPower(pid_output);
     }
     public void hoodfar(){
-        SVD.setPosition(0);
+        SVD.setPosition(0.3);
     }
     public void hoodclose(){
         SVD.setPosition(0.4);
     }
     public void latchdown(){
-        latch.setPosition(0.65);
+        latch.setPosition(0.7);
     }
     public void latchup(){
-        latch.setPosition(0.35);
+        latch.setPosition(0.15);
     }
 }

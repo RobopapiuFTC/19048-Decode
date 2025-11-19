@@ -26,8 +26,8 @@ public class Robot {
     private Intake i;
     private Movement m;
     private Camera c;
-    public static Pose startingPose = new Pose(72,135,90);
-    public static Pose shootp = new Pose(5,130,0);
+    public static Pose startingPose = new Pose(72,135,Math.toRadians(90));
+    public static Pose shootp = new Pose(0 ,144,0);
     public static double red,blue,green;
     public Gamepad g1,g2;
     public Follower f;
@@ -38,7 +38,7 @@ public class Robot {
     public boolean da=true,r,y,b,need=false,state = false,ts=false,spec=false,daS=false;
     public int flip = 1, iState = -1;
     public static int offset=20;
-    double degreestointake=90;
+    double degreestointake=180;
     double ticksfor360 = 1900;
     double maxticks = 1900;
     double ticksperdegree = ticksfor360 / 360;
@@ -135,11 +135,11 @@ public class Robot {
         double ticksneeded=(unghi+degreestointake-Math.toDegrees(f.getPose().getHeading()))*ticksperdegree;
         if(f.getPose().getX()+f.getPose().getY()>144){
             s.hoodclose();
-            s.target=700;
+            s.target=1100;
         }
         else {
             s.hoodfar();
-            s.target=1500;
+            s.target=1450;
         }
         s.targett=ticksneeded;
 
