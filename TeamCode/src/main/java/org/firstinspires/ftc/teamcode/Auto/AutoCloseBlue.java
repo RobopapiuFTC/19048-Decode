@@ -9,6 +9,7 @@ import com.pedropathing.paths.PathChain;
 import com.pedropathing.util.Timer;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import  com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import org.firstinspires.ftc.teamcode.Hardware.Robot;
 
 import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
 
@@ -16,14 +17,16 @@ import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
 public class AutoCloseBlue extends OpMode{
     private Follower follower;
     private Timer pathTimer, actionTimer, opmodeTimer;
+    private Robot r;
+    private boolean okp;
 
     private int pathState;
     private final Pose goalPose = new Pose(6,140,0);
     private final Pose startPose = new Pose(20, 130, Math.toRadians(234));
-    private final Pose scorePose = new Pose(60, 84, Math.toRadians(180));
+    private final Pose scorePose = new Pose(60, 86, Math.toRadians(180));
     private final Pose line1Pose = new Pose(18, 84, Math.toRadians(180));
-    private final Pose line2Pose = new Pose(12, 60, Math.toRadians(0));
-    private final Pose line3Pose = new Pose(12, 36, Math.toRadians(0));
+    private final Pose line2Pose = new Pose(12, 57, Math.toRadians(0));
+    private final Pose line3Pose = new Pose(12, 33, Math.toRadians(0));
     public final Pose endPose = new Pose(36,60,Math.toRadians(0));
     private PathChain scorePreload,grabPickup1, scorePickup1, grabPickup2, scorePickup2, grabPickup3, scorePickup3,end;
     public void buildPaths() {
@@ -41,6 +44,7 @@ public class AutoCloseBlue extends OpMode{
                         new BezierLine(scorePose,line1Pose)
                 )
                 .setConstantHeadingInterpolation(Math.toRadians(180))
+                .setVelocityConstraint(15)
                 .build();
 
         scorePickup1 = follower
@@ -61,6 +65,7 @@ public class AutoCloseBlue extends OpMode{
                         )
                 )
                 .setConstantHeadingInterpolation(Math.toRadians(180))
+                .setVelocityConstraint(10)
                 .build();
 
         scorePickup2 = follower
@@ -85,6 +90,7 @@ public class AutoCloseBlue extends OpMode{
                         )
                 )
                 .setConstantHeadingInterpolation(Math.toRadians(180))
+                .setVelocityConstraint(10)
                 .build();
 
 
@@ -109,12 +115,30 @@ public class AutoCloseBlue extends OpMode{
         switch (pathState) {
             case 0:
                 follower.followPath(scorePreload);
+                okp=true;
                 setPathState(1);
                 break;
             case 1:
                 if(!follower.isBusy()) {
-                    follower.followPath(grabPickup1,true);
-                    setPathState(2);
+                    if(okp){
+                        pathTimer.resetTimer();
+                        okp=false;
+                    }
+                    if(pathTimer.getElapsedTimeSeconds()<0.1){
+                        r.shoot=true;
+                        r.oks=true;
+                        r.s.hoodclose();
+                        r.s.target=900;
+                    }
+                    if(pathTimer.getElapsedTimeSeconds()>2){
+                        r.i.pornit=true;
+                    }
+                    if(pathTimer.getElapsedTimeSeconds()>3) {
+                        follower.followPath(grabPickup1, true);
+                        r.aim=false;
+                        okp=true;
+                        setPathState(2);
+                    }
                 }
                 break;
             case 2:
@@ -168,6 +192,7 @@ public class AutoCloseBlue extends OpMode{
     @Override
     public void loop() {
         follower.update();
+        r.aPeriodic();
         autonomousPathUpdate();
 
         telemetry.addData("path state", pathState);
@@ -182,6 +207,7 @@ public class AutoCloseBlue extends OpMode{
         pathTimer = new Timer();
         opmodeTimer = new Timer();
         opmodeTimer.resetTimer();
+        r = new Robot(hardwareMap,telemetry,gamepad1,gamepad2,true,true,true);
 
 
         follower = Constants.createFollower(hardwareMap);

@@ -58,6 +58,7 @@ public class Shooter {
         SD.setDirection(DcMotorSimple.Direction.REVERSE);
         latch.setPosition(0.25);
 
+
         pid = new PIDController(p , i , d);
 
         turret=hardwareMap.get(DcMotorEx.class, "turret");

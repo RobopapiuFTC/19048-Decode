@@ -22,8 +22,8 @@ import org.firstinspires.ftc.teamcode.Systems.Camera;
 public class Robot {
     private HardwareMap h;
     private Telemetry t;
-    private Shooter s;
-    private Intake i;
+    public Shooter s;
+    public Intake i;
     private Movement m;
     private Camera c;
     public static Pose startingPose = new Pose(72,135,Math.toRadians(90));
@@ -31,24 +31,24 @@ public class Robot {
     public static double red,blue,green;
     public Gamepad g1,g2;
     public Follower f;
-    private boolean a,shoot,oks,aim;
+    public boolean a,shoot,oks,aim,auto;
     private boolean ro = true;
     public double speed = 0.9;
     public Timer iTimer,rTimer,rsTimer,sTimer;
     public boolean da=true,r,y,b,need=false,state = false,ts=false,spec=false,daS=false;
     public int flip = 1, iState = -1;
     public static int offset=20;
-    double degreestointake=180;
     double ticksfor360 = 1900;
     double maxticks = 1900;
     double ticksperdegree = ticksfor360 / 360;
-    public Robot(HardwareMap h, Telemetry t, Gamepad g1, Gamepad g2, boolean blue,boolean spec) {
+    public Robot(HardwareMap h, Telemetry t, Gamepad g1, Gamepad g2, boolean blue,boolean spec,boolean auto) {
         this.h = h;
         this.t = t;
         this.g1 = g1;
         this.g2 = g2;
         this.a = blue;
         this.spec = spec;
+        this.auto = auto;
         f = Constants.createFollower(this.h);
         f.setStartingPose(startingPose);
         f.update();
@@ -71,7 +71,7 @@ public class Robot {
         sequenceshoot();
       //  c.periodic();
         f.update();
-        if(aim)turret();
+        if(aim)turret(auto);
         t.addData("Pose x", f.getPose().getX());
         t.addData("Pose y", f.getPose().getY());
         t.addData("Pose heading", Math.toDegrees(f.getPose().getHeading()));
@@ -82,6 +82,19 @@ public class Robot {
     }
     public void tInit(){
        // c.start();
+    }
+    public void aPeriodic(){
+        sequenceshoot();
+        if(aim)turret(auto);
+        if(aim)s.run();
+        else{
+            s.target=0;
+            s.SD.setPower(0);
+            s.SS.setPower(0);
+        }
+        s.runt();
+        i.periodic();
+        t.update();
     }
     public void dualControls(){
         if(g1.b)s.hoodfar();
@@ -126,20 +139,21 @@ public class Robot {
             }
         }
     }
-    public void turret() {
+    public void turret(boolean auto) {
         f.update();
         double c1 = f.getPose().getX()-shootp.getX();
         double c2 = shootp.getY()-f.getPose().getY();
         double ipoten = Math.sqrt(c1*c1+c2*c2);
         double unghi = Math.toDegrees(asin(c1/ipoten));
-        double ticksneeded=(unghi+degreestointake-Math.toDegrees(f.getPose().getHeading()))*ticksperdegree;
-        if(f.getPose().getX()+f.getPose().getY()>144){
-            s.hoodclose();
-            s.target=1100;
-        }
-        else {
-            s.hoodfar();
-            s.target=1450;
+        double ticksneeded=(unghi-Math.toDegrees(f.getPose().getHeading())+180)*ticksperdegree;
+        if(!auto) {
+            if (f.getPose().getX() + f.getPose().getY() > 110) {
+                s.hoodclose();
+                s.target = 1100;
+            } else {
+                s.hoodfar();
+                s.target = 1450;
+            }
         }
         s.targett=ticksneeded;
 

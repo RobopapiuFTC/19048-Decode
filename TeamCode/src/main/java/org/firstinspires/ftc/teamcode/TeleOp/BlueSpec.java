@@ -14,7 +14,7 @@ public class BlueSpec extends OpMode {
 
     @Override
     public void init() {
-        r = new Robot(hardwareMap, telemetry, gamepad1 , gamepad2,true,true);
+        r = new Robot(hardwareMap, telemetry, gamepad1 , gamepad2,true,true,false);
         r.tInit();
     }
 
