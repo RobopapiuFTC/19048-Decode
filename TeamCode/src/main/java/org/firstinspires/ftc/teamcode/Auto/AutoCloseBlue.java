@@ -127,15 +127,13 @@ public class AutoCloseBlue extends OpMode{
                     if(pathTimer.getElapsedTimeSeconds()<0.1){
                         r.shoot=true;
                         r.oks=true;
-                        r.s.hoodclose();
-                        r.s.target=900;
                     }
                     if(pathTimer.getElapsedTimeSeconds()>2){
                         r.i.pornit=true;
                     }
                     if(pathTimer.getElapsedTimeSeconds()>3) {
                         follower.followPath(grabPickup1, true);
-                        r.aim=false;
+                        r.sequenceintake();
                         okp=true;
                         setPathState(2);
                     }
@@ -143,14 +141,29 @@ public class AutoCloseBlue extends OpMode{
                 break;
             case 2:
                 if(!follower.isBusy()) {
-                    follower.followPath(scorePickup1,true);
-                    setPathState(3);
+                            follower.followPath(scorePickup1,true);
+                            setPathState(3);
                 }
                 break;
             case 3:
                 if(!follower.isBusy()) {
-                    follower.followPath(grabPickup2,true);
-                    setPathState(4);
+                    if(okp){
+                        pathTimer.resetTimer();
+                        okp=false;
+                    }
+                    if(pathTimer.getElapsedTimeSeconds()<0.1){
+                        r.shoot=true;
+                        r.oks=true;
+                    }
+                    if(pathTimer.getElapsedTimeSeconds()>2){
+                        r.i.pornit=true;
+                    }
+                    if(pathTimer.getElapsedTimeSeconds()>3) {
+                        follower.followPath(grabPickup2, true);
+                        okp=true;
+                        r.sequenceintake();
+                        setPathState(4);
+                    }
                 }
                 break;
             case 4:
@@ -161,8 +174,23 @@ public class AutoCloseBlue extends OpMode{
                 break;
             case 5:
                 if(!follower.isBusy()) {
-                    follower.followPath(grabPickup3,true);
-                    setPathState(6);
+                    if(okp){
+                        pathTimer.resetTimer();
+                        okp=false;
+                    }
+                    if(pathTimer.getElapsedTimeSeconds()<0.1){
+                        r.shoot=true;
+                        r.oks=true;
+                    }
+                    if(pathTimer.getElapsedTimeSeconds()>2){
+                        r.i.pornit=true;
+                    }
+                    if(pathTimer.getElapsedTimeSeconds()>3) {
+                        okp=true;
+                        r.sequenceintake();
+                        follower.followPath(grabPickup3,true);
+                        setPathState(6);
+                    }
                 }
                 break;
             case 6:
@@ -173,8 +201,24 @@ public class AutoCloseBlue extends OpMode{
                 break;
             case 7:
                 if(!follower.isBusy()) {
-                    follower.followPath(end, true);
-                    setPathState(8);
+                    if(okp){
+                        pathTimer.resetTimer();
+                        okp=false;
+                    }
+                    if(pathTimer.getElapsedTimeSeconds()<0.1){
+                        r.shoot=true;
+                        r.oks=true;
+                    }
+                    if(pathTimer.getElapsedTimeSeconds()>2){
+                        r.i.pornit=true;
+                    }
+                    if(pathTimer.getElapsedTimeSeconds()>3) {
+                        okp=true;
+                        r.sequenceintake();
+                        follower.followPath(end, true);
+                        setPathState(8);
+                    }
+
                 }
                 break;
             case 8:
@@ -207,12 +251,12 @@ public class AutoCloseBlue extends OpMode{
         pathTimer = new Timer();
         opmodeTimer = new Timer();
         opmodeTimer.resetTimer();
-        r = new Robot(hardwareMap,telemetry,gamepad1,gamepad2,true,true,true);
 
 
         follower = Constants.createFollower(hardwareMap);
         buildPaths();
         follower.setStartingPose(startPose);
+        r = new Robot(hardwareMap,follower,telemetry,gamepad1,gamepad2,true,true,true);
 
     }
     @Override

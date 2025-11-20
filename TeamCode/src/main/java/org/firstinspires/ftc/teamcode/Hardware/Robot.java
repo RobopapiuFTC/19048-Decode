@@ -41,17 +41,15 @@ public class Robot {
     double ticksfor360 = 1900;
     double maxticks = 1900;
     double ticksperdegree = ticksfor360 / 360;
-    public Robot(HardwareMap h, Telemetry t, Gamepad g1, Gamepad g2, boolean blue,boolean spec,boolean auto) {
+    public Robot(HardwareMap h,Follower f, Telemetry t, Gamepad g1, Gamepad g2, boolean blue,boolean spec,boolean auto) {
         this.h = h;
         this.t = t;
+        this.f = f;
         this.g1 = g1;
         this.g2 = g2;
         this.a = blue;
         this.spec = spec;
         this.auto = auto;
-        f = Constants.createFollower(this.h);
-        f.setStartingPose(startingPose);
-        f.update();
         s=new Shooter(this.h,this.t);
         m=new Movement(this.h, this.t);
         i=new Intake(this.h,this.t);
@@ -70,8 +68,9 @@ public class Robot {
         t.addData("Power", s.power);
         sequenceshoot();
       //  c.periodic();
+        //set starting pose aici pentru follower in teleop numa
         f.update();
-        if(aim)turret(auto);
+        if(aim)turret();
         t.addData("Pose x", f.getPose().getX());
         t.addData("Pose y", f.getPose().getY());
         t.addData("Pose heading", Math.toDegrees(f.getPose().getHeading()));
@@ -85,14 +84,8 @@ public class Robot {
     }
     public void aPeriodic(){
         sequenceshoot();
-        if(aim)turret(auto);
-        if(aim)s.run();
-        else{
-            s.target=0;
-            s.SD.setPower(0);
-            s.SS.setPower(0);
-        }
-        s.runt();
+        if(aim)turret();
+        s.periodic();
         i.periodic();
         t.update();
     }
@@ -139,22 +132,19 @@ public class Robot {
             }
         }
     }
-    public void turret(boolean auto) {
-        f.update();
+    public void turret() {
         double c1 = f.getPose().getX()-shootp.getX();
         double c2 = shootp.getY()-f.getPose().getY();
         double ipoten = Math.sqrt(c1*c1+c2*c2);
         double unghi = Math.toDegrees(asin(c1/ipoten));
         double ticksneeded=(unghi-Math.toDegrees(f.getPose().getHeading())+180)*ticksperdegree;
-        if(!auto) {
-            if (f.getPose().getX() + f.getPose().getY() > 110) {
+            if (f.getPose().getY() > 40) {
                 s.hoodclose();
                 s.target = 1100;
             } else {
                 s.hoodfar();
                 s.target = 1450;
             }
-        }
         s.targett=ticksneeded;
 
     }
