@@ -31,7 +31,7 @@ public class Robot {
     public static double red,blue,green;
     public Gamepad g1,g2;
     public Follower f;
-    public boolean a,shoot,oks,aim,auto;
+    public boolean a,shoot,oks,aim,auto,intake,oki;
     private boolean ro = true;
     public double speed = 0.9;
     public Timer iTimer,rTimer,rsTimer,sTimer;
@@ -67,6 +67,7 @@ public class Robot {
         t.addData("Target", s.targett);
         t.addData("Power", s.power);
         sequenceshoot();
+        sequenceintake();
       //  c.periodic();
         //set starting pose aici pentru follower in teleop numa
         f.update();
@@ -84,6 +85,7 @@ public class Robot {
     }
     public void aPeriodic(){
         sequenceshoot();
+        sequenceintake();
         if(aim)turret();
         s.periodic();
         i.periodic();
@@ -92,25 +94,38 @@ public class Robot {
     public void dualControls(){
         if(g1.b)s.hoodfar();
         if(g1.y){
-            if(iTimer.getElapsedTimeSeconds()>0.3){
-                sequenceintake();
-                iTimer.resetTimer();
+            if(rTimer.getElapsedTimeSeconds()>0.3){
+                intake=true;
+                oki=true;
+                rTimer.resetTimer();
             }
         }
         if(g1.x){
-            if(iTimer.getElapsedTimeSeconds()>0.3){
+            if(rTimer.getElapsedTimeSeconds()>0.3){
                 shoot=true;
                 oks=true;
-                iTimer.resetTimer();
+                rTimer.resetTimer();
             }
         }
         if(g1.a)i.pornit=true;
     }
     public void sequenceintake(){
-        aim=false;
-        s.latchup();
-        i.intake.setDirection(DcMotorSimple.Direction.FORWARD);
-        i.pornit=true;
+        if(intake) {
+            if (oki) {
+                iTimer.resetTimer();
+                oki = false;
+            }
+            if (iTimer.getElapsedTimeSeconds() < 0.4) {
+                aim = false;
+                s.latchup();
+            }
+            if (iTimer.getElapsedTimeSeconds() > 0.4 && iTimer.getElapsedTimeSeconds() < 1) {
+                i.intake.setDirection(DcMotorSimple.Direction.FORWARD);
+                i.pornit = true;
+                intake=false;
+                oki=false;
+            }
+        }
     }
     public void sequenceshoot(){
         if(shoot) {
@@ -118,7 +133,6 @@ public class Robot {
                 aim=true;
                 sTimer.resetTimer();
                 oks=false;
-                s.latchdown();
             }
             if(sTimer.getElapsedTimeSeconds()<0.2){
                 i.intake.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -127,6 +141,7 @@ public class Robot {
             if(sTimer.getElapsedTimeSeconds()>0.2 && sTimer.getElapsedTimeSeconds()<1){
                 i.pornit=false;
                 i.intake.setDirection(DcMotorSimple.Direction.FORWARD);
+                s.latchdown();
                 shoot=false;
                 oks=false;
             }
