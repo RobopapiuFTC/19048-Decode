@@ -13,8 +13,8 @@ import org.firstinspires.ftc.teamcode.Hardware.Robot;
 
 import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
 
-@Autonomous(name="Auto Close Blue", group="Blue")
-public class AutoCloseBlue extends OpMode{
+@Autonomous(name="Auto Close Red", group="Red")
+public class AutoCloseRed extends OpMode{
     private Follower follower;
     private Timer pathTimer, actionTimer, opmodeTimer;
     private Robot r;
@@ -22,9 +22,9 @@ public class AutoCloseBlue extends OpMode{
 
     private int pathState;
     private final Pose goalPose = new Pose(6,140,0);
-    private final Pose startPose = new Pose(20, 130, Math.toRadians(234));
-    private final Pose scorePose = new Pose(63, 88, Math.toRadians(180));
-    private final Pose line1Pose = new Pose(18, 88, Math.toRadians(180));
+    private final Pose startPose = new Pose(20, 130, Math.toRadians(306));
+    private final Pose scorePose = new Pose(63, 88, Math.toRadians(0));
+    private final Pose line1Pose = new Pose(18, 88, Math.toRadians(0));
     private final Pose line2Pose = new Pose(12, 57, Math.toRadians(0));
     private final Pose line3Pose = new Pose(12, 33, Math.toRadians(0));
     public final Pose endPose = new Pose(36,60,Math.toRadians(0));
@@ -35,7 +35,7 @@ public class AutoCloseBlue extends OpMode{
                 .addPath(
                         new BezierLine(startPose, scorePose)
                 )
-                .setLinearHeadingInterpolation(Math.toRadians(234), Math.toRadians(180))
+                .setLinearHeadingInterpolation(Math.toRadians(306), Math.toRadians(0))
                 .build();
 
         grabPickup1 = follower
@@ -43,7 +43,7 @@ public class AutoCloseBlue extends OpMode{
                 .addPath(
                         new BezierLine(scorePose,line1Pose)
                 )
-                .setConstantHeadingInterpolation(Math.toRadians(180))
+                .setConstantHeadingInterpolation(Math.toRadians(0))
                 .setVelocityConstraint(15)
                 .build();
 
@@ -52,7 +52,7 @@ public class AutoCloseBlue extends OpMode{
                 .addPath(
                         new BezierLine(line1Pose,scorePose)
                 )
-                .setConstantHeadingInterpolation(Math.toRadians(180))
+                .setConstantHeadingInterpolation(Math.toRadians(0))
                 .build();
 
         grabPickup2 = follower
@@ -64,7 +64,7 @@ public class AutoCloseBlue extends OpMode{
                                 line2Pose
                         )
                 )
-                .setConstantHeadingInterpolation(Math.toRadians(180))
+                .setConstantHeadingInterpolation(Math.toRadians(0))
                 .setVelocityConstraint(10)
                 .build();
 
@@ -77,7 +77,7 @@ public class AutoCloseBlue extends OpMode{
                                 scorePose
                         )
                 )
-                .setConstantHeadingInterpolation(Math.toRadians(180))
+                .setConstantHeadingInterpolation(Math.toRadians(0))
                 .build();
 
         grabPickup3 = follower
@@ -89,7 +89,7 @@ public class AutoCloseBlue extends OpMode{
                                 line3Pose
                         )
                 )
-                .setConstantHeadingInterpolation(Math.toRadians(180))
+                .setConstantHeadingInterpolation(Math.toRadians(0))
                 .setVelocityConstraint(10)
                 .build();
 
@@ -99,7 +99,7 @@ public class AutoCloseBlue extends OpMode{
                 .addPath(
                         new BezierLine(line3Pose,scorePose)
                 )
-                .setConstantHeadingInterpolation(Math.toRadians(180))
+                .setConstantHeadingInterpolation(Math.toRadians(0))
                 .build();
 
         end = follower
@@ -107,7 +107,7 @@ public class AutoCloseBlue extends OpMode{
                 .addPath(
                         new BezierLine(scorePose,endPose)
                 )
-                .setConstantHeadingInterpolation(Math.toRadians(180))
+                .setConstantHeadingInterpolation(Math.toRadians(0))
                 .build();
 
     }
@@ -142,8 +142,8 @@ public class AutoCloseBlue extends OpMode{
                 break;
             case 2:
                 if(!follower.isBusy()) {
-                            follower.followPath(scorePickup1,true);
-                            setPathState(3);
+                    follower.followPath(scorePickup1,true);
+                    setPathState(3);
                 }
                 break;
             case 3:
@@ -154,7 +154,7 @@ public class AutoCloseBlue extends OpMode{
                         r.calculatetarget();
                     }
                     if(pathTimer.getElapsedTimeSeconds()<0.1){
-                       r.shooter();
+                        r.shooter();
                     }
                     if(pathTimer.getElapsedTimeSeconds()>1){
                         r.i.pornit=true;
@@ -208,7 +208,7 @@ public class AutoCloseBlue extends OpMode{
                         r.calculatetarget();
                     }
                     if(pathTimer.getElapsedTimeSeconds()<0.1){
-                       r.shooter();
+                        r.shooter();
                     }
                     if(pathTimer.getElapsedTimeSeconds()>1){
                         r.i.pornit=true;

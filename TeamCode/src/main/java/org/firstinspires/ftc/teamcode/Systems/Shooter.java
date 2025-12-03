@@ -72,6 +72,7 @@ public class Shooter {
     }
     public void run(){
         command = controller.calculate(target, SD.getVelocity());
+        command +=0.15;
         SD.setPower(command);
         SS.setPower(command);
     }
@@ -89,15 +90,15 @@ public class Shooter {
         turret.setPower(pid_output);
     }
     public void hoodfar(){
-        SVD.setPosition(0.3);
+        SVD.setPosition(0.2);
     }
     public void hoodclose(){
-        SVD.setPosition(0.4);
+        SVD.setPosition(0.3);
     }
     public void latchdown(){
-        latch.setPosition(0.7);
+        latch.setPosition(0.8);
     }
     public void latchup(){
-        latch.setPosition(0.15);
+        latch.setPosition(0.25);
     }
 }
