@@ -29,7 +29,7 @@ public class Shooter {
     public Servo SVS,SVD,latch;
     public Telemetry telemetry;
     public double target;
-    public double power;
+    public double power,htarget=0.5;
     public double pos;
     public boolean pornit=false,yea=false;
     double maxOutput = 1;
@@ -69,6 +69,7 @@ public class Shooter {
     public void periodic(){
         run();
         runt();
+        SVD.setPosition(htarget);
     }
     public void run(){
         command = controller.calculate(target, SD.getVelocity());
@@ -90,10 +91,10 @@ public class Shooter {
         turret.setPower(pid_output);
     }
     public void hoodfar(){
-        SVD.setPosition(0.2);
+        htarget=0.2;
     }
     public void hoodclose(){
-        SVD.setPosition(0.3);
+        htarget=0.3;
     }
     public void latchdown(){
         latch.setPosition(0.8);

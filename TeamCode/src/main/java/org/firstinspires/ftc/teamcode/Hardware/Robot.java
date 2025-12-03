@@ -67,7 +67,7 @@ public class Robot {
         t.addData("Velocity: ", s.SD.getVelocity());
         t.addData("Turret Ticks", s.turret.getCurrentPosition());
         t.addData("Target", s.targett);
-        t.addData("Power", s.power);
+        t.addData("Hood", s.htarget);
         sequenceshoot();
         sequenceintake();
       //  c.periodic();
@@ -120,7 +120,10 @@ public class Robot {
                 oTimer.resetTimer();
             }
         }
-        if(g1.a)i.pornit=true;
+        if(g1.a){
+            i.pornit=true;
+            s.latchdown();
+        }
     }
     public void intake(){
         intake=true;

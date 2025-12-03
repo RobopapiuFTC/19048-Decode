@@ -21,13 +21,13 @@ public class AutoCloseRed extends OpMode{
     private boolean okp;
 
     private int pathState;
-    private final Pose goalPose = new Pose(6,140,0);
-    private final Pose startPose = new Pose(20, 130, Math.toRadians(306));
-    private final Pose scorePose = new Pose(63, 88, Math.toRadians(0));
-    private final Pose line1Pose = new Pose(18, 88, Math.toRadians(0));
-    private final Pose line2Pose = new Pose(12, 57, Math.toRadians(0));
-    private final Pose line3Pose = new Pose(12, 33, Math.toRadians(0));
-    public final Pose endPose = new Pose(36,60,Math.toRadians(0));
+    private final Pose goalPose = new Pose(138,140,0);
+    private final Pose startPose = new Pose(124, 130, Math.toRadians(306));
+    private final Pose scorePose = new Pose(81, 88, Math.toRadians(0));
+    private final Pose line1Pose = new Pose(126, 88, Math.toRadians(0));
+    private final Pose line2Pose = new Pose(132, 57, Math.toRadians(0));
+    private final Pose line3Pose = new Pose(132, 33, Math.toRadians(0));
+    public final Pose endPose = new Pose(108,60,Math.toRadians(0));
     private PathChain scorePreload,grabPickup1, scorePickup1, grabPickup2, scorePickup2, grabPickup3, scorePickup3,end;
     public void buildPaths() {
         scorePreload = follower
@@ -60,7 +60,7 @@ public class AutoCloseRed extends OpMode{
                 .addPath(
                         new BezierCurve(
                                 scorePose,
-                                new Pose(69.905, 59.176),
+                                new Pose(74.095, 59.176),
                                 line2Pose
                         )
                 )
@@ -73,7 +73,7 @@ public class AutoCloseRed extends OpMode{
                 .addPath(
                         new BezierCurve(
                                 line2Pose,
-                                new Pose(66.719, 46.100),
+                                new Pose(77.281, 46.100),
                                 scorePose
                         )
                 )
@@ -85,7 +85,7 @@ public class AutoCloseRed extends OpMode{
                 .addPath(
                         new BezierCurve(
                                 scorePose,
-                                new Pose(83.483, 30.678),
+                                new Pose(60.517, 30.678),
                                 line3Pose
                         )
                 )

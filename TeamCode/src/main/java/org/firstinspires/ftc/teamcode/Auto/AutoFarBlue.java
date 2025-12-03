@@ -18,7 +18,7 @@ public class AutoFarBlue extends OpMode{
     private Timer pathTimer, actionTimer, opmodeTimer;
 
     private int pathState;
-    private final Pose goalPose = new Pose(5,130,0);
+    private final Pose goalPose = new Pose(6,140,0);
     private final Pose startPose = new Pose(21, 125, Math.toRadians(54));
     private final Pose scorePose = new Pose(60, 84, Math.toRadians(180));
     private final Pose line1Pose = new Pose(18, 84, Math.toRadians(180));
