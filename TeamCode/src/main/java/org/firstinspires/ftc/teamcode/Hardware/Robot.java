@@ -31,9 +31,8 @@ public class Robot {
     public static double red,blue,green;
     public Gamepad g1,g2;
     public Follower f;
-    public boolean a,shoot,oks,aim,auto,intake,oki,pids=false;
+    public boolean a,shoot,oks,aim,auto,intake,oki,pids=false,slowmode=false,aima=true;
     public double c1,c2,ipoten,unghi,ticksneeded;
-    private boolean ro = true;
     public double speed = 0.9;
     public Timer iTimer,rTimer,rsTimer,sTimer,oTimer;
     public boolean da=true,r,y,b,need=false,state = false,ts=false,spec=false,daS=false;
@@ -64,38 +63,33 @@ public class Robot {
     }
 
     public void tPeriodic() {
+        f.update();
         t.addData("Velocity: ", s.SD.getVelocity());
         t.addData("Turret Ticks", s.turret.getCurrentPosition());
         t.addData("Target", s.targett);
-        t.addData("Hood", s.htarget);
         sequenceshoot();
         sequenceintake();
-      //  c.periodic();
-        //set starting pose aici pentru follower in teleop numa
-        f.update();
         if(aim)turret();
-        t.addData("Pose x", f.getPose().getX());
-        t.addData("Pose y", f.getPose().getY());
-        t.addData("Pose heading", Math.toDegrees(f.getPose().getHeading()));
         m.periodic(g1);
         i.periodic();
         s.periodic();
         t.update();
     }
+    public void tStart(){
+    }
     public void tInit(){
-       // c.start();
+
     }
     public void aPeriodic(){
         sequenceshoot();
         sequenceintake();
         if(aim)turret();
-        else s.targett=390;
+        else if(aima)s.targett=390;
         if(pids)s.periodic();
         i.periodic();
         t.update();
     }
     public void dualControls(){
-        if(g1.b)s.hoodfar();
         if(g1.y){
             if(rTimer.getElapsedTimeSeconds()>0.3){
                intake();
@@ -122,7 +116,6 @@ public class Robot {
         }
         if(g1.a){
             i.pornit=true;
-            s.latchdown();
         }
     }
     public void intake(){
@@ -173,22 +166,35 @@ public class Robot {
             }
         }
     }
-    public void calculatetarget(){
+    public void calculatetarget(Pose shootp){
         c1 = f.getPose().getX()-shootp.getX();
         c2 = shootp.getY()-f.getPose().getY();
         ipoten = Math.sqrt(c1*c1+c2*c2);
         unghi = Math.toDegrees(asin(c1/ipoten));
-        ticksneeded=(unghi-Math.toDegrees(f.getPose().getHeading())+180+offset)*ticksperdegree;
+        if(a)ticksneeded=(unghi-Math.toDegrees(f.getPose().getHeading())+180+offset)*ticksperdegree;
+        else ticksneeded=(-unghi-Math.toDegrees(f.getPose().getHeading())+180+offset)*ticksperdegree;
         if(ticksneeded>1900)ticksneeded=ticksneeded-1900;
     }
+    public void calculatetargett(){
+        c1 = f.getPose().getX()-shootp.getX();
+        c2 = shootp.getY()-f.getPose().getY();
+        ipoten = Math.sqrt(c1*c1+c2*c2);
+        unghi = Math.toDegrees(asin(c1/ipoten));
+        if(a)ticksneeded=(unghi-Math.toDegrees(f.getPose().getHeading())+180+offset)*ticksperdegree;
+        else ticksneeded=(-unghi-Math.toDegrees(f.getPose().getHeading())+180+offset)*ticksperdegree;
+        if(ticksneeded>1900)ticksneeded=ticksneeded-1900;
+    }
+    public void settarget(double target){
+        s.targett=target;
+    }
     public void turret() {
-            if(!auto)calculatetarget();
+            if(!auto)calculatetargett();
             if (f.getPose().getY() > 40) {
                 s.hoodclose();
                 s.target = 1250;
             } else {
                 s.hoodfar();
-                s.target = 1500;
+                s.target = 1530;
             }
         s.targett=ticksneeded;
 

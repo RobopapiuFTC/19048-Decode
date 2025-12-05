@@ -29,7 +29,7 @@ public class Shooter {
     public Servo SVS,SVD,latch;
     public Telemetry telemetry;
     public double target;
-    public double power,htarget=0.5;
+    public double power;
     public double pos;
     public boolean pornit=false,yea=false;
     double maxOutput = 1;
@@ -56,7 +56,7 @@ public class Shooter {
         SD.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         SVD.setPosition(0.5);
         SD.setDirection(DcMotorSimple.Direction.REVERSE);
-        latch.setPosition(0.25);
+        latch.setPosition(0.3);
 
 
         pid = new PIDController(p , i , d);
@@ -69,7 +69,6 @@ public class Shooter {
     public void periodic(){
         run();
         runt();
-        SVD.setPosition(htarget);
     }
     public void run(){
         command = controller.calculate(target, SD.getVelocity());
@@ -91,15 +90,15 @@ public class Shooter {
         turret.setPower(pid_output);
     }
     public void hoodfar(){
-        htarget=0.2;
+        SVD.setPosition(0.2);
     }
     public void hoodclose(){
-        htarget=0.3;
+        SVD.setPosition(0.25);
     }
     public void latchdown(){
-        latch.setPosition(0.8);
+        latch.setPosition(0.9);
     }
     public void latchup(){
-        latch.setPosition(0.25);
+        latch.setPosition(0.3);
     }
 }

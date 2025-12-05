@@ -21,14 +21,15 @@ public class AutoCloseBlue extends OpMode{
     private boolean okp;
 
     private int pathState;
-    private final Pose goalPose = new Pose(6,140,0);
+    private final Pose goalPose = new Pose(0,144,0);
     private final Pose startPose = new Pose(20, 130, Math.toRadians(234));
     private final Pose scorePose = new Pose(63, 88, Math.toRadians(180));
+    private final Pose doorPose = new Pose(18,80,Math.toRadians(90));
     private final Pose line1Pose = new Pose(18, 88, Math.toRadians(180));
     private final Pose line2Pose = new Pose(12, 57, Math.toRadians(0));
     private final Pose line3Pose = new Pose(12, 33, Math.toRadians(0));
     public final Pose endPose = new Pose(36,60,Math.toRadians(0));
-    private PathChain scorePreload,grabPickup1, scorePickup1, grabPickup2, scorePickup2, grabPickup3, scorePickup3,end;
+    private PathChain scorePreload,doorPickup,grabPickup1, scorePickup1, grabPickup2, scorePickup2, grabPickup3, scorePickup3,end;
     public void buildPaths() {
         scorePreload = follower
                 .pathBuilder()
@@ -46,13 +47,19 @@ public class AutoCloseBlue extends OpMode{
                 .setConstantHeadingInterpolation(Math.toRadians(180))
                 .setVelocityConstraint(15)
                 .build();
-
+        doorPickup = follower
+                .pathBuilder()
+                .addPath(
+                        new BezierLine(line1Pose,doorPose)
+                )
+                .setLinearHeadingInterpolation(Math.toRadians(180),Math.toRadians(90))
+                .build();
         scorePickup1 = follower
                 .pathBuilder()
                 .addPath(
-                        new BezierLine(line1Pose,scorePose)
+                        new BezierLine(doorPose,scorePose)
                 )
-                .setConstantHeadingInterpolation(Math.toRadians(180))
+                .setLinearHeadingInterpolation(Math.toRadians(90),Math.toRadians(180))
                 .build();
 
         grabPickup2 = follower
@@ -124,7 +131,7 @@ public class AutoCloseBlue extends OpMode{
                         pathTimer.resetTimer();
                         r.pids=true;
                         okp=false;
-                        r.calculatetarget();
+                        r.calculatetarget(goalPose);
                     }
                     if(pathTimer.getElapsedTimeSeconds()<0.1){
                         r.shooter();
@@ -142,16 +149,23 @@ public class AutoCloseBlue extends OpMode{
                 break;
             case 2:
                 if(!follower.isBusy()) {
-                            follower.followPath(scorePickup1,true);
+                            follower.followPath(doorPickup,true);
                             setPathState(3);
                 }
                 break;
+
             case 3:
+                if(!follower.isBusy()) {
+                    follower.followPath(scorePickup1,true);
+                    setPathState(4);
+                }
+                break;
+            case 4:
                 if(!follower.isBusy()) {
                     if(okp){
                         pathTimer.resetTimer();
                         okp=false;
-                        r.calculatetarget();
+                        r.calculatetarget(goalPose);
                     }
                     if(pathTimer.getElapsedTimeSeconds()<0.1){
                        r.shooter();
@@ -163,22 +177,22 @@ public class AutoCloseBlue extends OpMode{
                         follower.followPath(grabPickup2, true);
                         okp=true;
                         r.intake();
-                        setPathState(4);
+                        setPathState(5);
                     }
-                }
-                break;
-            case 4:
-                if(!follower.isBusy()) {
-                    follower.followPath(scorePickup2,true);
-                    setPathState(5);
                 }
                 break;
             case 5:
                 if(!follower.isBusy()) {
+                    follower.followPath(scorePickup2,true);
+                    setPathState(6);
+                }
+                break;
+            case 6:
+                if(!follower.isBusy()) {
                     if(okp){
                         pathTimer.resetTimer();
                         okp=false;
-                        r.calculatetarget();
+                        r.calculatetarget(goalPose);
                     }
                     if(pathTimer.getElapsedTimeSeconds()<0.1){
                         r.shooter();
@@ -190,22 +204,22 @@ public class AutoCloseBlue extends OpMode{
                         okp=true;
                         r.intake();
                         follower.followPath(grabPickup3,true);
-                        setPathState(6);
+                        setPathState(7);
                     }
-                }
-                break;
-            case 6:
-                if(!follower.isBusy()) {
-                    follower.followPath(scorePickup3, true);
-                    setPathState(7);
                 }
                 break;
             case 7:
                 if(!follower.isBusy()) {
+                    follower.followPath(scorePickup3, true);
+                    setPathState(8);
+                }
+                break;
+            case 8:
+                if(!follower.isBusy()) {
                     if(okp){
                         pathTimer.resetTimer();
                         okp=false;
-                        r.calculatetarget();
+                        r.calculatetarget(goalPose);
                     }
                     if(pathTimer.getElapsedTimeSeconds()<0.1){
                        r.shooter();
@@ -218,13 +232,16 @@ public class AutoCloseBlue extends OpMode{
                         r.i.pornit=false;
                         r.aim=false;
                         follower.followPath(end, true);
-                        setPathState(8);
+                        setPathState(9);
                     }
 
                 }
                 break;
-            case 8:
+            case 9:
                 if(!follower.isBusy()) {
+                    r.aim=false;
+                    r.aima=false;
+                    r.settarget(0);
                     setPathState(-1);
                 }
                 break;

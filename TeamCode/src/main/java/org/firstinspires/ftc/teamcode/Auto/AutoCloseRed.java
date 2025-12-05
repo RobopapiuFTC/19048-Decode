@@ -21,7 +21,7 @@ public class AutoCloseRed extends OpMode{
     private boolean okp;
 
     private int pathState;
-    private final Pose goalPose = new Pose(138,140,0);
+    private final Pose goalPose = new Pose(138,144,0);
     private final Pose startPose = new Pose(124, 130, Math.toRadians(306));
     private final Pose scorePose = new Pose(81, 88, Math.toRadians(0));
     private final Pose line1Pose = new Pose(126, 88, Math.toRadians(0));
@@ -124,7 +124,7 @@ public class AutoCloseRed extends OpMode{
                         pathTimer.resetTimer();
                         r.pids=true;
                         okp=false;
-                        r.calculatetarget();
+                        r.calculatetarget(goalPose);
                     }
                     if(pathTimer.getElapsedTimeSeconds()<0.1){
                         r.shooter();
@@ -151,7 +151,7 @@ public class AutoCloseRed extends OpMode{
                     if(okp){
                         pathTimer.resetTimer();
                         okp=false;
-                        r.calculatetarget();
+                        r.calculatetarget(goalPose);
                     }
                     if(pathTimer.getElapsedTimeSeconds()<0.1){
                         r.shooter();
@@ -178,7 +178,7 @@ public class AutoCloseRed extends OpMode{
                     if(okp){
                         pathTimer.resetTimer();
                         okp=false;
-                        r.calculatetarget();
+                        r.calculatetarget(goalPose);
                     }
                     if(pathTimer.getElapsedTimeSeconds()<0.1){
                         r.shooter();
@@ -205,7 +205,7 @@ public class AutoCloseRed extends OpMode{
                     if(okp){
                         pathTimer.resetTimer();
                         okp=false;
-                        r.calculatetarget();
+                        r.calculatetarget(goalPose);
                     }
                     if(pathTimer.getElapsedTimeSeconds()<0.1){
                         r.shooter();
@@ -225,6 +225,9 @@ public class AutoCloseRed extends OpMode{
                 break;
             case 8:
                 if(!follower.isBusy()) {
+                    r.aim=false;
+                    r.aima=false;
+                    r.settarget(0);
                     setPathState(-1);
                 }
                 break;
@@ -260,7 +263,7 @@ public class AutoCloseRed extends OpMode{
         follower = Constants.createFollower(hardwareMap);
         buildPaths();
         follower.setStartingPose(startPose);
-        r = new Robot(hardwareMap,follower,telemetry,gamepad1,gamepad2,true,true,true);
+        r = new Robot(hardwareMap,follower,telemetry,gamepad1,gamepad2,false,true,true);
 
     }
     @Override

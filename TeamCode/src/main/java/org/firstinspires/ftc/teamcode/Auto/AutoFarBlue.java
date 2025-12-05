@@ -10,37 +10,49 @@ import com.pedropathing.util.Timer;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import  com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
+import org.firstinspires.ftc.teamcode.Hardware.Robot;
 import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
 
 @Autonomous(name="Auto Far Blue", group="Blue")
 public class AutoFarBlue extends OpMode{
     private Follower follower;
     private Timer pathTimer, actionTimer, opmodeTimer;
+    private boolean okp;
+    private Robot r;
 
     private int pathState;
-    private final Pose goalPose = new Pose(6,140,0);
-    private final Pose startPose = new Pose(21, 125, Math.toRadians(54));
-    private final Pose scorePose = new Pose(60, 84, Math.toRadians(180));
-    private final Pose line1Pose = new Pose(18, 84, Math.toRadians(180));
-    private final Pose line2Pose = new Pose(12, 60, Math.toRadians(0));
-    private final Pose line3Pose = new Pose(12, 36, Math.toRadians(0));
-    public final Pose endPose = new Pose(36,60,Math.toRadians(0));
-    private PathChain scorePreload,grabPickup1, scorePickup1, grabPickup2, scorePickup2, grabPickup3, scorePickup3,end;
+    private final Pose goalPose = new Pose(0,144,0);
+    private final Pose startPose = new Pose(56, 9, Math.toRadians(90));
+    private final Pose scorePose = new Pose(55, 20, Math.toRadians(90));
+    private final Pose positionPose= new Pose(36,17,Math.toRadians(210));
+    private final Pose line1Pose = new Pose(11, 6, Math.toRadians(210));
+    private final Pose line2Pose = new Pose(7, 18, Math.toRadians(210));
+    public final Pose endPose = new Pose(60,35,Math.toRadians(0));
+    private PathChain scorePreload,position,grabPickup1, scorePickup1, grabPickup2, scorePickup2, grabPickup3, scorePickup3,end;
     public void buildPaths() {
         scorePreload = follower
                 .pathBuilder()
                 .addPath(
                        new BezierLine(startPose, scorePose)
                 )
-                .setLinearHeadingInterpolation(Math.toRadians(54), Math.toRadians(180))
+                .setConstantHeadingInterpolation(Math.toRadians(90))
                 .build();
 
+        position = follower
+                .pathBuilder()
+                .addPath(
+                        new BezierLine(scorePose,positionPose)
+                )
+                .setLinearHeadingInterpolation(Math.toRadians(90), Math.toRadians(200))
+                .build();
         grabPickup1 = follower
                 .pathBuilder()
                 .addPath(
-                        new BezierLine(scorePose,line1Pose)
+                        new BezierCurve(positionPose,
+                                new Pose(7.000, 34),
+                                line1Pose)
                 )
-                .setConstantHeadingInterpolation(Math.toRadians(180))
+                .setConstantHeadingInterpolation(Math.toRadians(200))
                 .build();
 
         scorePickup1 = follower
@@ -48,7 +60,7 @@ public class AutoFarBlue extends OpMode{
                 .addPath(
                         new BezierLine(line1Pose,scorePose)
                 )
-                .setConstantHeadingInterpolation(Math.toRadians(180))
+                .setLinearHeadingInterpolation(Math.toRadians(200),Math.toRadians(180))
                 .build();
 
         grabPickup2 = follower
@@ -56,11 +68,11 @@ public class AutoFarBlue extends OpMode{
                 .addPath(
                         new BezierCurve(
                                 scorePose,
-                                new Pose(69.905, 59.176),
+                                new Pose(8, -10.000),
                                 line2Pose
                         )
                 )
-                .setConstantHeadingInterpolation(Math.toRadians(180))
+                .setConstantHeadingInterpolation(Math.toRadians(210))
                 .build();
 
         scorePickup2 = follower
@@ -68,32 +80,11 @@ public class AutoFarBlue extends OpMode{
                 .addPath(
                         new BezierCurve(
                                 line2Pose,
-                                new Pose(66.719, 46.100),
+                                new Pose(39, 12),
                                 scorePose
                         )
                 )
-                .setConstantHeadingInterpolation(Math.toRadians(180))
-                .build();
-
-        grabPickup3 = follower
-                .pathBuilder()
-                .addPath(
-                        new BezierCurve(
-                               scorePose,
-                                new Pose(83.483, 30.678),
-                                line3Pose
-                        )
-                )
-                .setConstantHeadingInterpolation(Math.toRadians(180))
-                .build();
-
-
-        scorePickup3 = follower
-                .pathBuilder()
-                .addPath(
-                        new BezierLine(line3Pose,scorePose)
-                )
-                .setConstantHeadingInterpolation(Math.toRadians(180))
+                .setLinearHeadingInterpolation(Math.toRadians(210),Math.toRadians(180))
                 .build();
 
         end = follower
@@ -109,46 +100,126 @@ public class AutoFarBlue extends OpMode{
         switch (pathState) {
             case 0:
                 follower.followPath(scorePreload);
+                okp=true;
                 setPathState(1);
                 break;
             case 1:
                 if(!follower.isBusy()) {
-                    follower.followPath(grabPickup1,true);
-                    setPathState(2);
+                    if(okp){
+                        pathTimer.resetTimer();
+                        r.pids=true;
+                        okp=false;
+                        r.calculatetarget(goalPose);
+                    }
+                    if(pathTimer.getElapsedTimeSeconds()<0.1){
+                        r.shooter();
+                    }
+                    if(pathTimer.getElapsedTimeSeconds()>1){
+                        r.i.pornit=true;
+                    }
+                    if(pathTimer.getElapsedTimeSeconds()>3) {
+                        follower.followPath(position, true);
+                        r.intake();
+                        okp=true;
+                        setPathState(2);
+                    }
                 }
                 break;
             case 2:
                 if(!follower.isBusy()) {
-                    follower.followPath(scorePickup1,true);
+                    follower.followPath(grabPickup1,true);
                     setPathState(3);
                 }
                 break;
+
             case 3:
                 if(!follower.isBusy()) {
-                    follower.followPath(grabPickup2,true);
+                    follower.followPath(scorePickup1,true);
                     setPathState(4);
                 }
                 break;
             case 4:
                 if(!follower.isBusy()) {
-                    follower.followPath(scorePickup2,true);
-                    setPathState(5);
+                    if(okp){
+                        pathTimer.resetTimer();
+                        okp=false;
+                        r.calculatetarget(goalPose);
+                    }
+                    if(pathTimer.getElapsedTimeSeconds()<0.1){
+                        r.shooter();
+                    }
+                    if(pathTimer.getElapsedTimeSeconds()>1){
+                        r.i.pornit=true;
+                    }
+                    if(pathTimer.getElapsedTimeSeconds()>3) {
+                        follower.followPath(grabPickup2, true);
+                        okp=true;
+                        r.intake();
+                        setPathState(5);
+                    }
                 }
                 break;
             case 5:
                 if(!follower.isBusy()) {
-                    follower.followPath(grabPickup3,true);
+                    follower.followPath(scorePickup2,true);
                     setPathState(6);
                 }
                 break;
             case 6:
                 if(!follower.isBusy()) {
-                    follower.followPath(scorePickup3, true);
-                    setPathState(7);
+                    if(okp){
+                        pathTimer.resetTimer();
+                        okp=false;
+                        r.calculatetarget(goalPose);
+                    }
+                    if(pathTimer.getElapsedTimeSeconds()<0.1){
+                        r.shooter();
+                    }
+                    if(pathTimer.getElapsedTimeSeconds()>1){
+                        r.i.pornit=true;
+                    }
+                    if(pathTimer.getElapsedTimeSeconds()>3) {
+                        okp=true;
+                        r.intake();
+                        follower.followPath(grabPickup2,true);
+                        setPathState(7);
+                    }
                 }
                 break;
             case 7:
                 if(!follower.isBusy()) {
+                    follower.followPath(scorePickup2, true);
+                    setPathState(8);
+                }
+                break;
+            case 8:
+                if(!follower.isBusy()) {
+                    if(okp){
+                        pathTimer.resetTimer();
+                        okp=false;
+                        r.calculatetarget(goalPose);
+                    }
+                    if(pathTimer.getElapsedTimeSeconds()<0.1){
+                        r.shooter();
+                    }
+                    if(pathTimer.getElapsedTimeSeconds()>1){
+                        r.i.pornit=true;
+                    }
+                    if(pathTimer.getElapsedTimeSeconds()>3) {
+                        okp=true;
+                        r.i.pornit=false;
+                        r.aim=false;
+                        follower.followPath(end, true);
+                        setPathState(9);
+                    }
+
+                }
+                break;
+            case 9:
+                if(!follower.isBusy()) {
+                    r.aim=false;
+                    r.aima=false;
+                    r.settarget(0);
                     setPathState(-1);
                 }
                 break;
@@ -162,12 +233,15 @@ public class AutoFarBlue extends OpMode{
     @Override
     public void loop() {
         follower.update();
+        r.aPeriodic();
         autonomousPathUpdate();
 
         telemetry.addData("path state", pathState);
         telemetry.addData("x", follower.getPose().getX());
         telemetry.addData("y", follower.getPose().getY());
         telemetry.addData("heading", follower.getPose().getHeading());
+        telemetry.addData("Velocity: ", r.s.SD.getVelocity());
+        telemetry.addData("Target", r.s.targett);
         telemetry.update();
     }
 
@@ -181,6 +255,7 @@ public class AutoFarBlue extends OpMode{
         follower = Constants.createFollower(hardwareMap);
         buildPaths();
         follower.setStartingPose(startPose);
+        r = new Robot(hardwareMap,follower,telemetry,gamepad1,gamepad2,true,true,true);
 
     }
     @Override
