@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.Systems;
 
+import com.bylazar.telemetry.TelemetryManager;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
@@ -15,7 +16,7 @@ public class Intake {
     public Servo SVS,SVD;
     public Telemetry telemetry;
     public boolean pornit=false;
-    public Intake(HardwareMap hardwareMap, Telemetry telemetry){
+    public Intake(HardwareMap hardwareMap, TelemetryManager telemetry){
 
         intake=hardwareMap.get(DcMotorEx.class, "i");
 

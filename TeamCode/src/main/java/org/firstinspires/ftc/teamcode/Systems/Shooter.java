@@ -6,10 +6,10 @@ import com.ThermalEquilibrium.homeostasis.Controllers.Feedback.BangBang;
 import com.ThermalEquilibrium.homeostasis.Filters.FilterAlgorithms.KalmanFilter;
 import com.ThermalEquilibrium.homeostasis.Parameters.PIDCoefficients;
 import com.ThermalEquilibrium.homeostasis.Controllers.Feedback.BasicPID;
-import com.arcrobotics.ftclib.controller.PIDController;
 
 import com.ThermalEquilibrium.homeostasis.Parameters.BangBangParameters;
 import com.bylazar.configurables.annotations.Configurable;
+import com.bylazar.telemetry.TelemetryManager;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
@@ -26,19 +26,16 @@ import dev.nextftc.control.KineticState;
 @Configurable
 public class Shooter {
     public DcMotorEx SS,SD;
-    public Servo SVS,SVD,latch;
+    public Servo SVD,latch;
     public DcMotorEx turret;
-    public double power,pos,targett;
     private double t = 0;
     public static double kS = 0.08, kV = 0.00039, kP = 0.001;
-    public static double p = 0.01, i = 0, d = 0.00000000000005, f = 0.05;
-    public PIDController pid;
     private boolean activated = true;
 
     public static double close = 1250;
     public static double far = 1400;
 
-    public Shooter(HardwareMap hardwareMap, Telemetry telemetry){
+    public Shooter(HardwareMap hardwareMap, TelemetryManager telemetry){
 
         SS=hardwareMap.get(DcMotorEx.class, "SS");
         SD=hardwareMap.get(DcMotorEx.class, "SD");
@@ -50,14 +47,10 @@ public class Shooter {
         SVD.setPosition(0.5);
         SD.setDirection(DcMotorSimple.Direction.REVERSE);
         latch.setPosition(0.3);
-
-        pid = new PIDController(p , i , d);
-
     }
     public void periodic(){
         if (activated)
             setPower((kV * getTarget()) + (kP * (getTarget() - getVelocity())) + kS);
-        runt();
     }
     public double getTarget() {
         return t;
@@ -108,17 +101,5 @@ public class Shooter {
     }
     public void latchdown(){latch.setPosition(0.9);}
     public void latchup(){latch.setPosition(0.3);}
-    public int getPos() {
-        pos = turret.getCurrentPosition();
-        return turret.getCurrentPosition();
-    }
-    public void runt(){
-        pid.setPID(p,i,d);
-        turret.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.FLOAT);
-
-        double pid_output = pid.calculate(getPos(), targett);
-        power = pid_output + f;
-        turret.setPower(pid_output);
-    }
 
 }

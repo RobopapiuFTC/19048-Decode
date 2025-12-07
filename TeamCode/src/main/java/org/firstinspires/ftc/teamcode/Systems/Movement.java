@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.Systems;
 
+import com.bylazar.telemetry.TelemetryManager;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -12,7 +13,7 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 public class Movement {
     public DcMotorEx leftFront,leftRear,rightFront,rightRear;
 
-    public Movement(HardwareMap hardwareMap, Telemetry telemetry){
+    public Movement(HardwareMap hardwareMap, TelemetryManager telemetry){
         leftFront = hardwareMap.get(DcMotorEx.class, "lf");
         leftRear = hardwareMap.get(DcMotorEx.class, "lr");
         rightFront = hardwareMap.get(DcMotorEx.class, "rf");

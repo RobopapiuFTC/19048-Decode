@@ -1,4 +1,5 @@
 package org.firstinspires.ftc.teamcode.Auto;
+import com.bylazar.telemetry.TelemetryManager;
 import com.pedropathing.geometry.BezierCurve;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.pedropathing.follower.Follower;
@@ -19,6 +20,7 @@ public class AutoFarBlue extends OpMode{
     private Timer pathTimer, actionTimer, opmodeTimer;
     private boolean okp;
     private Robot r;
+    private TelemetryManager t;
 
     private int pathState;
     private final Pose goalPose = new Pose(0,144,0);
@@ -109,7 +111,6 @@ public class AutoFarBlue extends OpMode{
                         pathTimer.resetTimer();
                         r.pids=true;
                         okp=false;
-                        r.calculatetarget(goalPose);
                     }
                     if(pathTimer.getElapsedTimeSeconds()<0.1){
                         r.shooter();
@@ -143,7 +144,6 @@ public class AutoFarBlue extends OpMode{
                     if(okp){
                         pathTimer.resetTimer();
                         okp=false;
-                        r.calculatetarget(goalPose);
                     }
                     if(pathTimer.getElapsedTimeSeconds()<0.1){
                         r.shooter();
@@ -170,7 +170,6 @@ public class AutoFarBlue extends OpMode{
                     if(okp){
                         pathTimer.resetTimer();
                         okp=false;
-                        r.calculatetarget(goalPose);
                     }
                     if(pathTimer.getElapsedTimeSeconds()<0.1){
                         r.shooter();
@@ -197,7 +196,6 @@ public class AutoFarBlue extends OpMode{
                     if(okp){
                         pathTimer.resetTimer();
                         okp=false;
-                        r.calculatetarget(goalPose);
                     }
                     if(pathTimer.getElapsedTimeSeconds()<0.1){
                         r.shooter();
@@ -219,7 +217,7 @@ public class AutoFarBlue extends OpMode{
                 if(!follower.isBusy()) {
                     r.aim=false;
                     r.aima=false;
-                    r.settarget(0);
+                    r.tu.set(0);
                     setPathState(-1);
                 }
                 break;
@@ -236,13 +234,10 @@ public class AutoFarBlue extends OpMode{
         r.aPeriodic();
         autonomousPathUpdate();
 
-        telemetry.addData("path state", pathState);
-        telemetry.addData("x", follower.getPose().getX());
-        telemetry.addData("y", follower.getPose().getY());
-        telemetry.addData("heading", follower.getPose().getHeading());
-        telemetry.addData("Velocity: ", r.s.SD.getVelocity());
-        telemetry.addData("Target", r.s.targett);
-        telemetry.update();
+        t.addData("path state", pathState);
+        t.addData("Follower Pose", r.f.getPose().toString());
+        t.addData("Velocity: ", r.s.getVelocity());
+        t.update(telemetry);
     }
 
     @Override
@@ -255,7 +250,8 @@ public class AutoFarBlue extends OpMode{
         follower = Constants.createFollower(hardwareMap);
         buildPaths();
         follower.setStartingPose(startPose);
-        r = new Robot(hardwareMap,follower,telemetry,gamepad1,gamepad2,true,true,true);
+        r = new Robot(hardwareMap,follower,t,gamepad1,gamepad2,true,true);
+        r.aInit();
 
     }
     @Override
@@ -267,5 +263,7 @@ public class AutoFarBlue extends OpMode{
         setPathState(0);
     }
     @Override
-    public void stop() {}
+    public void stop() {
+        r.stop();
+    }
 }

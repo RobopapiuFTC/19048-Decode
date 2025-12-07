@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.Systems;
 
+import com.bylazar.telemetry.TelemetryManager;
 import com.pedropathing.control.PIDFCoefficients;
 import com.pedropathing.control.PIDFController;
 import com.pedropathing.geometry.Pose;
@@ -8,25 +9,29 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.seattlesolvers.solverslib.command.Command;
+import com.seattlesolvers.solverslib.command.CommandBase;
+import com.seattlesolvers.solverslib.command.InstantCommand;
+import com.seattlesolvers.solverslib.command.SubsystemBase;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 public class Turret {
     public static double error = 0, power = 0, manualPower = 0;
-    public static double rpt = 0.0029919;
+    public static double rpt = 6.28319/1900;
+    public static double tti=1.5708;
 
     public final DcMotorEx turret;
-    private PIDFController p, s; // pidf controller for turret
+    private PIDFController p, s;
     public static double t = 0;
-    public static double pidfSwitch = 50; // target for turret
+    public static double pidfSwitch = 50;
     public static double kp = 0.003, kf = 0.0, kd = 0.000, sp = .005, sf = 0, sd = 0.0001;
 
     public static boolean on = true, manual = false;
 
-    public Turret(HardwareMap hardwareMap, Telemetry telemetry) {
+    public Turret(HardwareMap hardwareMap, TelemetryManager telemetry) {
         turret = hardwareMap.get(DcMotorEx.class, "turret");
         turret.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        //turret.setDirection(DcMotor.Direction.REVERSE);
         turret.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
 
         p = new PIDFController(new PIDFCoefficients(kp, 0, kd, kf));
@@ -107,7 +112,7 @@ public class Turret {
 
     public void face(Pose targetPose, Pose robotPose) {
         double angleToTargetFromCenter = Math.atan2(targetPose.getY() - robotPose.getY(), targetPose.getX() - robotPose.getX());
-        double robotAngleDiff = normalizeAngle(angleToTargetFromCenter - robotPose.getHeading());
+        double robotAngleDiff = normalizeAngle(angleToTargetFromCenter - robotPose.getHeading()+tti);
         setYaw(robotAngleDiff);
     }
 
@@ -131,5 +136,18 @@ public class Turret {
 
     public boolean isReady() {
         return Math.abs(getError()) < 30;
+    }
+
+    public InstantCommand reset() {
+        return new InstantCommand(this::resetTurret);
+    }
+
+    public InstantCommand set(double radians) {
+        return new InstantCommand(() -> set(radians));
+
+    }
+
+    public InstantCommand add(double radians) {
+        return new InstantCommand(() -> setYaw(getYaw() + radians));
     }
 }
