@@ -71,8 +71,8 @@ public class Shooter {
         return SD.getVelocity();
     }
     public void setPower(double p) {
-        SS.setPower(-p);
-        SD.setPower(-p);
+        SS.setPower(p);
+        SD.setPower(p);
     }
     public void off() {
         activated = false;
@@ -102,7 +102,7 @@ public class Shooter {
     }
     public void forDistance(double distance) {
         //setTarget((6.13992 * distance) + 858.51272);
-        setTarget((0.00180088*Math.pow(distance, 2))+(4.14265*distance)+948.97358);
+        setTarget((0.00180088*Math.pow(distance, 2))+(4.14265*distance)+860.97358);
     }
     public void hoodfar(){
         SVD.setPosition(0.2);
