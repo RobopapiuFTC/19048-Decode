@@ -26,17 +26,15 @@ public class Robot {
     public Intake i;
     private Movement m;
     private Camera c;
+    public double dist;
     public static Pose startingPose = new Pose(72,135,Math.toRadians(90));
     public static Pose shootp = new Pose(-5 ,144,0);
-    public static double red,blue,green;
     public Gamepad g1,g2;
     public Follower f;
     public boolean a,shoot,oks,aim,auto,intake,oki,pids=false,slowmode=false,aima=true;
     public double c1,c2,ipoten,unghi,ticksneeded;
-    public double speed = 0.9;
     public Timer iTimer,rTimer,rsTimer,sTimer,oTimer;
-    public boolean da=true,r,y,b,need=false,state = false,ts=false,spec=false,daS=false;
-    public int flip = 1, iState = -1;
+    public boolean spec=false;
     public static int offset=0;
     double ticksfor360 = 1900;
     double maxticks = 1900;
@@ -167,19 +165,21 @@ public class Robot {
         }
     }
     public void calculatetarget(Pose shootp){
-        c1 = f.getPose().getX()-shootp.getX();
+        /*c1 = f.getPose().getX()-shootp.getX();
         c2 = shootp.getY()-f.getPose().getY();
         ipoten = Math.sqrt(c1*c1+c2*c2);
-        unghi = Math.toDegrees(asin(c1/ipoten));
+        unghi = Math.toDegrees(asin(c1/ipoten)); */
+        unghi=Math.toDegrees(Math.atan2(shootp.getY()-f.getPose().getY(), shootp.getX()-f.getPose().getX()));
         if(a)ticksneeded=(unghi-Math.toDegrees(f.getPose().getHeading())+180+offset)*ticksperdegree;
         else ticksneeded=(-unghi-Math.toDegrees(f.getPose().getHeading())+180+offset)*ticksperdegree;
         if(ticksneeded>1900)ticksneeded=ticksneeded-1900;
     }
     public void calculatetargett(){
-        c1 = f.getPose().getX()-shootp.getX();
+        /*c1 = f.getPose().getX()-shootp.getX();
         c2 = shootp.getY()-f.getPose().getY();
-        ipoten = Math.sqrt(c1*c1+c2*c2);
-        unghi = Math.toDegrees(asin(c1/ipoten));
+        ipoten = shootp.distanceFrom(f.getPose());
+        unghi = Math.toDegrees(asin(c1/ipoten)); */
+        unghi=Math.toDegrees(Math.atan2(shootp.getY()-f.getPose().getY(), shootp.getX()-f.getPose().getX()));
         if(a)ticksneeded=(unghi-Math.toDegrees(f.getPose().getHeading())+180+offset)*ticksperdegree;
         else ticksneeded=(-unghi-Math.toDegrees(f.getPose().getHeading())+180+offset)*ticksperdegree;
         if(ticksneeded>1900)ticksneeded=ticksneeded-1900;
@@ -191,10 +191,12 @@ public class Robot {
             if(!auto)calculatetargett();
             if (f.getPose().getY() > 40) {
                 s.hoodclose();
-                s.target = 1250;
+                dist = shootp.distanceFrom(f.getPose());
+                s.forDistance(dist);
             } else {
                 s.hoodfar();
-                s.target = 1530;
+                dist = shootp.distanceFrom(f.getPose());
+                s.forDistance(dist);
             }
         s.targett=ticksneeded;
 

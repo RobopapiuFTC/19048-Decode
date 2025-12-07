@@ -27,24 +27,17 @@ import dev.nextftc.control.KineticState;
 public class Shooter {
     public DcMotorEx SS,SD;
     public Servo SVS,SVD,latch;
-    public Telemetry telemetry;
-    public double target;
-    public double power;
-    public double pos;
-    public boolean pornit=false,yea=false;
-    double maxOutput = 1;
-    double tolerance = 3;
-    double command,estimate,putere;
-    double Q = 0.3; // High values put more emphasis on the sensor.
-    double R = 3; // High Values put more emphasis on regression.
-    int N = 3; // The number of estimates in the past we perform regression on.
     public DcMotorEx turret;
-    public PIDController pid;
+    public double power,pos,targett;
+    private double t = 0;
+    public static double kS = 0.08, kV = 0.00039, kP = 0.001;
     public static double p = 0.01, i = 0, d = 0.00000000000005, f = 0.05;
-    public double targett;
-    BangBangParameters parameters = new BangBangParameters(maxOutput,tolerance);
-    KalmanFilter filter = new KalmanFilter(Q,R,N);
-    BangBang controller = new BangBang(parameters);
+    public PIDController pid;
+    private boolean activated = true;
+
+    public static double close = 1250;
+    public static double far = 1400;
+
     public Shooter(HardwareMap hardwareMap, Telemetry telemetry){
 
         SS=hardwareMap.get(DcMotorEx.class, "SS");
@@ -58,7 +51,6 @@ public class Shooter {
         SD.setDirection(DcMotorSimple.Direction.REVERSE);
         latch.setPosition(0.3);
 
-
         pid = new PIDController(p , i , d);
 
         turret=hardwareMap.get(DcMotorEx.class, "turret");
@@ -67,20 +59,63 @@ public class Shooter {
 
     }
     public void periodic(){
-        run();
+        if (activated)
+            setPower((kV * getTarget()) + (kP * (getTarget() - getVelocity())) + kS);
         runt();
     }
-    public void run(){
-        command = controller.calculate(target, SD.getVelocity());
-        command +=0.15;
-        SD.setPower(command);
-        SS.setPower(command);
+    public double getTarget() {
+        return t;
     }
+
+    public double getVelocity() {
+        return SD.getVelocity();
+    }
+    public void setPower(double p) {
+        SS.setPower(-p);
+        SD.setPower(-p);
+    }
+    public void off() {
+        activated = false;
+        setPower(0);
+    }
+
+    public void on() {
+        activated = true;
+    }
+
+    public boolean isActivated() {
+        return activated;
+    }
+    public void far() {
+        setTarget(far);
+        on();
+    }
+    public void close() {
+        setTarget(close);
+        on();
+    }
+    public void setTarget(double velocity) {
+        t = velocity;
+    }
+    public boolean atTarget() {
+        return Math.abs((getTarget()- getVelocity())) < 50;
+    }
+    public void forDistance(double distance) {
+        //setTarget((6.13992 * distance) + 858.51272);
+        setTarget((0.00180088*Math.pow(distance, 2))+(4.14265*distance)+948.97358);
+    }
+    public void hoodfar(){
+        SVD.setPosition(0.2);
+    }
+    public void hoodclose(){
+        SVD.setPosition(0.25);
+    }
+    public void latchdown(){latch.setPosition(0.9);}
+    public void latchup(){latch.setPosition(0.3);}
     public int getPos() {
         pos = turret.getCurrentPosition();
         return turret.getCurrentPosition();
     }
-
     public void runt(){
         pid.setPID(p,i,d);
         turret.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.FLOAT);
@@ -89,16 +124,5 @@ public class Shooter {
         power = pid_output + f;
         turret.setPower(pid_output);
     }
-    public void hoodfar(){
-        SVD.setPosition(0.2);
-    }
-    public void hoodclose(){
-        SVD.setPosition(0.25);
-    }
-    public void latchdown(){
-        latch.setPosition(0.9);
-    }
-    public void latchup(){
-        latch.setPosition(0.3);
-    }
+
 }
