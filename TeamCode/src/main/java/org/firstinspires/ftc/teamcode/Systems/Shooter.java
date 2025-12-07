@@ -53,10 +53,6 @@ public class Shooter {
 
         pid = new PIDController(p , i , d);
 
-        turret=hardwareMap.get(DcMotorEx.class, "turret");
-        turret.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        turret.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-
     }
     public void periodic(){
         if (activated)

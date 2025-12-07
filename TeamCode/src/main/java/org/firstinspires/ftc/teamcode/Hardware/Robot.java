@@ -18,6 +18,7 @@ import org.firstinspires.ftc.teamcode.Systems.Shooter;
 import org.firstinspires.ftc.teamcode.Systems.Movement;
 import org.firstinspires.ftc.teamcode.Systems.Intake;
 import org.firstinspires.ftc.teamcode.Systems.Camera;
+import org.firstinspires.ftc.teamcode.Systems.Turret;
 
 public class Robot {
     private HardwareMap h;
@@ -25,6 +26,7 @@ public class Robot {
     public Shooter s;
     public Intake i;
     private Movement m;
+    private Turret tu;
     private Camera c;
     public double dist;
     public static Pose startingPose = new Pose(72,135,Math.toRadians(90));
@@ -51,6 +53,7 @@ public class Robot {
         s=new Shooter(this.h,this.t);
         m=new Movement(this.h, this.t);
         i=new Intake(this.h,this.t);
+        tu=new Turret(this.h,this.t);
        // c=new Camera(this.h,this.t,blue);
 
         iTimer = new Timer();
