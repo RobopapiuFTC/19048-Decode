@@ -19,13 +19,14 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 public class Turret {
     public static double error = 0, power = 0, manualPower = 0;
     public static double rpt = 6.28319/1900;
-    public static double tti=1.5708;
+    public static double tti=1.5707963268;
+    public static double offset=0;
 
     public final DcMotorEx turret;
     private PIDFController p, s;
     public static double t = 0;
     public static double pidfSwitch = 50;
-    public static double kp = 0.003, kf = 0.0, kd = 0.000, sp = .005, sf = 0, sd = 0.0001;
+    public static double kp = 0.01, kf = 0.0, kd = 0.000, sp = .013, sf = 0, sd = 0.0001;
 
     public static boolean on = true, manual = false;
 
@@ -39,6 +40,8 @@ public class Turret {
     }
 
     private void setTurretTarget(double ticks) {
+        if(ticks>=1900)ticks=ticks-1900;
+        if(ticks<0)ticks=ticks+1900;
         t = ticks;
     }
 
@@ -113,7 +116,7 @@ public class Turret {
     public void face(Pose targetPose, Pose robotPose) {
         double angleToTargetFromCenter = Math.atan2(targetPose.getY() - robotPose.getY(), targetPose.getX() - robotPose.getX());
         double robotAngleDiff = normalizeAngle(angleToTargetFromCenter - robotPose.getHeading()+tti);
-        setYaw(robotAngleDiff);
+        setYaw(robotAngleDiff+offset);
     }
 
     public void resetTurret() {

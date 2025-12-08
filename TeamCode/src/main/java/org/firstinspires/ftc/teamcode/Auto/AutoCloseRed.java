@@ -225,7 +225,7 @@ public class AutoCloseRed extends OpMode{
                 if(!follower.isBusy()) {
                     r.aim=false;
                     r.aima=false;
-                    r.tu.set(0);
+                    r.tu.setYaw(0);
                     setPathState(-1);
                 }
                 break;
@@ -241,11 +241,6 @@ public class AutoCloseRed extends OpMode{
         follower.update();
         r.aPeriodic();
         autonomousPathUpdate();
-
-        t.addData("path state", pathState);
-        t.addData("Follower Pose", r.f.getPose().toString());
-        t.addData("Velocity: ", r.s.getVelocity());
-        t.update(telemetry);
     }
 
     @Override
@@ -258,7 +253,7 @@ public class AutoCloseRed extends OpMode{
         follower = Constants.createFollower(hardwareMap);
         buildPaths();
         follower.setStartingPose(startPose);
-        r = new Robot(hardwareMap,follower,t,gamepad1,gamepad2,true,true);
+        r = new Robot(hardwareMap,follower,t,gamepad1,gamepad2,true,true,startPose);
         r.aInit();
 
     }

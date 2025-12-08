@@ -51,7 +51,7 @@ public class AutoFarBlue extends OpMode{
                 .pathBuilder()
                 .addPath(
                         new BezierCurve(positionPose,
-                                new Pose(7.000, 34),
+                                new Pose(7.000, 30),
                                 line1Pose)
                 )
                 .setConstantHeadingInterpolation(Math.toRadians(200))
@@ -70,7 +70,7 @@ public class AutoFarBlue extends OpMode{
                 .addPath(
                         new BezierCurve(
                                 scorePose,
-                                new Pose(8, -10.000),
+                                new Pose(8, -5),
                                 line2Pose
                         )
                 )
@@ -217,7 +217,7 @@ public class AutoFarBlue extends OpMode{
                 if(!follower.isBusy()) {
                     r.aim=false;
                     r.aima=false;
-                    r.tu.set(0);
+                    r.tu.setYaw(0);
                     setPathState(-1);
                 }
                 break;
@@ -233,11 +233,6 @@ public class AutoFarBlue extends OpMode{
         follower.update();
         r.aPeriodic();
         autonomousPathUpdate();
-
-        t.addData("path state", pathState);
-        t.addData("Follower Pose", r.f.getPose().toString());
-        t.addData("Velocity: ", r.s.getVelocity());
-        t.update(telemetry);
     }
 
     @Override
@@ -250,7 +245,7 @@ public class AutoFarBlue extends OpMode{
         follower = Constants.createFollower(hardwareMap);
         buildPaths();
         follower.setStartingPose(startPose);
-        r = new Robot(hardwareMap,follower,t,gamepad1,gamepad2,true,true);
+        r = new Robot(hardwareMap,follower,t,gamepad1,gamepad2,true,true,startPose);
         r.aInit();
 
     }

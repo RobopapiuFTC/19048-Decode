@@ -23,13 +23,17 @@ public class BlueSpec extends OpMode {
     @Override
     public void init() {
         follower = Constants.createFollower(hardwareMap);
-        if(r.endPose==null){
-            follower.setStartingPose(startingPose);
-        }
-        else follower.setStartingPose(r.endPose);
         t = PanelsTelemetry.INSTANCE.getTelemetry();
-        r = new Robot(hardwareMap,follower, t, gamepad1 , gamepad2,true,true);
+        r = new Robot(hardwareMap,follower, t, gamepad1 , gamepad2,true,true,startingPose);
         r.tInit();
+    }
+
+    @Override
+    public void init_loop(){
+        if(gamepad1.x)r.tu.resetTurret();
+        if(gamepad1.y){
+            follower.setPose(startingPose);
+        }
     }
 
     @Override

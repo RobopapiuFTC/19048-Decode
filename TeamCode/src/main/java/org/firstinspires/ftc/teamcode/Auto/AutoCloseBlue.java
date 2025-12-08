@@ -27,7 +27,7 @@ public class AutoCloseBlue extends OpMode{
     private int pathState;
     private final Pose goalPose = new Pose(-4,144,0);
     private final Pose startPose = new Pose(20, 130, Math.toRadians(234));
-    private final Pose scorePose = new Pose(63, 90, Math.toRadians(180));
+    private final Pose scorePose = new Pose(54, 89, Math.toRadians(180));
     private final Pose doorPose = new Pose(18,79,Math.toRadians(90));
     private final Pose line1Pose = new Pose(16, 89, Math.toRadians(180));
     private final Pose line2Pose = new Pose(9, 63, Math.toRadians(0));
@@ -188,7 +188,7 @@ public class AutoCloseBlue extends OpMode{
                 break;
             case 5:
                 if(!follower.isBusy()) {
-                    r.i.pornit=false;
+                   // r.i.pornit=false;
                     follower.followPath(scorePickup2,true);
                     setPathState(6);
                 }
@@ -215,7 +215,7 @@ public class AutoCloseBlue extends OpMode{
                 break;
             case 7:
                 if(!follower.isBusy()) {
-                    r.i.pornit=false;
+                   // r.i.pornit=false;
                     follower.followPath(scorePickup3, true);
                     setPathState(8);
                 }
@@ -246,7 +246,7 @@ public class AutoCloseBlue extends OpMode{
                 if(!follower.isBusy()) {
                     r.aim=false;
                     r.aima=false;
-                    r.tu.set(0);
+                    r.tu.setYaw(0);
                     setPathState(-1);
                 }
                 break;
@@ -262,11 +262,10 @@ public class AutoCloseBlue extends OpMode{
         follower.update();
         r.aPeriodic();
         autonomousPathUpdate();
-
-        t.addData("path state", pathState);
-        t.addData("Follower Pose", r.f.getPose().toString());
-        t.addData("Velocity: ", r.s.getVelocity());
-        t.update(telemetry);
+        telemetry.addData("Follower Pose: ",follower.getPose().toString());
+        telemetry.addData("Dist: ", r.dist);
+        telemetry.addData("Velocity: ",r.s.getVelocity());
+        telemetry.update();
     }
 
     @Override
@@ -279,9 +278,8 @@ public class AutoCloseBlue extends OpMode{
         follower = Constants.createFollower(hardwareMap);
         buildPaths();
         follower.setStartingPose(startPose);
-        r = new Robot(hardwareMap,follower,t,gamepad1,gamepad2,true,true);
+        r = new Robot(hardwareMap,follower,t,gamepad1,gamepad2,true,true,startPose);
         r.aInit();
-
     }
     @Override
     public void init_loop() {}

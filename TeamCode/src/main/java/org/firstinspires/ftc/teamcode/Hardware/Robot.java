@@ -30,18 +30,16 @@ public class Robot {
     public Turret tu;
     private Camera c;
     public double dist;
-    public static Pose startingPose = new Pose(72,135,Math.toRadians(90));
     public static Pose shootp = new Pose(0 ,144,0);
-    public static Pose endPose;
+    public static Pose endPose,startingPose=new Pose(72,135,90);
     public Gamepad g1,g2;
     public Follower f;
     public boolean a,shoot,oks,aim,auto,intake,oki,pids=false,slowmode=false,aima=true;
-    public double c1,c2,ipoten,unghi,ticksneeded;
     public Timer iTimer,rTimer,rsTimer,sTimer,oTimer;
     public static int offset=0;
     double ticksfor360 = 1900;
     double ticksperdegree = ticksfor360 / 360;
-    public Robot(HardwareMap h, Follower f, TelemetryManager t, Gamepad g1, Gamepad g2, boolean blue, boolean auto) {
+    public Robot(HardwareMap h, Follower f, TelemetryManager t, Gamepad g1, Gamepad g2, boolean blue, boolean auto,Pose startingPose) {
         this.h = h;
         this.t = t;
         this.f = f;
@@ -72,7 +70,7 @@ public class Robot {
         sequenceintake();
         if(aim)turret();
         else{
-            tu.set(0);
+            tu.setYaw(0);
         }
         m.periodic(g1);
         i.periodic();
@@ -83,7 +81,11 @@ public class Robot {
         setShootTarget();
     }
     public void tInit() {
-
+        if(endPose==null){
+            f.setStartingPose(startingPose);
+        }
+        else f.setStartingPose(endPose);
+        tu.resetTurret();
     }
     public void aPeriodic(){
         sequenceshoot();
@@ -91,17 +93,16 @@ public class Robot {
         setShootTarget();
         if(aim)turret();
         else{
-            tu.set(0);
+            tu.setYaw(0);
         }
         if(pids){
             s.periodic();
             tu.periodic();
         }
         i.periodic();
-        t.update();
     }
     public void aInit(){
-        tu.reset();
+        tu.resetTurret();
         setShootTarget();
     }
     public void dualControls(){
@@ -118,14 +119,14 @@ public class Robot {
             }
         }
         if(g1.dpad_left){
-            if(oTimer.getElapsedTimeSeconds()>0.5){
-                tu.add(0.0872665);
+            if(oTimer.getElapsedTimeSeconds()>0.3){
+                tu.offset=tu.offset+0.0872665;
                 oTimer.resetTimer();
             }
         }
         if(g1.dpad_right){
-            if(oTimer.getElapsedTimeSeconds()>0.5){
-                tu.add(-0.0872665);
+            if(oTimer.getElapsedTimeSeconds()>0.3){
+                tu.offset=tu.offset-0.0872665;
                 oTimer.resetTimer();
             }
         }
