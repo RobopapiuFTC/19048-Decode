@@ -27,11 +27,11 @@ public class AutoCloseBlue extends OpMode{
     private int pathState;
     private final Pose goalPose = new Pose(-4,144,0);
     private final Pose startPose = new Pose(20, 130, Math.toRadians(234));
-    private final Pose scorePose = new Pose(54, 89, Math.toRadians(180));
-    private final Pose doorPose = new Pose(18,79,Math.toRadians(90));
-    private final Pose line1Pose = new Pose(16, 89, Math.toRadians(180));
-    private final Pose line2Pose = new Pose(9, 63, Math.toRadians(0));
-    private final Pose line3Pose = new Pose(9, 41, Math.toRadians(0));
+    private final Pose scorePose = new Pose(54, 91, Math.toRadians(180));
+    private final Pose doorPose = new Pose(18,81,Math.toRadians(90));
+    private final Pose line1Pose = new Pose(16, 91, Math.toRadians(180));
+    private final Pose line2Pose = new Pose(11, 65, Math.toRadians(0));
+    private final Pose line3Pose = new Pose(11, 43, Math.toRadians(0));
     public final Pose endPose = new Pose(36,60,Math.toRadians(0));
     private PathChain scorePreload,doorPickup,grabPickup1, scorePickup1, grabPickup2, scorePickup2, grabPickup3, scorePickup3,end;
     public void buildPaths() {
