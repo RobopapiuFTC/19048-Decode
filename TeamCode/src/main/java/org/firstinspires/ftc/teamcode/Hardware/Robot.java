@@ -30,7 +30,6 @@ public class Robot {
     public Intake i;
     private Movement m;
     public Turret tu;
-    private Camera c;
     public double dist;
     public static Pose shootp = new Pose(0 ,144,0);
     public static Pose parkPose,endPose,startingPose=new Pose(72,135,90);
@@ -50,8 +49,7 @@ public class Robot {
         s=new Shooter(this.h,this.t);
         m=new Movement(this.h, this.t);
         i=new Intake(this.h,this.t);
-        tu=new Turret(this.h,this.t);
-       // c=new Camera(this.h,this.t,blue);
+        tu=new Turret(this.h,this.t,this.a);
 
         iTimer = new Timer();
         rTimer = new Timer();
@@ -86,6 +84,7 @@ public class Robot {
         }
         else f.setPose(endPose);
         tu.resetTurret();
+        tu.c.start();
         setTurretOffset();
     }
     public void aPeriodic(){
@@ -104,6 +103,7 @@ public class Robot {
     }
     public void aInit(){
         tu.resetTurret();
+        tu.c.start();
         setShootTarget();
         setTurretOffset();
     }

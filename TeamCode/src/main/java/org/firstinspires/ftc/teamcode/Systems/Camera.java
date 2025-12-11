@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.Systems;
 
+import com.bylazar.telemetry.TelemetryManager;
 import com.qualcomm.hardware.limelightvision.LLResult;
 import com.qualcomm.hardware.limelightvision.Limelight3A;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
@@ -13,12 +14,11 @@ public class Camera {
     private boolean blue;
     public double tx,ty,ta;
 
-    public Camera(HardwareMap hardwareMap, Telemetry telemetry, boolean blue){
+    public Camera(HardwareMap hardwareMap, TelemetryManager telemetry, boolean blue){
 
         limelight=hardwareMap.get(Limelight3A.class, "limelight");
         if(blue)limelight.pipelineSwitch(3); //april tag pipeline blue
         else limelight.pipelineSwitch(4); //april tag pipeline red
-        this.telemetry=telemetry;
     }
 
     public void periodic(){

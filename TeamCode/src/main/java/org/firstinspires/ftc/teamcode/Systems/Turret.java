@@ -13,13 +13,15 @@ import com.seattlesolvers.solverslib.command.Command;
 import com.seattlesolvers.solverslib.command.CommandBase;
 import com.seattlesolvers.solverslib.command.InstantCommand;
 import com.seattlesolvers.solverslib.command.SubsystemBase;
+import org.firstinspires.ftc.teamcode.Systems.Camera;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 public class Turret {
+    public Camera c;
     public static double error = 0, power = 0, manualPower = 0;
     public static double rpt = 6.28319/1900;
-    public double tti;
+    public double tti,tpc;
     public static double offset=0;
 
     public final DcMotorEx turret;
@@ -30,10 +32,11 @@ public class Turret {
 
     public static boolean on = true, manual = false;
 
-    public Turret(HardwareMap hardwareMap, TelemetryManager telemetry) {
+    public Turret(HardwareMap hardwareMap, TelemetryManager telemetry, boolean a) {
         turret = hardwareMap.get(DcMotorEx.class, "turret");
         turret.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         turret.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+        c = new Camera(hardwareMap,telemetry,a);
 
         p = new PIDFController(new PIDFCoefficients(kp, 0, kd, kf));
         s = new PIDFController(new PIDFCoefficients(sp, 0, sd, sf));
@@ -60,6 +63,8 @@ public class Turret {
     }
 
     public void periodic() {
+        c.periodic();
+        tpc=-c.tx*5.27777777778;
         if (on) {
             if (manual) {
                 turret.setPower(manualPower);
@@ -80,6 +85,7 @@ public class Turret {
         } else {
             turret.setPower(0);
         }
+
     }
 
     public void manual(double power) {
@@ -116,7 +122,7 @@ public class Turret {
     public void face(Pose targetPose, Pose robotPose) {
         double angleToTargetFromCenter = Math.atan2(targetPose.getY() - robotPose.getY(), targetPose.getX() - robotPose.getX());
         double robotAngleDiff = normalizeAngle(angleToTargetFromCenter - robotPose.getHeading()+tti);
-        setYaw(robotAngleDiff+offset);
+        setYaw(robotAngleDiff+offset+tpc);
     }
 
     public void resetTurret() {
