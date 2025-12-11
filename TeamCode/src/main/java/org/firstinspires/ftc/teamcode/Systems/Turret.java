@@ -23,6 +23,7 @@ public class Turret {
     public static double rpt = 6.28319/1900;
     public double tti,tpc;
     public static double offset=0;
+    public boolean a;
 
     public final DcMotorEx turret;
     private PIDFController p, s;
@@ -36,6 +37,7 @@ public class Turret {
         turret = hardwareMap.get(DcMotorEx.class, "turret");
         turret.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         turret.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+        this.a=a;
         c = new Camera(hardwareMap,telemetry,a);
 
         p = new PIDFController(new PIDFCoefficients(kp, 0, kd, kf));
@@ -64,7 +66,12 @@ public class Turret {
 
     public void periodic() {
         c.periodic();
-        tpc=-c.tx*5.27777777778;
+        if(a) {
+            tpc = -c.tx * 5.27777777778;
+        }
+        else{
+            tpc = c.tx * 5.27777777778;
+        }
         if (on) {
             if (manual) {
                 turret.setPower(manualPower);
