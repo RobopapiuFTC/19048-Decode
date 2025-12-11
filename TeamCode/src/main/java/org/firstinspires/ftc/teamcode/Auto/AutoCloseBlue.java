@@ -272,6 +272,8 @@ public class AutoCloseBlue extends OpMode{
         telemetry.addData("Follower Pose: ",follower.getPose().toString());
         telemetry.addData("Dist: ", r.dist);
         telemetry.addData("Velocity: ",r.s.getVelocity());
+        telemetry.addData("Turret Ticks: ", r.tu.getTurret());
+        telemetry.addData("Turret Target: ",r.tu.getTurretTarget());
         telemetry.update();
     }
 

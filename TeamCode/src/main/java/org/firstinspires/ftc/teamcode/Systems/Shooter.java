@@ -31,6 +31,8 @@ public class Shooter {
     public static double kS = 0.08, kV = 0.00039, kP = 0.001;
     private boolean activated = true;
 
+    public double shootc=880,offset;
+
     public static double close = 1250;
     public static double far = 1400;
 
@@ -89,7 +91,7 @@ public class Shooter {
     }
     public void forDistance(double distance) {
         //setTarget((6.13992 * distance) + 858.51272);
-        setTarget((0.00180088*Math.pow(distance, 2))+(4.14265*distance)+880.97358);
+        setTarget((0.00180088*Math.pow(distance, 2))+(4.14265*distance)+shootc+offset);
     }
     public void hoodfar(){
         SVD.setPosition(0.2);

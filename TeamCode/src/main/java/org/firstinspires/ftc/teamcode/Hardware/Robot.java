@@ -5,7 +5,9 @@ import static java.lang.Math.sqrt;
 
 import com.bylazar.telemetry.TelemetryManager;
 import com.pedropathing.follower.Follower;
+import com.pedropathing.geometry.BezierLine;
 import com.pedropathing.geometry.Pose;
+import com.pedropathing.paths.PathChain;
 import com.pedropathing.util.Timer;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -31,11 +33,12 @@ public class Robot {
     private Camera c;
     public double dist;
     public static Pose shootp = new Pose(0 ,144,0);
-    public static Pose endPose,startingPose=new Pose(72,135,90);
+    public static Pose parkPose,endPose,startingPose=new Pose(72,135,90);
     public Gamepad g1,g2;
     public Follower f;
     public boolean a,shoot,oks,aim,auto,intake,oki,pids=false,aima=true;
     public Timer iTimer,rTimer,rsTimer,sTimer,oTimer;
+    public PathChain park;
     public Robot(HardwareMap h, Follower f, TelemetryManager t, Gamepad g1, Gamepad g2, boolean blue, boolean auto,Pose startingPose) {
         this.h = h;
         this.t = t;
@@ -117,6 +120,21 @@ public class Robot {
                 rTimer.resetTimer();
             }
         }
+        if(g1.b){
+            f.setPose(startingPose);
+        }
+        if(g1.left_bumper){
+            park = f.pathBuilder()
+                    .addPath(
+                            new BezierLine(
+                                    f.getPose(),
+                                    parkPose
+                            )
+                    )
+                    .setLinearHeadingInterpolation(f.getPose().getHeading(),parkPose.getHeading())
+                    .build();
+            f.followPath(park);
+        }
         if(g1.dpad_left){
             if(oTimer.getElapsedTimeSeconds()>0.3){
                 tu.offset=tu.offset+0.0872665;
@@ -126,6 +144,18 @@ public class Robot {
         if(g1.dpad_right){
             if(oTimer.getElapsedTimeSeconds()>0.3){
                 tu.offset=tu.offset-0.0872665;
+                oTimer.resetTimer();
+            }
+        }
+        if(g1.dpad_up){
+            if(oTimer.getElapsedTimeSeconds()>0.3){
+                s.offset=s.offset+20;
+                oTimer.resetTimer();
+            }
+        }
+        if(g1.dpad_down){
+            if(oTimer.getElapsedTimeSeconds()>0.3){
+                s.offset=s.offset-20;
                 oTimer.resetTimer();
             }
         }
@@ -184,10 +214,12 @@ public class Robot {
     public void turret() {
             if (f.getPose().getY() > 40) {
                 s.hoodclose();
+                s.shootc=880;
                 dist = shootp.distanceFrom(f.getPose());
                 s.forDistance(dist);
             } else {
                 s.hoodfar();
+                s.shootc=1000;
                 dist = shootp.distanceFrom(f.getPose());
                 s.forDistance(dist);
             }
@@ -199,10 +231,14 @@ public class Robot {
         else tu.tti=1.62;
     }
     public void setShootTarget() {
-        if (a)
+        if (a){
             shootp = new Pose(0, 144, 0);
-        else
-            shootp = new Pose(144,144,0);
+            parkPose= new Pose(106,34,Math.toRadians(90));
+        }
+        else {
+            shootp = new Pose(144, 144, 0);
+            parkPose= new Pose(38,34,Math.toRadians(90));
+        }
     }
     public Pose getShootTarget() {
         return shootp;
