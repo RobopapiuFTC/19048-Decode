@@ -32,7 +32,7 @@ public class AutoCloseBlue extends OpMode{
     private final Pose line1Pose = new Pose(16, 91, Math.toRadians(180));
     private final Pose line2Pose = new Pose(11, 65, Math.toRadians(0));
     private final Pose line3Pose = new Pose(11, 43, Math.toRadians(0));
-    public final Pose endPose = new Pose(36,60,Math.toRadians(0));
+    public final Pose endPose = new Pose(36,75,Math.toRadians(0));
     private PathChain scorePreload,doorPickup,grabPickup1, scorePickup1, grabPickup2, scorePickup2, grabPickup3, scorePickup3,end;
     public void buildPaths() {
         scorePreload = follower
@@ -154,7 +154,6 @@ public class AutoCloseBlue extends OpMode{
                 break;
             case 2:
                 if(!follower.isBusy()) {
-                    r.i.pornit=false;
                             follower.followPath(doorPickup,true);
                             setPathState(3);
                 }
@@ -162,8 +161,16 @@ public class AutoCloseBlue extends OpMode{
 
             case 3:
                 if(!follower.isBusy()) {
-                    follower.followPath(scorePickup1,true);
-                    setPathState(4);
+                    if(okp){
+                        pathTimer.resetTimer();
+                        r.pids=true;
+                        okp=false;
+                    }
+                    if(pathTimer.getElapsedTimeSeconds()>1) {
+                        follower.followPath(scorePickup1, true);
+                        okp=true;
+                        setPathState(4);
+                    }
                 }
                 break;
             case 4:

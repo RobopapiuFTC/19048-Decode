@@ -27,7 +27,6 @@ import dev.nextftc.control.KineticState;
 public class Shooter {
     public DcMotorEx SS,SD;
     public Servo SVD,latch;
-    public DcMotorEx turret;
     private double t = 0;
     public static double kS = 0.08, kV = 0.00039, kP = 0.001;
     private boolean activated = true;
@@ -39,7 +38,6 @@ public class Shooter {
 
         SS=hardwareMap.get(DcMotorEx.class, "SS");
         SD=hardwareMap.get(DcMotorEx.class, "SD");
-        //SVS=hardwareMap.get(Servo.class, "SVS");
         SVD=hardwareMap.get(Servo.class, "SVD");
         latch=hardwareMap.get(Servo.class,"latch");
 
@@ -91,7 +89,7 @@ public class Shooter {
     }
     public void forDistance(double distance) {
         //setTarget((6.13992 * distance) + 858.51272);
-        setTarget((0.00180088*Math.pow(distance, 2))+(4.14265*distance)+870.97358);
+        setTarget((0.00180088*Math.pow(distance, 2))+(4.14265*distance)+880.97358);
     }
     public void hoodfar(){
         SVD.setPosition(0.2);

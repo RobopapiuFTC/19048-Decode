@@ -43,6 +43,7 @@ public class BlueSpec extends OpMode {
 
     @Override
     public void loop() {
+        follower.update();
         r.dualControls();
         r.tPeriodic();
         t.addData("Velocity: ", r.s.getVelocity());

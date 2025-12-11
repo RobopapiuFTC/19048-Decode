@@ -34,11 +34,8 @@ public class Robot {
     public static Pose endPose,startingPose=new Pose(72,135,90);
     public Gamepad g1,g2;
     public Follower f;
-    public boolean a,shoot,oks,aim,auto,intake,oki,pids=false,slowmode=false,aima=true;
+    public boolean a,shoot,oks,aim,auto,intake,oki,pids=false,aima=true;
     public Timer iTimer,rTimer,rsTimer,sTimer,oTimer;
-    public static int offset=0;
-    double ticksfor360 = 1900;
-    double ticksperdegree = ticksfor360 / 360;
     public Robot(HardwareMap h, Follower f, TelemetryManager t, Gamepad g1, Gamepad g2, boolean blue, boolean auto,Pose startingPose) {
         this.h = h;
         this.t = t;
@@ -64,7 +61,6 @@ public class Robot {
     }
 
     public void tPeriodic() {
-        f.update();
         setShootTarget();
         sequenceshoot();
         sequenceintake();
@@ -79,13 +75,15 @@ public class Robot {
     }
     public void tStart(){
         setShootTarget();
+        setTurretOffset();
     }
     public void tInit() {
         if(endPose==null){
-            f.setStartingPose(startingPose);
+            f.setPose(startingPose);
         }
-        else f.setStartingPose(endPose);
+        else f.setPose(endPose);
         tu.resetTurret();
+        setTurretOffset();
     }
     public void aPeriodic(){
         sequenceshoot();
@@ -104,6 +102,7 @@ public class Robot {
     public void aInit(){
         tu.resetTurret();
         setShootTarget();
+        setTurretOffset();
     }
     public void dualControls(){
         if(g1.y){
@@ -195,11 +194,15 @@ public class Robot {
             tu.face(getShootTarget(),f.getPose());
             tu.automatic();
     }
+    public void setTurretOffset(){
+        if(a)tu.tti=1.5707963268;
+        else tu.tti=1.62;
+    }
     public void setShootTarget() {
         if (a)
             shootp = new Pose(0, 144, 0);
         else
-            shootp = shootp.mirror();
+            shootp = new Pose(144,144,0);
     }
     public Pose getShootTarget() {
         return shootp;

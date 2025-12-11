@@ -19,7 +19,7 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 public class Turret {
     public static double error = 0, power = 0, manualPower = 0;
     public static double rpt = 6.28319/1900;
-    public static double tti=1.5707963268;
+    public double tti;
     public static double offset=0;
 
     public final DcMotorEx turret;
