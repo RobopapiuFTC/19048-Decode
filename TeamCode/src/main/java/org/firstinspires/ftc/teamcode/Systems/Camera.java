@@ -23,7 +23,6 @@ public class Camera {
 
     public void periodic(){
         detect();
-        telemetry.update();
     }
     public void start(){
         limelight.start();
@@ -31,8 +30,6 @@ public class Camera {
     public void detect(){
         LLResult result = limelight.getLatestResult();
         if(result!=null && result.isValid()){
-            telemetry.addData("Target Position", result.getTx());
-            telemetry.addData("Target Area", result.getTa());
             tx= result.getTx();
             ty= result.getTy();
             ta= result.getTa();

@@ -14,7 +14,7 @@ import  com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import org.firstinspires.ftc.teamcode.Hardware.Robot;
 import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
 
-@Autonomous(name="Auto Far Red", group="Red")
+@Autonomous(name="Auto Far Red 6", group="Red")
 public class AutoFarRed extends OpMode{
     private Follower follower;
     private Timer pathTimer, actionTimer, opmodeTimer;
@@ -25,11 +25,11 @@ public class AutoFarRed extends OpMode{
     private int pathState;
     private final Pose goalPose = new Pose(0,144,0);
     private final Pose startPose = new Pose(88, 9, Math.toRadians(90));
-    private final Pose scorePose = new Pose(89, 20, Math.toRadians(90));
-    private final Pose positionPose= new Pose(108,17,Math.toRadians(330));
-    private final Pose line1Pose = new Pose(133, 6, Math.toRadians(330));
-    private final Pose line2Pose = new Pose(137, 18, Math.toRadians(330));
-    public final Pose endPose = new Pose(84,35,Math.toRadians(0));
+    private final Pose scorePose = new Pose(92, 12, Math.toRadians(90));
+    private final Pose positionPose= new Pose(108,17,Math.toRadians(210));
+    private final Pose line1Pose = new Pose(133, 6, Math.toRadians(210));
+    private final Pose line2Pose = new Pose(133, 16, Math.toRadians(210));
+    public final Pose endPose = new Pose(104,14,Math.toRadians(0));
     private PathChain scorePreload,position,grabPickup1, scorePickup1, grabPickup2, scorePickup2, grabPickup3, scorePickup3,end;
     public void buildPaths() {
         scorePreload = follower
@@ -45,16 +45,16 @@ public class AutoFarRed extends OpMode{
                 .addPath(
                         new BezierLine(scorePose,positionPose)
                 )
-                .setLinearHeadingInterpolation(Math.toRadians(90), Math.toRadians(340))
+                .setLinearHeadingInterpolation(Math.toRadians(90), Math.toRadians(-10))
                 .build();
         grabPickup1 = follower
                 .pathBuilder()
                 .addPath(
                         new BezierCurve(positionPose,
-                                new Pose(7.000, 30),
+                                new Pose(7.000, 25),
                                 line1Pose)
                 )
-                .setConstantHeadingInterpolation(Math.toRadians(340))
+                .setConstantHeadingInterpolation(Math.toRadians(-10))
                 .build();
 
         scorePickup1 = follower
@@ -62,7 +62,7 @@ public class AutoFarRed extends OpMode{
                 .addPath(
                         new BezierLine(line1Pose,scorePose)
                 )
-                .setLinearHeadingInterpolation(Math.toRadians(340),Math.toRadians(0))
+                .setLinearHeadingInterpolation(Math.toRadians(-10),Math.toRadians(0))
                 .build();
 
         grabPickup2 = follower
@@ -70,11 +70,11 @@ public class AutoFarRed extends OpMode{
                 .addPath(
                         new BezierCurve(
                                 scorePose,
-                                new Pose(8, -5),
+                                new Pose(8, 6),
                                 line2Pose
                         )
                 )
-                .setConstantHeadingInterpolation(Math.toRadians(330))
+                .setConstantHeadingInterpolation(Math.toRadians(-20))
                 .build();
 
         scorePickup2 = follower
@@ -86,7 +86,7 @@ public class AutoFarRed extends OpMode{
                                 scorePose
                         )
                 )
-                .setLinearHeadingInterpolation(Math.toRadians(330),Math.toRadians(0))
+                .setLinearHeadingInterpolation(Math.toRadians(-20),Math.toRadians(0))
                 .build();
 
         end = follower
@@ -94,14 +94,14 @@ public class AutoFarRed extends OpMode{
                 .addPath(
                         new BezierLine(scorePose,endPose)
                 )
-                .setConstantHeadingInterpolation(Math.toRadians(180))
+                .setConstantHeadingInterpolation(Math.toRadians(0))
                 .build();
 
     }
     public void autonomousPathUpdate() {
         switch (pathState) {
             case 0:
-                follower.followPath(scorePreload);
+                follower.followPath(scorePreload,true);
                 okp=true;
                 setPathState(1);
                 break;
@@ -217,6 +217,7 @@ public class AutoFarRed extends OpMode{
                 if(!follower.isBusy()) {
                     r.aim=false;
                     r.aima=false;
+                    r.s.off();
                     r.tu.setYaw(0);
                     setPathState(-1);
                 }
@@ -233,6 +234,7 @@ public class AutoFarRed extends OpMode{
         follower.update();
         r.aPeriodic();
         autonomousPathUpdate();
+        r.setShootTargetFar();
         telemetry.addData("Follower Pose: ",follower.getPose().toString());
         telemetry.addData("Dist: ", r.dist);
         telemetry.addData("Velocity: ",r.s.getVelocity());
@@ -252,9 +254,9 @@ public class AutoFarRed extends OpMode{
         follower = Constants.createFollower(hardwareMap);
         buildPaths();
         follower.setStartingPose(startPose);
-        r = new Robot(hardwareMap,follower,t,gamepad1,gamepad2,true,true,startPose);
+        r = new Robot(hardwareMap,follower,t,gamepad1,gamepad2,false,true,startPose);
         r.aInit();
-
+        r.setShootTargetFar();
     }
     @Override
     public void init_loop() {}

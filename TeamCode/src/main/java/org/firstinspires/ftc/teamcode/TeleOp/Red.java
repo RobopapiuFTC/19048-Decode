@@ -11,8 +11,8 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import org.firstinspires.ftc.teamcode.Hardware.Robot;
 import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
 
-@TeleOp(name = "Blue", group = "...Sigma")
-public class BlueSpec extends OpMode {
+@TeleOp(name = "Red", group = "...Sigma")
+public class Red extends OpMode {
 
     Robot r;
     private Follower follower;
@@ -24,14 +24,14 @@ public class BlueSpec extends OpMode {
     public void init() {
         follower = Constants.createFollower(hardwareMap);
         t = PanelsTelemetry.INSTANCE.getTelemetry();
-        r = new Robot(hardwareMap,follower, t, gamepad1 , gamepad2,true,true,startingPose);
+        r = new Robot(hardwareMap,follower, t, gamepad1 , gamepad2,false,true,startingPose);
         r.tInit();
     }
 
     @Override
     public void init_loop(){
-        if(gamepad1.x)r.tu.resetTurret();
-        if(gamepad1.y){
+        if(gamepad1.y)r.tu.resetTurret();
+        if(gamepad1.x){
             follower.setPose(startingPose);
         }
     }

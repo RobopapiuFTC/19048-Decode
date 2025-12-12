@@ -21,7 +21,7 @@ public class Turret {
     public Camera c;
     public static double error = 0, power = 0, manualPower = 0;
     public static double rpt = 6.28319/1900;
-    public double tti,tpc;
+    public double tti,tpc=0;
     public static double offset=0;
     public boolean a;
 
@@ -38,7 +38,7 @@ public class Turret {
         turret.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         turret.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         this.a=a;
-        c = new Camera(hardwareMap,telemetry,a);
+        //c = new Camera(hardwareMap,telemetry,a);
 
         p = new PIDFController(new PIDFCoefficients(kp, 0, kd, kf));
         s = new PIDFController(new PIDFCoefficients(sp, 0, sd, sf));
@@ -64,14 +64,17 @@ public class Turret {
         return turret.getCurrentPosition();
     }
 
-    public void periodic() {
-        c.periodic();
-        if(a) {
-            tpc = -c.tx * 5.27777777778;
-        }
-        else{
-            tpc = c.tx * 5.27777777778;
-        }
+    public void periodic(boolean auto,boolean aim) {
+       /* if(!auto) {
+            c.periodic();
+            if (aim) {
+                if (a) {
+                    tpc = -c.tx * 5.27777777778 / 2;
+                } else {
+                    tpc = c.tx * 5.27777777778 / 2;
+                }
+            } else tpc = 0;
+        }else tpc=0; */
         if (on) {
             if (manual) {
                 turret.setPower(manualPower);
@@ -119,7 +122,7 @@ public class Turret {
 
     public void setYaw(double radians) {
         radians = normalizeAngle(radians);
-        setTurretTarget(radians/rpt);
+        setTurretTarget(radians/rpt+tpc);
     }
 
     public void addYaw(double radians) {
@@ -129,7 +132,7 @@ public class Turret {
     public void face(Pose targetPose, Pose robotPose) {
         double angleToTargetFromCenter = Math.atan2(targetPose.getY() - robotPose.getY(), targetPose.getX() - robotPose.getX());
         double robotAngleDiff = normalizeAngle(angleToTargetFromCenter - robotPose.getHeading()+tti);
-        setYaw(robotAngleDiff+offset+tpc);
+        setYaw(robotAngleDiff+offset);
     }
 
     public void resetTurret() {

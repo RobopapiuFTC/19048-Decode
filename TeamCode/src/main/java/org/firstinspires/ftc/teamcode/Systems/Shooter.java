@@ -31,7 +31,7 @@ public class Shooter {
     public static double kS = 0.08, kV = 0.00039, kP = 0.001;
     private boolean activated = true;
 
-    public double shootc=880,offset;
+    public double shootc=900,offset;
 
     public static double close = 1250;
     public static double far = 1400;
@@ -99,7 +99,7 @@ public class Shooter {
     public void hoodclose(){
         SVD.setPosition(0.25);
     }
-    public void latchdown(){latch.setPosition(0.9);}
+    public void latchdown(){latch.setPosition(0.85);}
     public void latchup(){latch.setPosition(0.3);}
 
 }

@@ -27,9 +27,9 @@ public class AutoCloseBlue extends OpMode{
     private int pathState;
     private final Pose goalPose = new Pose(-4,144,0);
     private final Pose startPose = new Pose(20, 130, Math.toRadians(234));
-    private final Pose scorePose = new Pose(54, 91, Math.toRadians(180));
-    private final Pose doorPose = new Pose(18,81,Math.toRadians(90));
-    private final Pose line1Pose = new Pose(16, 91, Math.toRadians(180));
+    private final Pose scorePose = new Pose(54, 96, Math.toRadians(180));
+    private final Pose doorPose = new Pose(18,82,Math.toRadians(90));
+    private final Pose line1Pose = new Pose(16, 89, Math.toRadians(180));
     private final Pose line2Pose = new Pose(11, 65, Math.toRadians(0));
     private final Pose line3Pose = new Pose(11, 43, Math.toRadians(0));
     public final Pose endPose = new Pose(36,75,Math.toRadians(0));
@@ -46,7 +46,9 @@ public class AutoCloseBlue extends OpMode{
         grabPickup1 = follower
                 .pathBuilder()
                 .addPath(
-                        new BezierLine(scorePose,line1Pose)
+                        new BezierCurve(scorePose,
+                                new Pose(55,84),
+                                line1Pose)
                 )
                 .setConstantHeadingInterpolation(Math.toRadians(180))
                 .setVelocityConstraint(15)
@@ -127,7 +129,7 @@ public class AutoCloseBlue extends OpMode{
     public void autonomousPathUpdate() {
         switch (pathState) {
             case 0:
-                follower.followPath(scorePreload);
+                follower.followPath(scorePreload,true);
                 okp=true;
                 setPathState(1);
                 break;
@@ -269,6 +271,7 @@ public class AutoCloseBlue extends OpMode{
         follower.update();
         r.aPeriodic();
         autonomousPathUpdate();
+        r.setShootTarget();
         telemetry.addData("Follower Pose: ",follower.getPose().toString());
         telemetry.addData("Dist: ", r.dist);
         telemetry.addData("Velocity: ",r.s.getVelocity());
@@ -289,6 +292,7 @@ public class AutoCloseBlue extends OpMode{
         follower.setStartingPose(startPose);
         r = new Robot(hardwareMap,follower,t,gamepad1,gamepad2,true,true,startPose);
         r.aInit();
+        r.setShootTarget();
     }
     @Override
     public void init_loop() {}
