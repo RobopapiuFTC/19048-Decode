@@ -26,7 +26,7 @@ public class AutoCloseRed extends OpMode{
     private final Pose goalPose = new Pose(138,144,0);
     private final Pose startPose = new Pose(124, 130, Math.toRadians(306));
     private final Pose scorePose = new Pose(90, 96, Math.toRadians(0));
-    private final Pose doorPose=new Pose(126,82,Math.toRadians(90));
+    private final Pose doorPose=new Pose(127,82,Math.toRadians(90));
     private final Pose line1Pose = new Pose(127, 89, Math.toRadians(0));
     private final Pose line2Pose = new Pose(131, 65, Math.toRadians(0));
     private final Pose line3Pose = new Pose(131, 43, Math.toRadians(0));

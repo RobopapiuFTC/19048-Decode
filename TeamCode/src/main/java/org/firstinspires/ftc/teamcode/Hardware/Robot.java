@@ -165,11 +165,11 @@ public class Robot {
                 iTimer.resetTimer();
                 oki = false;
             }
-            if (iTimer.getElapsedTimeSeconds() < 0.4) {
+            if (iTimer.getElapsedTimeSeconds() < 0.6) {
                 aim = false;
                 s.latchup();
             }
-            if (iTimer.getElapsedTimeSeconds() > 0.4 && iTimer.getElapsedTimeSeconds() < 1) {
+            if (iTimer.getElapsedTimeSeconds() > 0.6 && iTimer.getElapsedTimeSeconds() < 1) {
                 i.intake.setDirection(DcMotorSimple.Direction.FORWARD);
                 i.pornit = true;
                 intake=false;
@@ -216,16 +216,61 @@ public class Robot {
         }
     }
     public void turret() {
-            if (f.getPose().getY() > 40) {
-                s.hoodclose();
-                s.shootc=940;
-                dist = shootp.distanceFrom(f.getPose());
-                s.forDistance(dist);
-            } else {
-                s.hoodfar();
-                s.shootc=1050;
-                dist = shootp.distanceFrom(f.getPose());
-                s.forDistance(dist);
+            if(a){
+                if(f.getPose().getX()<72){
+                    if (f.getPose().getY() > 40) {
+                        s.hoodclose();
+                        s.shootc=930;
+                        dist = shootp.distanceFrom(f.getPose());
+                        s.forDistance(dist);
+                    } else {
+                        s.hoodfar();
+                        s.shootc=970;
+                        dist = shootp.distanceFrom(f.getPose());
+                        s.forDistance(dist);
+                    }
+                }
+                else{
+                    if (f.getPose().getY() > 40) {
+                        s.hoodclose();
+                        s.shootc=970;
+                        dist = shootp.distanceFrom(f.getPose());
+                        s.forDistance(dist);
+                    } else {
+                        s.hoodfar();
+                        s.shootc=1010;
+                        dist = shootp.distanceFrom(f.getPose());
+                        s.forDistance(dist);
+                    }
+                }
+            }
+            else{
+                if(f.getPose().getX()<72) {
+                    if (f.getPose().getY() > 40) {
+                        s.hoodclose();
+                        s.shootc = 970;
+                        dist = shootp.distanceFrom(f.getPose());
+                        s.forDistance(dist);
+                    } else {
+                        s.hoodfar();
+                        s.shootc = 1010;
+                        dist = shootp.distanceFrom(f.getPose());
+                        s.forDistance(dist);
+                    }
+                }
+                else{
+                    if (f.getPose().getY() > 40) {
+                        s.hoodclose();
+                        s.shootc=930;
+                        dist = shootp.distanceFrom(f.getPose());
+                        s.forDistance(dist);
+                    } else {
+                        s.hoodfar();
+                        s.shootc=970;
+                        dist = shootp.distanceFrom(f.getPose());
+                        s.forDistance(dist);
+                    }
+                }
             }
             tu.face(getShootTarget(),f.getPose());
             tu.automatic();

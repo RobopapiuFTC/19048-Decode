@@ -94,10 +94,10 @@ public class Shooter {
         setTarget((0.00180088*Math.pow(distance, 2))+(4.14265*distance)+shootc+offset);
     }
     public void hoodfar(){
-        SVD.setPosition(0.2);
+        SVD.setPosition(0.15);
     }
     public void hoodclose(){
-        SVD.setPosition(0.25);
+        SVD.setPosition(0.15);
     }
     public void latchdown(){latch.setPosition(0.85);}
     public void latchup(){latch.setPosition(0.3);}

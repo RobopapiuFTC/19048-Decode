@@ -27,9 +27,9 @@ public class AutoFarRed9 extends OpMode{
     private final Pose startPose = new Pose(88, 9, Math.toRadians(90));
     private final Pose scorePose = new Pose(92, 12, Math.toRadians(90));
     private final Pose positionPose= new Pose(108,17,Math.toRadians(210));
-    private final Pose linePose = new Pose(131,34,Math.toRadians(180));
-    private final Pose line1Pose = new Pose(131, 6, Math.toRadians(210));
-    private final Pose line2Pose = new Pose(131, 16, Math.toRadians(210));
+    private final Pose linePose = new Pose(131,33,Math.toRadians(180));
+    private final Pose line1Pose = new Pose(132, 6, Math.toRadians(210));
+    private final Pose line2Pose = new Pose(132, 16, Math.toRadians(210));
     public final Pose endPose = new Pose(104,14,Math.toRadians(0));
     private PathChain scorePreload,position,grabLine,scoreLine,grabPickup1, scorePickup1, grabPickup2, scorePickup2, grabPickup3, scorePickup3,end;
     public void buildPaths() {
