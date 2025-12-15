@@ -5,19 +5,16 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.pedropathing.follower.Follower;
 import com.pedropathing.geometry.BezierLine;
 import com.pedropathing.geometry.Pose;
-import com.pedropathing.paths.Path;
 import com.pedropathing.paths.PathChain;
 import com.pedropathing.util.Timer;
-import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import  com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
-import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.Hardware.Robot;
 
 import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
 
-@Autonomous(name="Auto Close Blue 12", group="Blue")
-public class AutoCloseBlue12 extends OpMode{
+@Autonomous(name="Auto Close Blue 15", group="Blue")
+public class AutoCloseBlue15 extends OpMode{
     private TelemetryManager t;
     private Follower follower;
     private Timer pathTimer, actionTimer, opmodeTimer;
@@ -51,7 +48,6 @@ public class AutoCloseBlue12 extends OpMode{
                                 line1Pose)
                 )
                 .setConstantHeadingInterpolation(Math.toRadians(180))
-                .setVelocityConstraint(15)
                 .build();
         doorPickup = follower
                 .pathBuilder()
@@ -91,7 +87,6 @@ public class AutoCloseBlue12 extends OpMode{
                         )
                 )
                 .setConstantHeadingInterpolation(Math.toRadians(180))
-                .setVelocityConstraint(10)
                 .build();
 
         scorePickup2 = follower
@@ -116,7 +111,6 @@ public class AutoCloseBlue12 extends OpMode{
                         )
                 )
                 .setConstantHeadingInterpolation(Math.toRadians(180))
-                .setVelocityConstraint(10)
                 .build();
 
 
