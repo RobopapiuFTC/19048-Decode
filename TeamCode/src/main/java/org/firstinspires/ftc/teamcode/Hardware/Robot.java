@@ -35,7 +35,7 @@ public class Robot {
     public static Pose parkPose,endPose,startingPose=new Pose(72,135,Math.toRadians(90));
     public Gamepad g1,g2;
     public Follower f;
-    public boolean a,shoot,oks,aim,auto,intake,oki,pids=false,aima=true,shooting=false;
+    public boolean a,shoot,oks,aim,auto,intake,oki,pids=false,aima=true,shooting=false,aiming=true;
     public Timer iTimer,rTimer,rsTimer,sTimer,oTimer;
     public PathChain park;
     public Robot(HardwareMap h, Follower f, TelemetryManager t, Gamepad g1, Gamepad g2, boolean blue, boolean auto,Pose startingPose) {
@@ -95,6 +95,7 @@ public class Robot {
         else{
             tu.setYaw(0);
         }
+        if(!aiming)tu.setYaw(0);
         if(pids){
             s.periodic();
             tu.periodic(auto,aim);
@@ -156,17 +157,20 @@ public class Robot {
     public void shooter(){
         shoot=true;
         oks=true;
+        aiming=true;
     }
     public void sequenceintake(){
         if(intake) {
             if (oki) {
-                s.off();
+                if(!auto){
+                    s.off();
+                }
                 shooting=false;
                 iTimer.resetTimer();
                 oki = false;
             }
             if (iTimer.getElapsedTimeSeconds() < 0.6) {
-                aim = false;
+                if(!auto)aim = false;
                 s.latchup();
             }
             if (iTimer.getElapsedTimeSeconds() > 0.6 && iTimer.getElapsedTimeSeconds() < 1) {
@@ -272,8 +276,10 @@ public class Robot {
                     }
                 }
             }
-            tu.face(getShootTarget(),f.getPose());
-            tu.automatic();
+            if(aiming){
+                tu.face(getShootTarget(),f.getPose());
+                tu.automatic();
+            }
     }
     public void setTurretOffset(){
         /*if(a)tu.tti=1.5707963268;

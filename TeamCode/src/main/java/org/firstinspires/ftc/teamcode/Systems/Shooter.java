@@ -46,7 +46,7 @@ public class Shooter {
         SD.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         SVD.setPosition(0.5);
         SD.setDirection(DcMotorSimple.Direction.REVERSE);
-        latch.setPosition(0.3);
+        latch.setPosition(0.7);
     }
     public void periodic(){
         if (activated)
