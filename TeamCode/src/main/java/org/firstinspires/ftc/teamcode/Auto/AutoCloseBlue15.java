@@ -25,7 +25,7 @@ public class AutoCloseBlue15 extends OpMode{
     private final Pose goalPose = new Pose(-4,144,0);
     private final Pose startPose = new Pose(20, 130, Math.toRadians(234));
     private final Pose scorePose = new Pose(54, 96, Math.toRadians(180));
-    private final Pose doorPose = new Pose(17,73.7,Math.toRadians(175));
+    private final Pose doorPose = new Pose(14,70,Math.toRadians(175));
     private final Pose line1Pose = new Pose(17, 93, Math.toRadians(180));
     private final Pose line2Pose = new Pose(12, 65, Math.toRadians(0));
     private final Pose line3Pose = new Pose(12, 45, Math.toRadians(0));
@@ -56,7 +56,7 @@ public class AutoCloseBlue15 extends OpMode{
                                 new Pose(69.905, 59.176),
                                 doorPose)
                 )
-                .setConstantHeadingInterpolation(Math.toRadians(180))
+                .setLinearHeadingInterpolation(Math.toRadians(180),Math.toRadians(150))
                 .build();
         scoreDoor = follower
                 .pathBuilder()
@@ -67,7 +67,7 @@ public class AutoCloseBlue15 extends OpMode{
                                 scorePose
                         )
                 )
-                .setLinearHeadingInterpolation(Math.toRadians(165),Math.toRadians(180))
+                .setLinearHeadingInterpolation(Math.toRadians(150),Math.toRadians(180))
                 .build();
         scorePickup1 = follower
                 .pathBuilder()
