@@ -24,7 +24,7 @@ public class Red extends OpMode {
     public void init() {
         follower = Constants.createFollower(hardwareMap);
         t = PanelsTelemetry.INSTANCE.getTelemetry();
-        r = new Robot(hardwareMap,follower, t, gamepad1 , gamepad2,false,true,startingPose);
+        r = new Robot(hardwareMap,follower, t, gamepad1 , gamepad2,false,false,startingPose);
         r.tInit();
     }
 
