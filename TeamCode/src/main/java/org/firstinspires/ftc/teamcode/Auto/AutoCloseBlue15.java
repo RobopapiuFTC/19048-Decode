@@ -28,7 +28,7 @@ public class AutoCloseBlue15 extends OpMode{
     private final Pose doorPose = new Pose(14,70.5,Math.toRadians(175));
     private final Pose line1Pose = new Pose(17, 93, Math.toRadians(180));
     private final Pose line2Pose = new Pose(12, 65, Math.toRadians(0));
-    private final Pose line3Pose = new Pose(12, 45, Math.toRadians(0));
+    private final Pose line3Pose = new Pose(12, 44, Math.toRadians(0));
     public final Pose endPose = new Pose(36,90,Math.toRadians(0));
     private PathChain scorePreload,doorPickup,grabPickup1, scorePickup1, grabPickup2, scorePickup2, grabPickup3, scorePickup3,end,scoreDoor;
     public void buildPaths() {
@@ -106,7 +106,7 @@ public class AutoCloseBlue15 extends OpMode{
                 .addPath(
                         new BezierCurve(
                                 scorePose,
-                                new Pose(83.483, 37),
+                                new Pose(83.483, 39),
                                 line3Pose
                         )
                 )

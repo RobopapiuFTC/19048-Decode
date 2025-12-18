@@ -90,8 +90,8 @@ public class Robot {
     public void aPeriodic(){
         sequenceshoot();
         sequenceintake();
-        shooting();
-        if(aim)turret();
+        shootauto();
+        if(aim)turretauto();
         else{
             tu.setYaw(0);
         }
@@ -219,9 +219,26 @@ public class Robot {
             } */
         }
     }
+    public void shootauto(){
+        if (f.getPose().getY() > 40) {
+            s.hoodclose();
+            s.shootc=930;
+            dist = shootp.distanceFrom(f.getPose());
+            s.forDistance(dist);
+        } else {
+            s.hoodfar();
+            s.shootc=970;
+            dist = shootp.distanceFrom(f.getPose());
+            s.forDistance(dist);
+        }
+    }
+    public void turretauto(){
+        tu.face(getShootTarget(),f.getPose());
+        tu.automatic();
+    }
     public void turret() {
             if(a){
-                if(f.getPose().getX()<72){
+                if(f.getPose().getX()<80){
                     if (f.getPose().getY() > 40) {
                         s.hoodclose();
                         s.shootc=930;
@@ -249,7 +266,7 @@ public class Robot {
                 }
             }
             else{
-                if(f.getPose().getX()<72) {
+                if(f.getPose().getX()<80) {
                     if (f.getPose().getY() > 40) {
                         s.hoodclose();
                         s.shootc = 970;
