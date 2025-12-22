@@ -66,6 +66,7 @@ public class Robot {
         sequenceshoot();
         sequenceintake();
         hood();
+        if(shooting)shooting();
         if(aim)turret();
         else{
             tu.setYaw(0);
@@ -147,9 +148,12 @@ public class Robot {
                 oTimer.resetTimer();
             }
         }
-        if(g1.a){
-            shooting=true;
+        if(g1.a && !g1.left_bumper){
+            shooting=false;
             i.pornit=true;
+        }
+        if(g1.a && g1.left_bumper){
+            shooting=true;
         }
     }
     public void intake(){
