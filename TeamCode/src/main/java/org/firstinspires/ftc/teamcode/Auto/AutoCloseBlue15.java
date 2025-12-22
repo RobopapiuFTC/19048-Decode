@@ -25,11 +25,11 @@ public class AutoCloseBlue15 extends OpMode{
     private final Pose goalPose = new Pose(-4,144,0);
     private final Pose startPose = new Pose(20, 130, Math.toRadians(234));
     private final Pose scorePose = new Pose(54, 96, Math.toRadians(180));
-    private final Pose doorPose = new Pose(14,70.5,Math.toRadians(175));
+    private final Pose doorPose = new Pose(14,70.5,Math.toRadians(148));
     private final Pose line1Pose = new Pose(17, 93, Math.toRadians(180));
-    private final Pose line2Pose = new Pose(12, 65, Math.toRadians(0));
-    private final Pose line3Pose = new Pose(12, 44, Math.toRadians(0));
-    public final Pose endPose = new Pose(36,90,Math.toRadians(0));
+    private final Pose line2Pose = new Pose(12, 65, Math.toRadians(180));
+    private final Pose line3Pose = new Pose(12, 44, Math.toRadians(180));
+    public final Pose endPose = new Pose(36,90,Math.toRadians(180));
     private PathChain scorePreload,doorPickup,grabPickup1, scorePickup1, grabPickup2, scorePickup2, grabPickup3, scorePickup3,end,scoreDoor;
     public void buildPaths() {
         scorePreload = follower
@@ -37,7 +37,8 @@ public class AutoCloseBlue15 extends OpMode{
                 .addPath(
                         new BezierLine(startPose, scorePose)
                 )
-                .setLinearHeadingInterpolation(Math.toRadians(234), Math.toRadians(180))
+                .setNoDeceleration()
+                .setLinearHeadingInterpolation(startPose.getHeading(),scorePose.getHeading())
                 .build();
 
         grabPickup1 = follower
@@ -47,7 +48,8 @@ public class AutoCloseBlue15 extends OpMode{
                                 new Pose(55,86),
                                 line1Pose)
                 )
-                .setConstantHeadingInterpolation(Math.toRadians(180))
+                .setBrakingStrength(2)
+                .setLinearHeadingInterpolation(scorePose.getHeading(),line1Pose.getHeading())
                 .build();
         doorPickup = follower
                 .pathBuilder()
@@ -56,7 +58,8 @@ public class AutoCloseBlue15 extends OpMode{
                                 new Pose(69.905, 59.176),
                                 doorPose)
                 )
-                .setLinearHeadingInterpolation(Math.toRadians(180),Math.toRadians(148))
+                .setBrakingStrength(2)
+                .setLinearHeadingInterpolation(scorePose.getHeading(),doorPose.getHeading())
                 .build();
         scoreDoor = follower
                 .pathBuilder()
@@ -67,14 +70,16 @@ public class AutoCloseBlue15 extends OpMode{
                                 scorePose
                         )
                 )
-                .setLinearHeadingInterpolation(Math.toRadians(148),Math.toRadians(180))
+                .setNoDeceleration()
+                .setLinearHeadingInterpolation(doorPose.getHeading(),scorePose.getHeading())
                 .build();
         scorePickup1 = follower
                 .pathBuilder()
                 .addPath(
                         new BezierLine(line1Pose,scorePose)
                 )
-                .setConstantHeadingInterpolation(Math.toRadians(180))
+                .setNoDeceleration()
+                .setLinearHeadingInterpolation(line1Pose.getHeading(),scorePose.getHeading())
                 .build();
 
         grabPickup2 = follower
@@ -86,7 +91,8 @@ public class AutoCloseBlue15 extends OpMode{
                                 line2Pose
                         )
                 )
-                .setConstantHeadingInterpolation(Math.toRadians(180))
+                .setBrakingStrength(2)
+                .setLinearHeadingInterpolation(scorePose.getHeading(),line2Pose.getHeading())
                 .build();
 
         scorePickup2 = follower
@@ -98,7 +104,8 @@ public class AutoCloseBlue15 extends OpMode{
                                 scorePose
                         )
                 )
-                .setConstantHeadingInterpolation(Math.toRadians(180))
+                .setNoDeceleration()
+                .setLinearHeadingInterpolation(line2Pose.getHeading(),scorePose.getHeading())
                 .build();
 
         grabPickup3 = follower
@@ -110,7 +117,8 @@ public class AutoCloseBlue15 extends OpMode{
                                 line3Pose
                         )
                 )
-                .setConstantHeadingInterpolation(Math.toRadians(180))
+                .setBrakingStrength(2)
+                .setLinearHeadingInterpolation(scorePose.getHeading(),line3Pose.getHeading())
                 .build();
 
 
@@ -119,7 +127,8 @@ public class AutoCloseBlue15 extends OpMode{
                 .addPath(
                         new BezierLine(line3Pose,scorePose)
                 )
-                .setConstantHeadingInterpolation(Math.toRadians(180))
+                .setNoDeceleration()
+                .setLinearHeadingInterpolation(line3Pose.getHeading(),scorePose.getHeading())
                 .build();
 
         end = follower
@@ -127,7 +136,7 @@ public class AutoCloseBlue15 extends OpMode{
                 .addPath(
                         new BezierLine(scorePose,endPose)
                 )
-                .setConstantHeadingInterpolation(Math.toRadians(180))
+                .setLinearHeadingInterpolation(scorePose.getHeading(),endPose.getHeading())
                 .build();
 
     }
