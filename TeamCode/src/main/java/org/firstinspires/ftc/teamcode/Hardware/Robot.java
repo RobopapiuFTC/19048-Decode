@@ -65,7 +65,7 @@ public class Robot {
         setShootTarget();
         sequenceshoot();
         sequenceintake();
-        shooting();
+        hood();
         if(aim)turret();
         else{
             tu.setYaw(0);
@@ -89,6 +89,7 @@ public class Robot {
     }
     public void aPeriodic(){
         sequenceshoot();
+        hood();
         sequenceintake();
         shootauto();
         if(aim)turretauto();
@@ -148,6 +149,7 @@ public class Robot {
         }
         if(g1.a){
             shooting=true;
+            i.pornit=true;
         }
     }
     public void intake(){
@@ -158,6 +160,14 @@ public class Robot {
         shoot=true;
         oks=true;
         aiming=true;
+    }
+    public void hood(){
+        if(s.getVelocity()>s.getTarget()-20)s.hood=0.15;
+        else if(s.getVelocity()>s.getTarget()-40)s.hood=0.2;
+        else if(s.getVelocity()>s.getTarget()-60)s.hood=0.25;
+        else if(s.getVelocity()>s.getTarget()-80)s.hood=0.3;
+        else s.hood=0.15;
+        s.SVD.setPosition(s.hood);
     }
     public void sequenceintake(){
         if(intake) {

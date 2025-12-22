@@ -35,6 +35,7 @@ public class Shooter {
 
     public static double close = 1250;
     public static double far = 1400;
+    public static double hood;
 
     public Shooter(HardwareMap hardwareMap, TelemetryManager telemetry){
 
