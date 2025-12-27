@@ -55,7 +55,7 @@ public class AutoCloseBlue15 extends OpMode{
                 .pathBuilder()
                 .addPath(
                         new BezierCurve(scorePose,
-                                new Pose(69.905, 59.176),
+                                new Pose(55, 60),
                                 doorPose)
                 )
                 .setBrakingStrength(2)
@@ -66,7 +66,7 @@ public class AutoCloseBlue15 extends OpMode{
                 .addPath(
                         new BezierCurve(
                                 doorPose,
-                                new Pose(69.905, 59.176),
+                                new Pose(55, 60),
                                 scorePose
                         )
                 )

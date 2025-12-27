@@ -53,7 +53,7 @@ public class AutoCloseBlue15L extends OpMode{
                 .pathBuilder()
                 .addPath(
                         new BezierCurve(scorePose,
-                                new Pose(69.905, 59.176),
+                                new Pose(55, 60),
                                 doorPose)
                 )
                 .setLinearHeadingInterpolation(Math.toRadians(180),Math.toRadians(148))
@@ -63,7 +63,7 @@ public class AutoCloseBlue15L extends OpMode{
                 .addPath(
                         new BezierCurve(
                                 doorPose,
-                                new Pose(69.905, 59.176),
+                                new Pose(55, 60),
                                 scorePose
                         )
                 )
