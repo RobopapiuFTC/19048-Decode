@@ -32,9 +32,6 @@ public class Shooter {
     private boolean activated = true;
 
     public double shootc=900,offset;
-
-    public static double close = 1250;
-    public static double far = 1400;
     public static double hood;
 
     public Shooter(HardwareMap hardwareMap, TelemetryManager telemetry){
@@ -68,21 +65,8 @@ public class Shooter {
         activated = false;
         setPower(0);
     }
-
     public void on() {
         activated = true;
-    }
-
-    public boolean isActivated() {
-        return activated;
-    }
-    public void far() {
-        setTarget(far);
-        on();
-    }
-    public void close() {
-        setTarget(close);
-        on();
     }
     public void setTarget(double velocity) {
         t = velocity;
@@ -91,7 +75,6 @@ public class Shooter {
         return Math.abs((getTarget()- getVelocity())) < 50;
     }
     public void forDistance(double distance) {
-        //setTarget((6.13992 * distance) + 858.51272);
         setTarget((0.00180088*Math.pow(distance, 2))+(4.14265*distance)+shootc+offset);
     }
     public void hoodfar(){

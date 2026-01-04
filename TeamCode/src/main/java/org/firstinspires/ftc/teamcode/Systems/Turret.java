@@ -49,15 +49,8 @@ public class Turret {
         if(ticks<0)ticks=ticks+1900;
         t = ticks;
     }
-
-    /** ticks */
     public double getTurretTarget() {
         return t;
-    }
-
-    /** ticks */
-    private void incrementTurretTarget(double ticks) {
-        t += ticks;
     }
 
     public double getTurret() {
