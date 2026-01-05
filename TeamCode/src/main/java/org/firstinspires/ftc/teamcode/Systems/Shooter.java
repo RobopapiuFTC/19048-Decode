@@ -32,7 +32,7 @@ public class Shooter {
     private boolean activated = true;
 
     public double shootc=900,offset;
-    public static double hood;
+    public static double hood,angle=0.002;
 
     public Shooter(HardwareMap hardwareMap, TelemetryManager telemetry){
 

@@ -1,4 +1,5 @@
 package org.firstinspires.ftc.teamcode.Hardware;
+import static androidx.core.math.MathUtils.clamp;
 import static java.lang.Math.asin;
 import static java.lang.Math.pow;
 import static java.lang.Math.sqrt;
@@ -166,11 +167,7 @@ public class Robot {
         aiming=true;
     }
     public void hood(){
-        if(s.getVelocity()>s.getTarget()-50)s.hood=0.15;
-        else if(s.getVelocity()>s.getTarget()-100)s.hood=0.2;
-        else if(s.getVelocity()>s.getTarget()-150)s.hood=0.25;
-        else if(s.getVelocity()>s.getTarget()-200)s.hood=0.3;
-        else s.hood=0.15;
+        s.hood=clamp(0.15+(s.getTarget()-s.getVelocity()-20)*s.angle,0.15,0.5);
         s.SVD.setPosition(s.hood);
     }
     public void sequenceintake(){
@@ -218,13 +215,6 @@ public class Robot {
                 shoot=false;
                 oks=false;
             }
-            /*if(sTimer.getElapsedTimeSeconds()>0.7){
-                if(s.getVelocity()>s.getTarget()-20){
-                    i.pornit=true;
-                    shoot=false;
-                    oks=false;
-                }
-            } */
         }
     }
     public void shootauto(){
@@ -248,12 +238,10 @@ public class Robot {
             if(a){
                 if(f.getPose().getX()<80){
                     if (f.getPose().getY() > 40) {
-                        s.hoodclose();
                         s.shootc=930;
                         dist = shootp.distanceFrom(f.getPose());
                         s.forDistance(dist);
                     } else {
-                        s.hoodfar();
                         s.shootc=970;
                         dist = shootp.distanceFrom(f.getPose());
                         s.forDistance(dist);
@@ -261,12 +249,10 @@ public class Robot {
                 }
                 else{
                     if (f.getPose().getY() > 40) {
-                        s.hoodclose();
                         s.shootc=970;
                         dist = shootp.distanceFrom(f.getPose());
                         s.forDistance(dist);
                     } else {
-                        s.hoodfar();
                         s.shootc=1010;
                         dist = shootp.distanceFrom(f.getPose());
                         s.forDistance(dist);
@@ -276,12 +262,10 @@ public class Robot {
             else{
                 if(f.getPose().getX()<80) {
                     if (f.getPose().getY() > 40) {
-                        s.hoodclose();
                         s.shootc = 970;
                         dist = shootp.distanceFrom(f.getPose());
                         s.forDistance(dist);
                     } else {
-                        s.hoodfar();
                         s.shootc = 1010;
                         dist = shootp.distanceFrom(f.getPose());
                         s.forDistance(dist);
@@ -289,12 +273,10 @@ public class Robot {
                 }
                 else{
                     if (f.getPose().getY() > 40) {
-                        s.hoodclose();
                         s.shootc=930;
                         dist = shootp.distanceFrom(f.getPose());
                         s.forDistance(dist);
                     } else {
-                        s.hoodfar();
                         s.shootc=970;
                         dist = shootp.distanceFrom(f.getPose());
                         s.forDistance(dist);
