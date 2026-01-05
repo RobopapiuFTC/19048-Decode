@@ -83,7 +83,7 @@ public class Shooter {
     public void hoodclose(){
         SVD.setPosition(0.15);
     }
-    public void latchdown(){latch.setPosition(0.1);}
-    public void latchup(){latch.setPosition(0.75);}
+    public void latchdown(){latch.setPosition(0.24);}
+    public void latchup(){latch.setPosition(0.65);}
 
 }

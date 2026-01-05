@@ -166,10 +166,10 @@ public class Robot {
         aiming=true;
     }
     public void hood(){
-        if(s.getVelocity()>s.getTarget()-20)s.hood=0.15;
-        else if(s.getVelocity()>s.getTarget()-40)s.hood=0.2;
-        else if(s.getVelocity()>s.getTarget()-60)s.hood=0.25;
-        else if(s.getVelocity()>s.getTarget()-80)s.hood=0.3;
+        if(s.getVelocity()>s.getTarget()-50)s.hood=0.15;
+        else if(s.getVelocity()>s.getTarget()-100)s.hood=0.2;
+        else if(s.getVelocity()>s.getTarget()-150)s.hood=0.25;
+        else if(s.getVelocity()>s.getTarget()-200)s.hood=0.3;
         else s.hood=0.15;
         s.SVD.setPosition(s.hood);
     }
@@ -210,12 +210,6 @@ public class Robot {
                 aim=true;
                 sTimer.resetTimer();
                 oks=false;
-            }
-            if(sTimer.getElapsedTimeSeconds()<0.2){
-                if(!auto) {
-                    i.intake.setDirection(DcMotorSimple.Direction.REVERSE);
-                    i.pornit = true;
-                }
             }
             if(sTimer.getElapsedTimeSeconds()>0.2 && sTimer.getElapsedTimeSeconds()<1){
                 i.pornit=false;
