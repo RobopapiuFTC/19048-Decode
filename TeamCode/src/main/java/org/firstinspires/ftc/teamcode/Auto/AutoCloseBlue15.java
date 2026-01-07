@@ -191,7 +191,7 @@ public class AutoCloseBlue15 extends OpMode{
                         r.i.pornit=true;
                     }
                     if(pathTimer.getElapsedTimeSeconds()>1.4) {
-                        follower.followPath(doorPickup, true);
+                        follower.followPath(doorPickup);
                         r.intake();
                         okp=true;
                         r.aiming=false;
@@ -259,7 +259,7 @@ public class AutoCloseBlue15 extends OpMode{
                         r.i.pornit=true;
                     }
                     if(pathTimer.getElapsedTimeSeconds()>1.4) {
-                        follower.followPath(doorPickup, true);
+                        follower.followPath(doorPickup);
                         r.intake();
                         okp=true;
                         r.aiming=false;
