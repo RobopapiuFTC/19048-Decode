@@ -94,6 +94,7 @@ public class Robot {
         hood();
         sequenceintake();
         turret();
+        if(shooting)shooting();
         if(!aiming)tu.setYaw(0);
         if(pids){
             s.periodic();
@@ -156,6 +157,7 @@ public class Robot {
     public void intake(){
         intake=true;
         oki=true;
+        shooting=false;
     }
     public void shooter(){
         shoot=true;

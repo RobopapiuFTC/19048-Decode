@@ -24,13 +24,13 @@ public class AutoFarRed9 extends OpMode{
 
     private int pathState;
     private final Pose goalPose = new Pose(0,144,0);
-    private final Pose startPose = new Pose(88, 9, Math.toRadians(90));
-    private final Pose scorePose = new Pose(92, 12, Math.toRadians(90));
-    private final Pose positionPose= new Pose(108,17,Math.toRadians(210));
-    private final Pose linePose = new Pose(131,33,Math.toRadians(180));
-    private final Pose line1Pose = new Pose(132, 6, Math.toRadians(210));
-    private final Pose line2Pose = new Pose(132, 16, Math.toRadians(210));
-    public final Pose endPose = new Pose(104,14,Math.toRadians(0));
+    private final Pose startPose = new Pose(144-56, 9, Math.toRadians(90));
+    private final Pose scorePose = new Pose(144-52, 12, Math.toRadians(0));
+    private final Pose positionPose= new Pose(144-36,17,Math.toRadians(350));
+    private final Pose line1Pose = new Pose(144-11, 6, Math.toRadians(350));
+    private final Pose line2Pose = new Pose(144-11, 16, Math.toRadians(350));
+    public final Pose endPose = new Pose(144-40,14,Math.toRadians(0));
+    private final Pose linePose = new Pose(144-17,36,Math.toRadians(0));
     private PathChain scorePreload,position,grabLine,scoreLine,grabPickup1, scorePickup1, grabPickup2, scorePickup2, grabPickup3, scorePickup3,end;
     public void buildPaths() {
         scorePreload = follower
@@ -38,7 +38,7 @@ public class AutoFarRed9 extends OpMode{
                 .addPath(
                         new BezierLine(startPose, scorePose)
                 )
-                .setConstantHeadingInterpolation(Math.toRadians(90))
+                .setLinearHeadingInterpolation(startPose.getHeading(),Math.toRadians(90))
                 .build();
 
         position = follower
@@ -46,18 +46,18 @@ public class AutoFarRed9 extends OpMode{
                 .addPath(
                         new BezierLine(scorePose,positionPose)
                 )
-                .setLinearHeadingInterpolation(Math.toRadians(90), Math.toRadians(0))
+                .setLinearHeadingInterpolation(Math.toRadians(90),Math.toRadians(0))
                 .build();
         grabLine = follower
                 .pathBuilder()
                 .addPath(
                         new BezierCurve(
                                 positionPose,
-                                new Pose(68,38),
+                                new Pose(144-75,38),
                                 linePose
                         )
                 )
-                .setConstantHeadingInterpolation(Math.toRadians(0))
+                .setLinearHeadingInterpolation(Math.toRadians(0),Math.toRadians(0))
                 .build();
         scoreLine = follower
                 .pathBuilder()
@@ -67,16 +67,16 @@ public class AutoFarRed9 extends OpMode{
                                 scorePose
                         )
                 )
-                .setConstantHeadingInterpolation(Math.toRadians(0))
+                .setLinearHeadingInterpolation(linePose.getHeading(),scorePose.getHeading())
                 .build();
         grabPickup1 = follower
                 .pathBuilder()
                 .addPath(
-                        new BezierCurve(positionPose,
-                                new Pose(137, 25),
+                        new BezierCurve(scorePose,
+                                new Pose(144-7.000, 25),
                                 line1Pose)
                 )
-                .setConstantHeadingInterpolation(Math.toRadians(-10))
+                .setLinearHeadingInterpolation(scorePose.getHeading(),line1Pose.getHeading())
                 .build();
 
         scorePickup1 = follower
@@ -84,7 +84,7 @@ public class AutoFarRed9 extends OpMode{
                 .addPath(
                         new BezierLine(line1Pose,scorePose)
                 )
-                .setLinearHeadingInterpolation(Math.toRadians(-10),Math.toRadians(0))
+                .setLinearHeadingInterpolation(line1Pose.getHeading(),scorePose.getHeading())
                 .build();
 
         grabPickup2 = follower
@@ -92,11 +92,11 @@ public class AutoFarRed9 extends OpMode{
                 .addPath(
                         new BezierCurve(
                                 scorePose,
-                                new Pose(136, 6),
+                                new Pose(144-8, 6),
                                 line2Pose
                         )
                 )
-                .setConstantHeadingInterpolation(Math.toRadians(-20))
+                .setLinearHeadingInterpolation(scorePose.getHeading(),line2Pose.getHeading())
                 .build();
 
         scorePickup2 = follower
@@ -104,11 +104,11 @@ public class AutoFarRed9 extends OpMode{
                 .addPath(
                         new BezierCurve(
                                 line2Pose,
-                                new Pose(105, 12),
+                                new Pose(144-39, 12),
                                 scorePose
                         )
                 )
-                .setLinearHeadingInterpolation(Math.toRadians(-20),Math.toRadians(0))
+                .setLinearHeadingInterpolation(line2Pose.getHeading(),scorePose.getHeading())
                 .build();
 
         end = follower
@@ -116,7 +116,7 @@ public class AutoFarRed9 extends OpMode{
                 .addPath(
                         new BezierLine(scorePose,endPose)
                 )
-                .setConstantHeadingInterpolation(Math.toRadians(0))
+                .setLinearHeadingInterpolation(scorePose.getHeading(),endPose.getHeading())
                 .build();
 
     }
@@ -124,26 +124,28 @@ public class AutoFarRed9 extends OpMode{
         switch (pathState) {
             case 0:
                 follower.followPath(scorePreload,true);
+                r.pids=true;
                 okp=true;
+                r.shooter();
                 setPathState(1);
                 break;
             case 1:
                 if(!follower.isBusy()) {
                     if(okp){
                         pathTimer.resetTimer();
-                        r.pids=true;
                         okp=false;
                     }
                     if(pathTimer.getElapsedTimeSeconds()<0.1){
                         r.shooter();
                     }
-                    if(pathTimer.getElapsedTimeSeconds()>1){
-                        r.i.pornit=true;
+                    if(pathTimer.getElapsedTimeSeconds()>0.5){
+                        r.shooting=true;
                     }
                     if(pathTimer.getElapsedTimeSeconds()>3) {
                         follower.followPath(position, true);
                         r.intake();
                         okp=true;
+                        r.aiming=false;
                         setPathState(2);
                     }
                 }
@@ -170,13 +172,14 @@ public class AutoFarRed9 extends OpMode{
                     if(pathTimer.getElapsedTimeSeconds()<0.1){
                         r.shooter();
                     }
-                    if(pathTimer.getElapsedTimeSeconds()>1){
-                        r.i.pornit=true;
+                    if(pathTimer.getElapsedTimeSeconds()>0.5){
+                        r.shooting=true;
                     }
                     if(pathTimer.getElapsedTimeSeconds()>3) {
                         follower.followPath(grabPickup1, true);
-                        okp=true;
                         r.intake();
+                        okp=true;
+                        r.aiming=false;
                         setPathState(5);
                     }
                 }
@@ -196,13 +199,14 @@ public class AutoFarRed9 extends OpMode{
                     if(pathTimer.getElapsedTimeSeconds()<0.1){
                         r.shooter();
                     }
-                    if(pathTimer.getElapsedTimeSeconds()>1){
-                        r.i.pornit=true;
+                    if(pathTimer.getElapsedTimeSeconds()>0.5){
+                        r.shooting=true;
                     }
                     if(pathTimer.getElapsedTimeSeconds()>3) {
-                        okp=true;
+                        follower.followPath(grabPickup2, true);
                         r.intake();
-                        follower.followPath(grabPickup2,true);
+                        okp=true;
+                        r.aiming=false;
                         setPathState(7);
                     }
                 }
@@ -222,14 +226,14 @@ public class AutoFarRed9 extends OpMode{
                     if(pathTimer.getElapsedTimeSeconds()<0.1){
                         r.shooter();
                     }
-                    if(pathTimer.getElapsedTimeSeconds()>1){
-                        r.i.pornit=true;
+                    if(pathTimer.getElapsedTimeSeconds()>0.5){
+                        r.shooting=true;
                     }
                     if(pathTimer.getElapsedTimeSeconds()>3) {
-                        okp=true;
-                        r.i.pornit=false;
-                        r.aim=false;
                         follower.followPath(end, true);
+                        r.intake();
+                        okp=true;
+                        r.aiming=false;
                         setPathState(9);
                     }
 
@@ -239,7 +243,6 @@ public class AutoFarRed9 extends OpMode{
                 if(!follower.isBusy()) {
                     r.aim=false;
                     r.aima=false;
-                    r.s.off();
                     r.tu.setYaw(0);
                     setPathState(-1);
                 }
@@ -256,10 +259,10 @@ public class AutoFarRed9 extends OpMode{
         follower.update();
         r.aPeriodic();
         autonomousPathUpdate();
-        r.setShootTargetFar();
         telemetry.addData("Follower Pose: ",follower.getPose().toString());
         telemetry.addData("Dist: ", r.dist);
         telemetry.addData("Velocity: ",r.s.getVelocity());
+        telemetry.addData("Target Velocity", r.s.getTarget());
         telemetry.addData("Turret Ticks: ", r.tu.getTurret());
         telemetry.addData("Turret Target: ",r.tu.getTurretTarget());
         telemetry.update();
