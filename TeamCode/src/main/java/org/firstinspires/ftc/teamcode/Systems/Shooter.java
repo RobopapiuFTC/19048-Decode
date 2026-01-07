@@ -32,7 +32,7 @@ public class Shooter {
     private boolean activated = true;
 
     public double shootc=900,offset;
-    public static double hood,angle=0.002;
+    public static double hood,angle=0.00055;
 
     public Shooter(HardwareMap hardwareMap, TelemetryManager telemetry){
 
@@ -84,6 +84,6 @@ public class Shooter {
         SVD.setPosition(0.15);
     }
     public void latchdown(){latch.setPosition(0.24);}
-    public void latchup(){latch.setPosition(0.65);}
+    public void latchup(){latch.setPosition(0.75);}
 
 }

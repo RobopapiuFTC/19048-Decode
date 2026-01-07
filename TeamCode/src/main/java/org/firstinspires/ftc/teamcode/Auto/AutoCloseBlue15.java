@@ -23,12 +23,12 @@ public class AutoCloseBlue15 extends OpMode{
 
     private int pathState;
     private final Pose goalPose = new Pose(-4,144,0);
-    private final Pose startPose = new Pose(20, 130, Math.toRadians(234));
+    private final Pose startPose = new Pose(20, 125, Math.toRadians(234));
     private final Pose scorePose = new Pose(54, 96, Math.toRadians(180));
-    private final Pose doorPose = new Pose(14,70.5,Math.toRadians(148));
-    private final Pose line1Pose = new Pose(17, 93, Math.toRadians(180));
-    private final Pose line2Pose = new Pose(12, 65, Math.toRadians(180));
-    private final Pose line3Pose = new Pose(12, 44, Math.toRadians(180));
+    private final Pose doorPose = new Pose(14,63.7,Math.toRadians(148));
+    private final Pose line1Pose = new Pose(17, 84, Math.toRadians(180));
+    private final Pose line2Pose = new Pose(15, 62, Math.toRadians(180));
+    private final Pose line3Pose = new Pose(17, 36, Math.toRadians(180));
     public final Pose endPose = new Pose(36,90,Math.toRadians(180));
     private PathChain scorePreload,doorPickup,grabPickup1, scorePickup1, grabPickup2, scorePickup2, grabPickup3, scorePickup3,end,scoreDoor;
     public void buildPaths() {
@@ -37,7 +37,7 @@ public class AutoCloseBlue15 extends OpMode{
                 .addPath(
                         new BezierLine(startPose, scorePose)
                 )
-                .setNoDeceleration()
+                .setBrakingStrength(2)
                 .setLinearHeadingInterpolation(startPose.getHeading(),scorePose.getHeading())
                 .build();
 
@@ -58,7 +58,7 @@ public class AutoCloseBlue15 extends OpMode{
                                 new Pose(55, 60),
                                 doorPose)
                 )
-                .setBrakingStrength(2)
+                .setNoDeceleration()
                 .setLinearHeadingInterpolation(scorePose.getHeading(),doorPose.getHeading())
                 .build();
         scoreDoor = follower
@@ -70,7 +70,7 @@ public class AutoCloseBlue15 extends OpMode{
                                 scorePose
                         )
                 )
-                .setNoDeceleration()
+                .setBrakingStrength(2)
                 .setLinearHeadingInterpolation(doorPose.getHeading(),scorePose.getHeading())
                 .build();
         scorePickup1 = follower
@@ -78,7 +78,7 @@ public class AutoCloseBlue15 extends OpMode{
                 .addPath(
                         new BezierLine(line1Pose,scorePose)
                 )
-                .setNoDeceleration()
+                .setBrakingStrength(2)
                 .setLinearHeadingInterpolation(line1Pose.getHeading(),scorePose.getHeading())
                 .build();
 
@@ -87,7 +87,7 @@ public class AutoCloseBlue15 extends OpMode{
                 .addPath(
                         new BezierCurve(
                                 scorePose,
-                                new Pose(69.905, 59.176),
+                                new Pose(59, 60),
                                 line2Pose
                         )
                 )
@@ -100,11 +100,11 @@ public class AutoCloseBlue15 extends OpMode{
                 .addPath(
                         new BezierCurve(
                                 line2Pose,
-                                new Pose(66.719, 46.100),
+                                new Pose(59, 53),
                                 scorePose
                         )
                 )
-                .setNoDeceleration()
+                .setBrakingStrength(2)
                 .setLinearHeadingInterpolation(line2Pose.getHeading(),scorePose.getHeading())
                 .build();
 
@@ -127,7 +127,7 @@ public class AutoCloseBlue15 extends OpMode{
                 .addPath(
                         new BezierLine(line3Pose,scorePose)
                 )
-                .setNoDeceleration()
+                .setBrakingStrength(2)
                 .setLinearHeadingInterpolation(line3Pose.getHeading(),scorePose.getHeading())
                 .build();
 
@@ -161,7 +161,7 @@ public class AutoCloseBlue15 extends OpMode{
                     if(pathTimer.getElapsedTimeSeconds()>0.5){
                         r.i.pornit=true;
                     }
-                    if(pathTimer.getElapsedTimeSeconds()>1.5) {
+                    if(pathTimer.getElapsedTimeSeconds()>1.4) {
                         follower.followPath(grabPickup2, true);
                         r.intake();
                         okp=true;
@@ -190,7 +190,7 @@ public class AutoCloseBlue15 extends OpMode{
                     if(pathTimer.getElapsedTimeSeconds()>0.5){
                         r.i.pornit=true;
                     }
-                    if(pathTimer.getElapsedTimeSeconds()>1.5) {
+                    if(pathTimer.getElapsedTimeSeconds()>1.4) {
                         follower.followPath(doorPickup, true);
                         r.intake();
                         okp=true;
@@ -207,7 +207,7 @@ public class AutoCloseBlue15 extends OpMode{
                         okp=false;
 
                     }
-                    if(pathTimer.getElapsedTimeSeconds()>2.5) {
+                    if(pathTimer.getElapsedTimeSeconds()>1.2) {
                         follower.followPath(scoreDoor, true);
                         r.intake=false;
                         r.oki=false;
@@ -230,7 +230,7 @@ public class AutoCloseBlue15 extends OpMode{
                     if(pathTimer.getElapsedTimeSeconds()>0.5){
                         r.i.pornit=true;
                     }
-                    if(pathTimer.getElapsedTimeSeconds()>1.5) {
+                    if(pathTimer.getElapsedTimeSeconds()>1.4) {
                         follower.followPath(grabPickup1, true);
                         r.intake();
                         okp=true;
@@ -258,8 +258,8 @@ public class AutoCloseBlue15 extends OpMode{
                     if(pathTimer.getElapsedTimeSeconds()>0.5){
                         r.i.pornit=true;
                     }
-                    if(pathTimer.getElapsedTimeSeconds()>1.5) {
-                        follower.followPath(grabPickup3, true);
+                    if(pathTimer.getElapsedTimeSeconds()>1.4) {
+                        follower.followPath(doorPickup, true);
                         r.intake();
                         okp=true;
                         r.aiming=false;
@@ -269,8 +269,20 @@ public class AutoCloseBlue15 extends OpMode{
                 break;
             case 8:
                 if(!follower.isBusy()) {
-                    follower.followPath(scorePickup3,true);
-                    setPathState(9);
+                    if(okp){
+                        pathTimer.resetTimer();
+                        r.pids=true;
+                        okp=false;
+
+                    }
+                    if(pathTimer.getElapsedTimeSeconds()>1.2) {
+                        follower.followPath(scoreDoor, true);
+                        r.intake=false;
+                        r.oki=false;
+                        r.i.pornit=false;
+                        okp=true;
+                        setPathState(9);
+                    }
                 }
                 break;
             case 9:
@@ -286,9 +298,8 @@ public class AutoCloseBlue15 extends OpMode{
                     if(pathTimer.getElapsedTimeSeconds()>0.5){
                         r.i.pornit=true;
                     }
-                    if(pathTimer.getElapsedTimeSeconds()>1.5) {
+                    if(pathTimer.getElapsedTimeSeconds()>1.4) {
                         follower.followPath(end, true);
-                        r.intake();
                         okp=true;
                         r.aiming=false;
                         setPathState(10);
@@ -315,7 +326,6 @@ public class AutoCloseBlue15 extends OpMode{
         follower.update();
         r.aPeriodic();
         autonomousPathUpdate();
-        r.setShootTarget();
         telemetry.addData("Follower Pose: ",follower.getPose().toString());
         telemetry.addData("Dist: ", r.dist);
         telemetry.addData("Velocity: ",r.s.getVelocity());
