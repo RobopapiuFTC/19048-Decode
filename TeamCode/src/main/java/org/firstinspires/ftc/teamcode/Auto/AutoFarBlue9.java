@@ -26,9 +26,9 @@ public class AutoFarBlue9 extends OpMode{
     private final Pose goalPose = new Pose(0,144,0);
     private final Pose startPose = new Pose(56, 9, Math.toRadians(90));
     private final Pose scorePose = new Pose(52, 12, Math.toRadians(180));
-    private final Pose positionPose= new Pose(36,17,Math.toRadians(190));
-    private final Pose line1Pose = new Pose(11, 6, Math.toRadians(190));
-    private final Pose line2Pose = new Pose(11, 16, Math.toRadians(190));
+    private final Pose positionPose= new Pose(36,17,Math.toRadians(200));
+    private final Pose line1Pose = new Pose(11, 6, Math.toRadians(200));
+    private final Pose line2Pose = new Pose(11, 16, Math.toRadians(200));
     public final Pose endPose = new Pose(40,14,Math.toRadians(180));
     private final Pose linePose = new Pose(17,36,Math.toRadians(180));
     private PathChain scorePreload,position,grabLine,scoreLine,grabPickup1, scorePickup1, grabPickup2, scorePickup2, grabPickup3, scorePickup3,end;
@@ -159,6 +159,7 @@ public class AutoFarBlue9 extends OpMode{
 
             case 3:
                 if(!follower.isBusy()) {
+                    r.i.pornit=false;
                     follower.followPath(scoreLine,true);
                     setPathState(4);
                 }
@@ -186,6 +187,7 @@ public class AutoFarBlue9 extends OpMode{
                 break;
             case 5:
                 if(!follower.isBusy()) {
+                    r.i.pornit=false;
                     follower.followPath(scorePickup1,true);
                     setPathState(6);
                 }
@@ -213,6 +215,7 @@ public class AutoFarBlue9 extends OpMode{
                 break;
             case 7:
                 if(!follower.isBusy()) {
+                    r.i.pornit=false;
                     follower.followPath(scorePickup2, true);
                     setPathState(8);
                 }
@@ -241,6 +244,7 @@ public class AutoFarBlue9 extends OpMode{
                 break;
             case 9:
                 if(!follower.isBusy()) {
+                    r.i.pornit=false;
                     r.aim=false;
                     r.aima=false;
                     r.tu.setYaw(0);

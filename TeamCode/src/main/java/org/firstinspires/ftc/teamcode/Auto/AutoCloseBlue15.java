@@ -25,9 +25,9 @@ public class AutoCloseBlue15 extends OpMode{
     private final Pose goalPose = new Pose(-4,144,0);
     private final Pose startPose = new Pose(20, 125, Math.toRadians(234));
     private final Pose scorePose = new Pose(54, 96, Math.toRadians(180));
-    private final Pose doorPose = new Pose(14,63.7,Math.toRadians(148));
+    private final Pose doorPose = new Pose(14,63,Math.toRadians(153));
     private final Pose line1Pose = new Pose(17, 84, Math.toRadians(180));
-    private final Pose line2Pose = new Pose(15, 62, Math.toRadians(180));
+    private final Pose line2Pose = new Pose(15, 60, Math.toRadians(180));
     private final Pose line3Pose = new Pose(17, 36, Math.toRadians(180));
     public final Pose endPose = new Pose(36,90,Math.toRadians(180));
     private PathChain scorePreload,doorPickup,grabPickup1, scorePickup1, grabPickup2, scorePickup2, grabPickup3, scorePickup3,end,scoreDoor;
@@ -100,7 +100,7 @@ public class AutoCloseBlue15 extends OpMode{
                 .addPath(
                         new BezierCurve(
                                 line2Pose,
-                                new Pose(59, 53),
+                                new Pose(59, 60),
                                 scorePose
                         )
                 )
@@ -207,7 +207,7 @@ public class AutoCloseBlue15 extends OpMode{
                         okp=false;
 
                     }
-                    if(pathTimer.getElapsedTimeSeconds()>1.2) {
+                    if(pathTimer.getElapsedTimeSeconds()>0.9) {
                         follower.followPath(scoreDoor, true);
                         r.intake=false;
                         r.oki=false;
@@ -241,6 +241,7 @@ public class AutoCloseBlue15 extends OpMode{
                 break;
             case 6:
                 if(!follower.isBusy()) {
+                    r.i.pornit=false;
                     follower.followPath(scorePickup1,true);
                     setPathState(7);
                 }
@@ -259,7 +260,7 @@ public class AutoCloseBlue15 extends OpMode{
                         r.i.pornit=true;
                     }
                     if(pathTimer.getElapsedTimeSeconds()>1.4) {
-                        follower.followPath(doorPickup);
+                        follower.followPath(grabPickup3,true);
                         r.intake();
                         okp=true;
                         r.aiming=false;
@@ -269,20 +270,9 @@ public class AutoCloseBlue15 extends OpMode{
                 break;
             case 8:
                 if(!follower.isBusy()) {
-                    if(okp){
-                        pathTimer.resetTimer();
-                        r.pids=true;
-                        okp=false;
-
-                    }
-                    if(pathTimer.getElapsedTimeSeconds()>1.2) {
-                        follower.followPath(scoreDoor, true);
-                        r.intake=false;
-                        r.oki=false;
-                        r.i.pornit=false;
-                        okp=true;
-                        setPathState(9);
-                    }
+                    r.i.pornit=false;
+                    follower.followPath(scorePickup3,true);
+                    setPathState(9);
                 }
                 break;
             case 9:
@@ -308,6 +298,7 @@ public class AutoCloseBlue15 extends OpMode{
                 break;
             case 10:
                 if(!follower.isBusy()) {
+                    r.i.pornit=false;
                     r.aim=false;
                     r.aima=false;
                     r.tu.setYaw(0);

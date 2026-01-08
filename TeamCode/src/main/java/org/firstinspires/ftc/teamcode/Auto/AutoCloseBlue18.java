@@ -7,14 +7,12 @@ import com.pedropathing.geometry.BezierLine;
 import com.pedropathing.geometry.Pose;
 import com.pedropathing.paths.PathChain;
 import com.pedropathing.util.Timer;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import  com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
 import org.firstinspires.ftc.teamcode.Hardware.Robot;
 
 import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
 
-@Disabled
 @Autonomous(name="Auto Close Blue 18", group="Blue")
 public class AutoCloseBlue18 extends OpMode{
     private TelemetryManager t;
@@ -24,12 +22,11 @@ public class AutoCloseBlue18 extends OpMode{
     private boolean okp;
 
     private int pathState;
-    private final Pose goalPose = new Pose(-4,144,0);
     private final Pose startPose = new Pose(20, 125, Math.toRadians(234));
     private final Pose scorePose = new Pose(54, 96, Math.toRadians(180));
-    private final Pose doorPose = new Pose(14,64.4,Math.toRadians(148));
+    private final Pose doorPose = new Pose(14,63,Math.toRadians(153));
     private final Pose line1Pose = new Pose(17, 84, Math.toRadians(180));
-    private final Pose line2Pose = new Pose(15, 60.5, Math.toRadians(180));
+    private final Pose line2Pose = new Pose(15, 60, Math.toRadians(180));
     private final Pose line3Pose = new Pose(17, 36, Math.toRadians(180));
     public final Pose endPose = new Pose(36,90,Math.toRadians(180));
     private PathChain scorePreload,doorPickup,grabPickup1, scorePickup1, grabPickup2, scorePickup2, grabPickup3, scorePickup3,end,scoreDoor;
@@ -89,7 +86,7 @@ public class AutoCloseBlue18 extends OpMode{
                 .addPath(
                         new BezierCurve(
                                 scorePose,
-                                new Pose(59, 53),
+                                new Pose(59, 60),
                                 line2Pose
                         )
                 )
@@ -102,7 +99,7 @@ public class AutoCloseBlue18 extends OpMode{
                 .addPath(
                         new BezierCurve(
                                 line2Pose,
-                                new Pose(59, 53),
+                                new Pose(59, 60),
                                 scorePose
                         )
                 )
@@ -174,6 +171,7 @@ public class AutoCloseBlue18 extends OpMode{
                 break;
             case 2:
                 if(!follower.isBusy()) {
+                    r.i.pornit=false;
                     follower.followPath(scorePickup2,true);
                     setPathState(3);
                 }
@@ -193,7 +191,7 @@ public class AutoCloseBlue18 extends OpMode{
                         r.i.pornit=true;
                     }
                     if(pathTimer.getElapsedTimeSeconds()>1.1) {
-                        follower.followPath(doorPickup, true);
+                        follower.followPath(doorPickup);
                         r.intake();
                         okp=true;
                         r.aiming=false;
@@ -209,7 +207,7 @@ public class AutoCloseBlue18 extends OpMode{
                         okp=false;
 
                     }
-                    if(pathTimer.getElapsedTimeSeconds()>1.2) {
+                    if(pathTimer.getElapsedTimeSeconds()>1) {
                         follower.followPath(scoreDoor, true);
                         r.intake=false;
                         r.oki=false;
@@ -261,7 +259,7 @@ public class AutoCloseBlue18 extends OpMode{
                         r.i.pornit=true;
                     }
                     if(pathTimer.getElapsedTimeSeconds()>1.1) {
-                        follower.followPath(doorPickup, true);
+                        follower.followPath(doorPickup);
                         r.intake();
                         okp=true;
                         r.aiming=false;
@@ -277,7 +275,7 @@ public class AutoCloseBlue18 extends OpMode{
                         okp=false;
 
                     }
-                    if(pathTimer.getElapsedTimeSeconds()>1.2) {
+                    if(pathTimer.getElapsedTimeSeconds()>1) {
                         follower.followPath(scoreDoor, true);
                         r.intake=false;
                         r.oki=false;
@@ -329,7 +327,7 @@ public class AutoCloseBlue18 extends OpMode{
                         r.i.pornit=true;
                     }
                     if(pathTimer.getElapsedTimeSeconds()>1.1) {
-                        follower.followPath(end, true);
+                        follower.followPath(end);
                         r.intake();
                         okp=true;
                         r.aiming=false;
