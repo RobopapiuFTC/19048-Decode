@@ -13,8 +13,8 @@ import org.firstinspires.ftc.teamcode.Hardware.Robot;
 
 import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
 
-@Autonomous(name="Auto Close Blue 18", group="Blue")
-public class AutoCloseBlue18 extends OpMode{
+@Autonomous(name="Auto Close Blue  Solo", group="Blue")
+public class AutoCloseBlue18S extends OpMode{
     private TelemetryManager t;
     private Follower follower;
     private Timer pathTimer, actionTimer, opmodeTimer;
@@ -217,7 +217,7 @@ public class AutoCloseBlue18 extends OpMode{
                         okp=false;
                     }
                     if(pathTimer.getElapsedTimeSeconds()>0.7) {
-                        follower.followPath(grabPickup1,true);
+                        follower.followPath(doorPickup);
                         r.intake();
                         okp=true;
                         r.aiming=false;
@@ -226,31 +226,6 @@ public class AutoCloseBlue18 extends OpMode{
                 }
                 break;
             case 6:
-                if(!follower.isBusy()) {
-                    r.i.pornit=false;
-                    r.shooter();
-                    follower.followPath(scorePickup1,true);
-                    setPathState(7);
-                }
-                break;
-            case 7:
-                if(!follower.isBusy()) {
-                    if(okp){
-                        pathTimer.resetTimer();
-                        r.pids=true;
-                        r.i.pornit=true;
-                        okp=false;
-                    }
-                    if(pathTimer.getElapsedTimeSeconds()>0.7) {
-                        follower.followPath(doorPickup);
-                        r.intake();
-                        okp=true;
-                        r.aiming=false;
-                        setPathState(8);
-                    }
-                }
-                break;
-            case 8:
                 if(!follower.isBusy()) {
                     if(okp){
                         pathTimer.resetTimer();
@@ -265,8 +240,33 @@ public class AutoCloseBlue18 extends OpMode{
                         r.i.pornit=false;
                         r.shooter();
                         okp=true;
-                        setPathState(9);
+                        setPathState(7);
                     }
+                }
+                break;
+            case 7:
+                if(!follower.isBusy()) {
+                    if(okp){
+                        pathTimer.resetTimer();
+                        r.pids=true;
+                        r.i.pornit=true;
+                        okp=false;
+                    }
+                    if(pathTimer.getElapsedTimeSeconds()>0.7) {
+                        follower.followPath(grabPickup1,true);
+                        r.intake();
+                        okp=true;
+                        r.aiming=false;
+                        setPathState(8);
+                    }
+                }
+                break;
+            case 8:
+                if(!follower.isBusy()) {
+                    r.i.pornit=false;
+                    r.shooter();
+                    follower.followPath(scorePickup1,true);
+                    setPathState(9);
                 }
                 break;
             case 9:
