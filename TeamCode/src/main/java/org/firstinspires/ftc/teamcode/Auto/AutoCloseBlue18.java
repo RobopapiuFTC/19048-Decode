@@ -267,24 +267,30 @@ public class AutoCloseBlue18 extends OpMode{
                 break;
             case 9:
                 if(!follower.isBusy()) {
+                    follower.followPath(doorMove,true);
+                    setPathState(10);
+                }
+                break;
+            case 10:
+                if(!follower.isBusy()) {
                     if(okp){
                         pathTimer.resetTimer();
                         r.pids=true;
                         okp=false;
 
                     }
-                    if(pathTimer.getElapsedTimeSeconds()>1) {
+                    if(pathTimer.getElapsedTimeSeconds()>0.3) {
                         follower.followPath(scoreDoor, true);
                         r.intake=false;
                         r.oki=false;
                         r.i.pornit=false;
                         r.shooter();
                         okp=true;
-                        setPathState(10);
+                        setPathState(11);
                     }
                 }
                 break;
-            case 10:
+            case 11:
                 if(!follower.isBusy()) {
                     if(okp){
                         pathTimer.resetTimer();
@@ -297,19 +303,19 @@ public class AutoCloseBlue18 extends OpMode{
                         r.intake();
                         okp=true;
                         r.aiming=false;
-                        setPathState(11);
+                        setPathState(12);
                     }
                 }
                 break;
-            case 11:
+            case 12:
                 if(!follower.isBusy()) {
                     r.i.pornit=false;
                     r.shooter();
                     follower.followPath(scorePickup3,true);
-                    setPathState(12);
+                    setPathState(13);
                 }
                 break;
-            case 12:
+            case 13:
                 if(!follower.isBusy()) {
                     if(okp){
                         pathTimer.resetTimer();
@@ -322,11 +328,11 @@ public class AutoCloseBlue18 extends OpMode{
                         r.intake();
                         okp=true;
                         r.aiming=false;
-                        setPathState(13);
+                        setPathState(14);
                     }
                 }
                 break;
-            case 13:
+            case 14:
                 if(!follower.isBusy()) {
                     r.i.pornit=false;
                     r.aim=false;
