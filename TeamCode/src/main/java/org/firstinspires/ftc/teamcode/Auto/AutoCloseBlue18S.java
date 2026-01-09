@@ -13,7 +13,7 @@ import org.firstinspires.ftc.teamcode.Hardware.Robot;
 
 import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
 
-@Autonomous(name="Auto Close Blue  Solo", group="Blue")
+@Autonomous(name="Auto Close Blue 18 Solo", group="Blue")
 public class AutoCloseBlue18S extends OpMode{
     private TelemetryManager t;
     private Follower follower;
@@ -24,7 +24,7 @@ public class AutoCloseBlue18S extends OpMode{
     private int pathState;
     private final Pose startPose = new Pose(20, 125, Math.toRadians(234));
     private final Pose scorePose = new Pose(54, 96, Math.toRadians(180));
-    private final Pose doorPose = new Pose(14,63,Math.toRadians(153));
+    private final Pose doorPose = new Pose(14,63.1,Math.toRadians(153));
     private final Pose line1Pose = new Pose(17, 84, Math.toRadians(180));
     private final Pose line2Pose = new Pose(15, 60, Math.toRadians(180));
     private final Pose line3Pose = new Pose(17, 36, Math.toRadians(180));
@@ -152,6 +152,7 @@ public class AutoCloseBlue18S extends OpMode{
                 if(!follower.isBusy()) {
                     if(okp){
                         pathTimer.resetTimer();
+                        r.i.pornit=true;
                         okp=false;
                     }
                     if(pathTimer.getElapsedTimeSeconds()>0.7) {
@@ -197,7 +198,7 @@ public class AutoCloseBlue18S extends OpMode{
                         okp=false;
 
                     }
-                    if(pathTimer.getElapsedTimeSeconds()>1) {
+                    if(pathTimer.getElapsedTimeSeconds()>0.7) {
                         follower.followPath(scoreDoor, true);
                         r.intake=false;
                         r.oki=false;
@@ -233,7 +234,7 @@ public class AutoCloseBlue18S extends OpMode{
                         okp=false;
 
                     }
-                    if(pathTimer.getElapsedTimeSeconds()>1) {
+                    if(pathTimer.getElapsedTimeSeconds()>0.7) {
                         follower.followPath(scoreDoor, true);
                         r.intake=false;
                         r.oki=false;
