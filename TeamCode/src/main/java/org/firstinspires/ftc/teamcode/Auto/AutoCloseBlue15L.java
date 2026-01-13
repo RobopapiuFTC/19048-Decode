@@ -24,11 +24,11 @@ public class AutoCloseBlue15L extends OpMode{
     private int pathState;
     private final Pose startPose = new Pose(20, 125, Math.toRadians(234));
     private final Pose scorePose = new Pose(54, 96, Math.toRadians(180));
-    private final Pose doorPose = new Pose(13.5,62,Math.toRadians(160));
-    private final Pose doorM = new Pose(14,53,Math.toRadians(160));
+    private final Pose doorPose = new Pose(15,65,Math.toRadians(180));
+    private final Pose doorM = new Pose(14,53,Math.toRadians(153));
     private final Pose line1Pose = new Pose(13.5, 84, Math.toRadians(180));
-    private final Pose line2Pose = new Pose(9, 59, Math.toRadians(180));
-    private final Pose line3Pose = new Pose(9, 36, Math.toRadians(180));
+    private final Pose line2Pose = new Pose(10, 59, Math.toRadians(180));
+    private final Pose line3Pose = new Pose(10, 36, Math.toRadians(180));
     public final Pose endPose = new Pose(36,90,Math.toRadians(180));
     private PathChain scorePreload,doorPickup,grabPickup1, scorePickup1, grabPickup2, scorePickup2, grabPickup3, scorePickup3,end,scoreDoor,doorMove;
     public void buildPaths() {
@@ -54,7 +54,9 @@ public class AutoCloseBlue15L extends OpMode{
         doorMove = follower
                 .pathBuilder()
                 .addPath(
-                        new BezierLine(follower::getPose, doorM)
+                        new BezierCurve(follower::getPose,
+                                new Pose(18.000, 55.000),
+                                doorM)
                 )
                 .setBrakingStrength(2)
                 .setLinearHeadingInterpolation(doorPose.getHeading(),doorM.getHeading())
@@ -113,10 +115,10 @@ public class AutoCloseBlue15L extends OpMode{
                 .pathBuilder()
                 .addPath(
                         new BezierLine(follower::getPose,
-                                new Pose(60,108,Math.toRadians(250)))
+                                new Pose(60,108,Math.toRadians(180)))
                 )
                 .setBrakingStrength(2)
-                .setLinearHeadingInterpolation(line3Pose.getHeading(),Math.toRadians(250),0.1)
+                .setLinearHeadingInterpolation(line3Pose.getHeading(),Math.toRadians(180))
                 .build();
 
         end = follower
@@ -199,6 +201,12 @@ public class AutoCloseBlue15L extends OpMode{
                 break;
             case 4:
                 if(!follower.isBusy()) {
+                    follower.followPath(doorMove,true);
+                    setPathState(5);
+                }
+                break;
+            case 5:
+                if(!follower.isBusy()) {
                     scoreDoor = follower
                             .pathBuilder()
                             .addPath(
@@ -226,11 +234,11 @@ public class AutoCloseBlue15L extends OpMode{
                         r.s.on();
                         okf=true;
                         okp=true;
-                        setPathState(5);
+                        setPathState(6);
                     }
                 }
                 break;
-            case 5:
+            case 6:
                 if(follower.getPose().getX()>20 && okf){
                     r.i.pornit=false;
                     r.s.latchdown();
@@ -254,16 +262,22 @@ public class AutoCloseBlue15L extends OpMode{
                         r.i.pornit=true;
                         okp=false;
                     }
-                    if(pathTimer.getElapsedTimeSeconds()>0.7) {
+                    if(pathTimer.getElapsedTimeSeconds()>1) {
                         follower.followPath(doorPickup, true);
                         r.intake();
                         okp=true;
                         r.aiming=false;
-                        setPathState(6);
+                        setPathState(7);
                     }
                 }
                 break;
-            case 6:
+            case 7:
+                if(!follower.isBusy()) {
+                    follower.followPath(doorMove,true);
+                    setPathState(8);
+                }
+                break;
+            case 8:
                 if(!follower.isBusy()) {
                     scoreDoor = follower
                             .pathBuilder()
@@ -292,11 +306,12 @@ public class AutoCloseBlue15L extends OpMode{
                         r.s.on();
                         okf=true;
                         okp=true;
-                        setPathState(7);
+                        setPathState(9);
                     }
                 }
                 break;
-            case 7:if(follower.getPose().getX()>20 && okf){
+            case 9:
+                if(follower.getPose().getX()>20 && okf){
                 r.i.pornit=false;
                 r.s.latchdown();
                 okf=false;
@@ -313,21 +328,22 @@ public class AutoCloseBlue15L extends OpMode{
                         r.intake();
                         okp=true;
                         r.aiming=false;
-                        setPathState(8);
+                        setPathState(10);
                     }
                 }
                 break;
-            case 8:
+            case 10:
                 if(!follower.isBusy()) {
                     r.aim=true;
                     r.aiming=true;
                     r.s.on();
                     okf=true;
                     follower.followPath(scorePickup1,true);
-                    setPathState(9);
+                    setPathState(11);
                 }
                 break;
-            case 9:if(follower.getPose().getX()>20 && okf){
+            case 11:
+                if(follower.getPose().getX()>20 && okf){
                 r.i.pornit=false;
                 r.s.latchdown();
                 okf=false;
@@ -343,11 +359,11 @@ public class AutoCloseBlue15L extends OpMode{
                         r.intake();
                         okp=true;
                         r.aiming=false;
-                        setPathState(10);
+                        setPathState(12);
                     }
                 }
                 break;
-            case 10:
+            case 12:
                 if(!follower.isBusy()) {
                     r.i.pornit=false;
                     r.aim=false;
