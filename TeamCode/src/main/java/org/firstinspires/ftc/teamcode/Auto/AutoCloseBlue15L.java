@@ -137,7 +137,7 @@ public class AutoCloseBlue15L extends OpMode{
                 r.pids=true;
                 okp=true;
                 r.shooter();
-                setPathState(1);
+                nextPath();
                 break;
             case 1:
                 if(!follower.isBusy()) {
@@ -151,7 +151,7 @@ public class AutoCloseBlue15L extends OpMode{
                         r.intake();
                         okp=true;
                         r.aiming=false;
-                        setPathState(2);
+                        nextPath();
                     }
                 }
                 break;
@@ -162,7 +162,7 @@ public class AutoCloseBlue15L extends OpMode{
                     r.s.on();
                     okf=true;
                     follower.followPath(scorePickup2,true);
-                    setPathState(3);
+                    nextPath();
                 }
                 break;
 
@@ -181,7 +181,7 @@ public class AutoCloseBlue15L extends OpMode{
                                             new Pose(55, 60),
                                             doorPose)
                             )
-                            .setNoDeceleration()
+                            .setBrakingStrength(2)
                             .setLinearHeadingInterpolation(scorePose.getHeading(),doorPose.getHeading())
                             .build();
                     if(okp){
@@ -195,14 +195,14 @@ public class AutoCloseBlue15L extends OpMode{
                         r.intake();
                         okp=true;
                         r.aiming=false;
-                        setPathState(4);
+                        nextPath();
                     }
                 }
                 break;
             case 4:
                 if(!follower.isBusy()) {
                     follower.followPath(doorMove,true);
-                    setPathState(5);
+                    nextPath();
                 }
                 break;
             case 5:
@@ -234,7 +234,7 @@ public class AutoCloseBlue15L extends OpMode{
                         r.s.on();
                         okf=true;
                         okp=true;
-                        setPathState(6);
+                        nextPath();
                     }
                 }
                 break;
@@ -253,7 +253,7 @@ public class AutoCloseBlue15L extends OpMode{
                                             new Pose(55, 60),
                                             doorPose)
                             )
-                            .setNoDeceleration()
+                            .setBrakingStrength(2)
                             .setLinearHeadingInterpolation(scorePose.getHeading(),doorPose.getHeading())
                             .build();
                     if(okp){
@@ -267,14 +267,14 @@ public class AutoCloseBlue15L extends OpMode{
                         r.intake();
                         okp=true;
                         r.aiming=false;
-                        setPathState(7);
+                        nextPath();
                     }
                 }
                 break;
             case 7:
                 if(!follower.isBusy()) {
                     follower.followPath(doorMove,true);
-                    setPathState(8);
+                    nextPath();
                 }
                 break;
             case 8:
@@ -306,7 +306,7 @@ public class AutoCloseBlue15L extends OpMode{
                         r.s.on();
                         okf=true;
                         okp=true;
-                        setPathState(9);
+                        nextPath();
                     }
                 }
                 break;
@@ -328,7 +328,7 @@ public class AutoCloseBlue15L extends OpMode{
                         r.intake();
                         okp=true;
                         r.aiming=false;
-                        setPathState(10);
+                        nextPath();
                     }
                 }
                 break;
@@ -339,7 +339,7 @@ public class AutoCloseBlue15L extends OpMode{
                     r.s.on();
                     okf=true;
                     follower.followPath(scorePickup1,true);
-                    setPathState(11);
+                    nextPath();
                 }
                 break;
             case 11:
@@ -359,7 +359,7 @@ public class AutoCloseBlue15L extends OpMode{
                         r.intake();
                         okp=true;
                         r.aiming=false;
-                        setPathState(12);
+                        nextPath();
                     }
                 }
                 break;
@@ -369,7 +369,7 @@ public class AutoCloseBlue15L extends OpMode{
                     r.aim=false;
                     r.aima=false;
                     r.tu.setYaw(0);
-                    setPathState(-1);
+                    endPath();
                 }
                 break;
         }
@@ -377,6 +377,16 @@ public class AutoCloseBlue15L extends OpMode{
 
     public void setPathState(int pState) {
         pathState = pState;
+        pathTimer.resetTimer();
+    }
+
+    public void nextPath(){
+        pathState++;
+        pathTimer.resetTimer();
+    }
+
+    public void endPath(){
+        pathState=-1;
         pathTimer.resetTimer();
     }
     @Override

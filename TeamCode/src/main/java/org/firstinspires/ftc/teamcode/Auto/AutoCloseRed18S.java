@@ -13,8 +13,8 @@ import org.firstinspires.ftc.teamcode.Hardware.Robot;
 
 import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
 
-@Autonomous(name="Auto Close Blue 18 Solo", group="Blue")
-public class AutoCloseBlue18S extends OpMode{
+@Autonomous(name="Auto Close Red 18 Solo", group="Red")
+public class AutoCloseRed18S extends OpMode{
     private TelemetryManager t;
     private Follower follower;
     private Timer pathTimer, actionTimer, opmodeTimer;
@@ -22,14 +22,14 @@ public class AutoCloseBlue18S extends OpMode{
     private boolean okp,okf;
 
     private int pathState;
-    private final Pose startPose = new Pose(20, 125, Math.toRadians(234));
-    private final Pose scorePose = new Pose(54, 96, Math.toRadians(180));
-    private final Pose doorPose = new Pose(15,65,Math.toRadians(180));
-    private final Pose doorM = new Pose(14,53,Math.toRadians(153));
-    private final Pose line1Pose = new Pose(13.5, 84, Math.toRadians(180));
-    private final Pose line2Pose = new Pose(10, 59, Math.toRadians(180));
-    private final Pose line3Pose = new Pose(10, 36, Math.toRadians(180));
-    public final Pose endPose = new Pose(36,90,Math.toRadians(180));
+    private  Pose startPose = new Pose(20, 125, Math.toRadians(234));
+    private  Pose scorePose = new Pose(54, 96, Math.toRadians(180));
+    private  Pose doorPose = new Pose(15,65,Math.toRadians(180));
+    private  Pose doorM = new Pose(14,53,Math.toRadians(153));
+    private  Pose line1Pose = new Pose(13.5, 84, Math.toRadians(180));
+    private  Pose line2Pose = new Pose(10, 59, Math.toRadians(180));
+    private  Pose line3Pose = new Pose(10, 36, Math.toRadians(180));
+    public  Pose endPose = new Pose(36,90,Math.toRadians(180));
     private PathChain scorePreload,doorPickup,grabPickup1, scorePickup1, grabPickup2, scorePickup2, grabPickup3, scorePickup3,end,scoreDoor,doorMove;
     public void buildPaths() {
         scorePreload = follower
@@ -432,11 +432,19 @@ public class AutoCloseBlue18S extends OpMode{
         opmodeTimer = new Timer();
         opmodeTimer.resetTimer();
 
+        startPose = startPose.mirror();
+        scorePose = scorePose.mirror();
+        doorPose = doorPose.mirror();
+        doorM = doorM.mirror();
+        line1Pose = line1Pose.mirror();
+        line2Pose = line2Pose.mirror();
+        line3Pose = line3Pose.mirror();
+        endPose = endPose.mirror();
 
         follower = Constants.createFollower(hardwareMap);
         buildPaths();
         follower.setStartingPose(startPose);
-        r = new Robot(hardwareMap,follower,t,gamepad1,gamepad2,true,true,startPose);
+        r = new Robot(hardwareMap,follower,t,gamepad1,gamepad2,false,true,startPose);
         r.aInit();
         r.setShootTarget();
     }
