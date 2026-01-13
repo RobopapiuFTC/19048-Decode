@@ -1,9 +1,6 @@
 package org.firstinspires.ftc.teamcode.Auto;
-import android.graphics.Point;
-
 import com.bylazar.telemetry.TelemetryManager;
 import com.pedropathing.geometry.BezierCurve;
-import com.pedropathing.paths.HeadingInterpolator;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.pedropathing.follower.Follower;
 import com.pedropathing.geometry.BezierLine;
@@ -22,32 +19,118 @@ public class AutoCloseBlue18 extends OpMode{
     private Follower follower;
     private Timer pathTimer, actionTimer, opmodeTimer;
     private Robot r;
-    private boolean okp;
+    private boolean okp,okf;
 
     private int pathState;
-    private final Pose startPose = new Pose(21, 124, Math.toRadians(234));
+    private final Pose startPose = new Pose(20, 125, Math.toRadians(234));
     private final Pose scorePose = new Pose(54, 96, Math.toRadians(180));
-    private final Pose doorPose = new Pose(12.5,62,Math.toRadians(160));
-    private final Pose doorM = new Pose(13.5,53,Math.toRadians(160));
-    private final Pose line1Pose = new Pose(15, 84, Math.toRadians(180));
-    private final Pose line2Pose = new Pose(12, 59, Math.toRadians(180));
-    private final Pose line3Pose = new Pose(12, 36, Math.toRadians(180));
+    private final Pose doorPose = new Pose(13.5,62.4,Math.toRadians(160));
+    private final Pose doorM = new Pose(14,53,Math.toRadians(160));
+    private final Pose line1Pose = new Pose(13.5, 84, Math.toRadians(180));
+    private final Pose line2Pose = new Pose(9, 59, Math.toRadians(180));
+    private final Pose line3Pose = new Pose(9, 36, Math.toRadians(180));
     public final Pose endPose = new Pose(36,90,Math.toRadians(180));
     private PathChain scorePreload,doorPickup,grabPickup1, scorePickup1, grabPickup2, scorePickup2, grabPickup3, scorePickup3,end,scoreDoor,doorMove;
     public void buildPaths() {
+        scorePreload = follower
+                .pathBuilder()
+                .addPath(
+                        new BezierLine(follower::getPose, scorePose)
+                )
+                .setBrakingStrength(2)
+                .setLinearHeadingInterpolation(startPose.getHeading(),scorePose.getHeading())
+                .build();
+
+        grabPickup1 = follower
+                .pathBuilder()
+                .addPath(
+                        new BezierCurve(follower::getPose,
+                                new Pose(55,86),
+                                line1Pose)
+                )
+                .setBrakingStrength(2)
+                .setLinearHeadingInterpolation(scorePose.getHeading(),line1Pose.getHeading())
+                .build();
+        doorMove = follower
+                .pathBuilder()
+                .addPath(
+                        new BezierLine(follower::getPose, doorM)
+                )
+                .setBrakingStrength(2)
+                .setLinearHeadingInterpolation(doorPose.getHeading(),doorM.getHeading())
+                .build();
+        scorePickup1 = follower
+                .pathBuilder()
+                .addPath(
+                        new BezierLine(follower::getPose, new Pose(60,108,Math.toRadians(180)))
+                )
+                .setBrakingStrength(2)
+                .setLinearHeadingInterpolation(line1Pose.getHeading(),scorePose.getHeading())
+                .build();
+
+        grabPickup2 = follower
+                .pathBuilder()
+                .addPath(
+                        new BezierCurve(
+                                follower::getPose,
+                                new Pose(57.667, 51.464),
+                                new Pose(54.802, 60.557),
+                                line2Pose
+                        )
+                )
+                .setBrakingStrength(2)
+                .setLinearHeadingInterpolation(scorePose.getHeading(),line2Pose.getHeading())
+                .build();
+
+        scorePickup2 = follower
+                .pathBuilder()
+                .addPath(
+                        new BezierCurve(
+                                follower::getPose,
+                                new Pose(59, 60),
+                                scorePose
+                        )
+                )
+                .setBrakingStrength(2)
+                .setLinearHeadingInterpolation(line2Pose.getHeading(),scorePose.getHeading())
+                .build();
+
+        grabPickup3 = follower
+                .pathBuilder()
+                .addPath(
+                        new BezierCurve(
+                                follower::getPose,
+                                new Pose(83.483, 39),
+                                line3Pose
+                        )
+                )
+                .setBrakingStrength(2)
+                .setLinearHeadingInterpolation(scorePose.getHeading(),line3Pose.getHeading())
+                .build();
+
+
+        scorePickup3 = follower
+                .pathBuilder()
+                .addPath(
+                        new BezierLine(follower::getPose,
+                                new Pose(60,108,Math.toRadians(250)))
+                )
+                .setBrakingStrength(2)
+                .setLinearHeadingInterpolation(line3Pose.getHeading(),Math.toRadians(250),0.1)
+                .build();
+
+        end = follower
+                .pathBuilder()
+                .addPath(
+                        new BezierLine(follower::getPose,endPose)
+                )
+                .setLinearHeadingInterpolation(scorePose.getHeading(),endPose.getHeading())
+                .build();
 
     }
     public void autonomousPathUpdate() {
         switch (pathState) {
             case 0:
-                scorePreload = follower
-                        .pathBuilder()
-                        .addPath(
-                                new BezierLine(follower.getPose(), scorePose)
-                        )
-                        .setBrakingStrength(2)
-                        .setLinearHeadingInterpolation(startPose.getHeading(),scorePose.getHeading())
-                        .build();
                 follower.followPath(scorePreload,true);
                 r.pids=true;
                 okp=true;
@@ -56,18 +139,6 @@ public class AutoCloseBlue18 extends OpMode{
                 break;
             case 1:
                 if(!follower.isBusy()) {
-                    grabPickup2 = follower
-                            .pathBuilder()
-                            .addPath(
-                                    new BezierCurve(
-                                            follower.getPose(),
-                                            new Pose(59, 58),
-                                            line2Pose
-                                    )
-                            )
-                            .setBrakingStrength(2)
-                            .setLinearHeadingInterpolation(scorePose.getHeading(),line2Pose.getHeading())
-                            .build();
                     if(okp){
                         pathTimer.resetTimer();
                         r.i.pornit=true;
@@ -84,27 +155,23 @@ public class AutoCloseBlue18 extends OpMode{
                 break;
             case 2:
                 if(!follower.isBusy()) {
-                    scorePickup2 = follower
-                            .pathBuilder()
-                            .addPath(
-                                    new BezierCurve(
-                                            follower.getPose(),
-                                            new Pose(59, 60),
-                                            scorePose
-                                    )
-                            )
-                            .setBrakingStrength(2)
-                            .setLinearHeadingInterpolation(line2Pose.getHeading(),scorePose.getHeading())
-                            .build();
-                    r.i.pornit=false;
-                    r.shooter();
+                    r.aim=true;
+                    r.aiming=true;
+                    r.s.on();
+                    okf=true;
                     follower.followPath(scorePickup2,true);
                     setPathState(3);
                 }
                 break;
 
             case 3:
+                if(follower.getPose().getX()>20 && okf){
+                    r.i.pornit=false;
+                    r.s.latchdown();
+                okf=false;
+            }
                 if(!follower.isBusy()) {
+
                     doorPickup = follower
                             .pathBuilder()
                             .addPath(
@@ -112,7 +179,7 @@ public class AutoCloseBlue18 extends OpMode{
                                             new Pose(55, 60),
                                             doorPose)
                             )
-                            .setBrakingStrength(2)
+                            .setNoDeceleration()
                             .setLinearHeadingInterpolation(scorePose.getHeading(),doorPose.getHeading())
                             .build();
                     if(okp){
@@ -154,24 +221,30 @@ public class AutoCloseBlue18 extends OpMode{
                         follower.followPath(scoreDoor, true);
                         r.intake=false;
                         r.oki=false;
-                        r.i.pornit=false;
-                        r.shooter();
+                        r.aim=true;
+                        r.aiming=true;
+                        r.s.on();
+                        okf=true;
                         okp=true;
                         setPathState(5);
                     }
                 }
                 break;
-            case 5:
+            case 5:if(follower.getPose().getX()>20 && okf){
+                r.i.pornit=false;
+                r.s.latchdown();
+                okf=false;
+            }
                 if(!follower.isBusy()) {
-                    grabPickup1 = follower
+                    doorPickup = follower
                             .pathBuilder()
                             .addPath(
                                     new BezierCurve(follower.getPose(),
-                                            new Pose(55,86),
-                                            line1Pose)
+                                            new Pose(55, 60),
+                                            doorPose)
                             )
-                            .setBrakingStrength(2)
-                            .setLinearHeadingInterpolation(scorePose.getHeading(),line1Pose.getHeading())
+                            .setNoDeceleration()
+                            .setLinearHeadingInterpolation(scorePose.getHeading(),doorPose.getHeading())
                             .build();
                     if(okp){
                         pathTimer.resetTimer();
@@ -180,7 +253,7 @@ public class AutoCloseBlue18 extends OpMode{
                         okp=false;
                     }
                     if(pathTimer.getElapsedTimeSeconds()>0.7) {
-                        follower.followPath(grabPickup1,true);
+                        follower.followPath(doorPickup, true);
                         r.intake();
                         okp=true;
                         r.aiming=false;
@@ -190,21 +263,43 @@ public class AutoCloseBlue18 extends OpMode{
                 break;
             case 6:
                 if(!follower.isBusy()) {
-                    scorePickup1 = follower
-                            .pathBuilder()
-                            .addPath(
-                                    new BezierLine(follower.getPose(),scorePose)
-                            )
-                            .setBrakingStrength(2)
-                            .setLinearHeadingInterpolation(line1Pose.getHeading(),scorePose.getHeading())
-                            .build();
-                    r.i.pornit=false;
-                    r.shooter();
-                    follower.followPath(scorePickup1,true);
-                    setPathState(7);
+                    scoreDoor = follower
+                        .pathBuilder()
+                        .addPath(
+                                new BezierCurve(
+                                        follower.getPose(),
+                                        new Pose(55, 60),
+                                        scorePose
+                                )
+                        )
+                        .setBrakingStrength(2)
+                        .setLinearHeadingInterpolation(doorPose.getHeading(),scorePose.getHeading())
+                        .build();
+
+                    if(okp){
+                        pathTimer.resetTimer();
+                        r.pids=true;
+                        okp=false;
+
+                    }
+                    if(pathTimer.getElapsedTimeSeconds()>1.5) {
+                        follower.followPath(scoreDoor, true);
+                        r.intake=false;
+                        r.oki=false;
+                        r.aim=true;
+                        r.aiming=true;
+                        r.s.on();
+                        okf=true;
+                        okp=true;
+                        setPathState(7);
+                    }
                 }
                 break;
-            case 7:
+            case 7:if(follower.getPose().getX()>20 && okf){
+                r.i.pornit=false;
+                r.s.latchdown();
+                okf=false;
+            }
                 if(!follower.isBusy()) {
                     doorPickup = follower
                             .pathBuilder()
@@ -213,7 +308,7 @@ public class AutoCloseBlue18 extends OpMode{
                                             new Pose(55, 60),
                                             doorPose)
                             )
-                            .setBrakingStrength(2)
+                            .setNoDeceleration()
                             .setLinearHeadingInterpolation(scorePose.getHeading(),doorPose.getHeading())
                             .build();
                     if(okp){
@@ -255,28 +350,21 @@ public class AutoCloseBlue18 extends OpMode{
                         follower.followPath(scoreDoor, true);
                         r.intake=false;
                         r.oki=false;
-                        r.i.pornit=false;
-                        r.shooter();
+                        r.aim=true;
+                        r.aiming=true;
+                        r.s.on();
+                        okf=true;
                         okp=true;
                         setPathState(9);
                     }
                 }
                 break;
-            case 9:
+            case 9:if(follower.getPose().getX()>20 && okf){
+                r.i.pornit=false;
+                r.s.latchdown();
+                okf=false;
+            }
                 if(!follower.isBusy()) {
-                    grabPickup3 = follower
-                            .pathBuilder()
-                            .addPath(
-                                    new BezierCurve(
-                                            follower.getPose(),
-                                            new Pose(83.483, 39),
-                                            line3Pose
-                                    )
-                            )
-                            .setBrakingStrength(2)
-                            .setLinearHeadingInterpolation(scorePose.getHeading(),line3Pose.getHeading())
-                            .build();
-
                     if(okp){
                         pathTimer.resetTimer();
                         r.pids=true;
@@ -284,32 +372,29 @@ public class AutoCloseBlue18 extends OpMode{
                         okp=false;
                     }
                     if(pathTimer.getElapsedTimeSeconds()>0.7) {
-                        follower.followPath(grabPickup3,true);
+                        follower.followPath(grabPickup1,true);
                         r.intake();
                         okp=true;
                         r.aiming=false;
                         setPathState(10);
                     }
                 }
-break;
+                break;
             case 10:
                 if(!follower.isBusy()) {
-                    scorePickup3 = follower
-                            .pathBuilder()
-                            .addPath(
-                                    new BezierLine(follower.getPose(),
-                                            new Pose(60, 108, Math.toRadians(180)))
-                            )
-                            .setBrakingStrength(2)
-                            .setLinearHeadingInterpolation(Math.toRadians(180),Math.toRadians(180))
-                            .build();
-                    r.i.pornit=false;
-                    r.shooter();
-                    follower.followPath(scorePickup3,true);
+                    r.aim=true;
+                    r.aiming=true;
+                    r.s.on();
+                    okf=true;
+                    follower.followPath(scorePickup1,true);
                     setPathState(11);
                 }
                 break;
-            case 11:
+            case 11:if(follower.getPose().getX()>20 && okf){
+                r.i.pornit=false;
+                r.s.latchdown();
+                okf=false;
+            }
                 if(!follower.isBusy()) {
                     if(okp){
                         pathTimer.resetTimer();
