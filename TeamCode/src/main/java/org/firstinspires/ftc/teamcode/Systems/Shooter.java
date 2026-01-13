@@ -2,12 +2,6 @@ package org.firstinspires.ftc.teamcode.Systems;
 
 import android.service.controls.Control;
 
-import com.ThermalEquilibrium.homeostasis.Controllers.Feedback.BangBang;
-import com.ThermalEquilibrium.homeostasis.Filters.FilterAlgorithms.KalmanFilter;
-import com.ThermalEquilibrium.homeostasis.Parameters.PIDCoefficients;
-import com.ThermalEquilibrium.homeostasis.Controllers.Feedback.BasicPID;
-
-import com.ThermalEquilibrium.homeostasis.Parameters.BangBangParameters;
 import com.bylazar.configurables.annotations.Configurable;
 import com.bylazar.telemetry.TelemetryManager;
 import com.qualcomm.robotcore.hardware.ColorSensor;
