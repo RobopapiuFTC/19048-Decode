@@ -25,8 +25,8 @@ public class Shooter {
     public static double kS = 0.08, kV = 0.00039, kP = 0.001;
     private boolean activated = true;
 
-    public double shootc=900,offset;
-    public static double hood,angle=0.00055;
+    public double shootc=1000,offset;
+    public static double hood,angle=0.0007;
 
     public Shooter(HardwareMap hardwareMap, TelemetryManager telemetry){
 

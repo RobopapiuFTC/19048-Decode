@@ -34,6 +34,7 @@ public class Constants {
     public static PathConstraints pathConstraints = new PathConstraints(0.95, 100, 1, 1);
 
     public static MecanumConstants driveConstants = new MecanumConstants()
+            .useBrakeModeInTeleOp(true)
             .rightFrontMotorName("rf")
             .rightRearMotorName("rr")
             .leftRearMotorName("lr")

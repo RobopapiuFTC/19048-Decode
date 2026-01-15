@@ -45,7 +45,7 @@ public class AutoCloseRed15 extends OpMode{
                 .pathBuilder()
                 .addPath(
                         new BezierCurve(follower::getPose,
-                                new Pose(55,86),
+                                new Pose(55,86).mirror(),
                                 line1Pose)
                 )
                 .setBrakingStrength(2)
@@ -54,7 +54,7 @@ public class AutoCloseRed15 extends OpMode{
         doorMove = follower
                 .pathBuilder()
                 .addPath(
-                        new BezierCurve(follower::getPose,new Pose(18.000, 55.000),
+                        new BezierCurve(follower::getPose,new Pose(18.000, 55.000).mirror(),
                                 doorM)
                 )
                 .setBrakingStrength(2)
@@ -74,8 +74,8 @@ public class AutoCloseRed15 extends OpMode{
                 .addPath(
                         new BezierCurve(
                                 follower::getPose,
-                                new Pose(57.667, 51.464),
-                                new Pose(54.802, 60.557),
+                                new Pose(57.667, 51.464).mirror(),
+                                new Pose(54.802, 60.557).mirror(),
                                 line2Pose
                         )
                 )
@@ -88,7 +88,7 @@ public class AutoCloseRed15 extends OpMode{
                 .addPath(
                         new BezierCurve(
                                 follower::getPose,
-                                new Pose(59, 60),
+                                new Pose(59, 60).mirror(),
                                 scorePose
                         )
                 )
@@ -101,7 +101,7 @@ public class AutoCloseRed15 extends OpMode{
                 .addPath(
                         new BezierCurve(
                                 follower::getPose,
-                                new Pose(83.483, 39),
+                                new Pose(83.483, 39).mirror(),
                                 line3Pose
                         )
                 )
@@ -114,7 +114,7 @@ public class AutoCloseRed15 extends OpMode{
                 .pathBuilder()
                 .addPath(
                         new BezierLine(follower::getPose,
-                                new Pose(60,108,Math.toRadians(180)))
+                                new Pose(60,108,Math.toRadians(180)).mirror())
                 )
                 .setBrakingStrength(2)
                 .setLinearHeadingInterpolation(line3Pose.getHeading(),Math.toRadians(180))

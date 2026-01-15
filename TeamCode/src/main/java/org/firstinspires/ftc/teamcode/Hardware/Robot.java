@@ -72,7 +72,7 @@ public class Robot {
         else{
             tu.setYaw(0);
         }
-        m.periodic(g1);
+        //m.periodic(g1);
         i.periodic();
         s.periodic();
         tu.periodic(auto,aim);
@@ -120,7 +120,10 @@ public class Robot {
             }
         }
         if(g1.b){
-            f.setPose(startingPose);
+            i.intake.setDirection(DcMotorSimple.Direction.REVERSE);
+            i.pornit=true;
+            intake=false;
+            oki=false;
         }
         if(g1.dpad_left){
             if(oTimer.getElapsedTimeSeconds()>0.3){
@@ -165,7 +168,7 @@ public class Robot {
         aiming=true;
     }
     public void hood(){
-        s.hood=clamp(0.1+(s.getTarget()-s.getVelocity()-20)*s.angle,0.1,0.5);
+        s.hood=clamp(0.05+(s.getTarget()-s.getVelocity()-20)*s.angle,0.05,0.5);
         s.SVD.setPosition(s.hood);
     }
     public void sequenceintake(){
@@ -235,12 +238,10 @@ public class Robot {
                 if(f.getPose().getX()<80){
                     if (f.getPose().getY() > 40) {
                         shootp = new Pose(0, 144, 0);
-                        s.shootc=970;
                         dist = shootp.distanceFrom(f.getPose());
                         s.forDistance(dist);
                     } else {
-                        shootp = new Pose(6, 144, 0);
-                        s.shootc=970;
+                        shootp = new Pose(2, 144, 0);
                         dist = shootp.distanceFrom(f.getPose());
                         s.forDistance(dist);
                     }
@@ -248,12 +249,10 @@ public class Robot {
                 else{
                     if (f.getPose().getY() > 40) {
                         shootp = new Pose(0, 144, 0);
-                        s.shootc=950;
                         dist = shootp.distanceFrom(f.getPose());
                         s.forDistance(dist);
                     } else {
-                        shootp = new Pose(6, 144, 0);
-                        s.shootc=970;
+                        shootp = new Pose(2, 144, 0);
                         dist = shootp.distanceFrom(f.getPose());
                         s.forDistance(dist);
                     }
@@ -263,12 +262,10 @@ public class Robot {
                 if(f.getPose().getX()<80) {
                     if (f.getPose().getY() > 40) {
                         shootp = new Pose(144, 144, 0);
-                        s.shootc = 950;
                         dist = shootp.distanceFrom(f.getPose());
                         s.forDistance(dist);
                     } else {
-                        shootp = new Pose(138, 144, 0);
-                        s.shootc = 970;
+                        shootp = new Pose(142, 144, 0);
                         dist = shootp.distanceFrom(f.getPose());
                         s.forDistance(dist);
                     }
@@ -276,12 +273,10 @@ public class Robot {
                 else{
                     if (f.getPose().getY() > 40) {
                         shootp = new Pose(144, 144, 0);
-                        s.shootc=970;
                         dist = shootp.distanceFrom(f.getPose());
                         s.forDistance(dist);
                     } else {
-                        shootp = new Pose(138, 144, 0);
-                        s.shootc=970;
+                        shootp = new Pose(142, 144, 0);
                         dist = shootp.distanceFrom(f.getPose());
                         s.forDistance(dist);
                     }
@@ -309,10 +304,10 @@ public class Robot {
     }
     public void setShootTargetFar(){
         if (a){
-            shootp = new Pose(6, 144, 0);
+            shootp = new Pose(2, 144, 0);
         }
         else {
-            shootp = new Pose(138, 144, 0);
+            shootp = new Pose(142, 144, 0);
         }
     }
     public Pose getShootTarget() {
