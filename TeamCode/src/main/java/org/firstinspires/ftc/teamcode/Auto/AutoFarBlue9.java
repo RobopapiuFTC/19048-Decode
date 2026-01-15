@@ -36,7 +36,7 @@ public class AutoFarBlue9 extends OpMode{
         scorePreload = follower
                 .pathBuilder()
                 .addPath(
-                        new BezierLine(startPose, scorePose)
+                        new BezierLine(follower::getPose, scorePose)
                 )
                 .setLinearHeadingInterpolation(startPose.getHeading(),Math.toRadians(90))
                 .build();
@@ -44,7 +44,7 @@ public class AutoFarBlue9 extends OpMode{
         position = follower
                 .pathBuilder()
                 .addPath(
-                        new BezierLine(scorePose,positionPose)
+                        new BezierLine(follower::getPose,positionPose)
                 )
                 .setLinearHeadingInterpolation(Math.toRadians(90),Math.toRadians(180))
                 .build();
@@ -52,7 +52,7 @@ public class AutoFarBlue9 extends OpMode{
                 .pathBuilder()
                 .addPath(
                         new BezierCurve(
-                                positionPose,
+                                follower::getPose,
                                 new Pose(75,38),
                                 linePose
                                 )
@@ -63,7 +63,7 @@ public class AutoFarBlue9 extends OpMode{
                 .pathBuilder()
                 .addPath(
                         new BezierLine(
-                                linePose,
+                                follower::getPose,
                                 scorePose
                         )
                 )
@@ -72,7 +72,7 @@ public class AutoFarBlue9 extends OpMode{
         grabPickup1 = follower
                 .pathBuilder()
                 .addPath(
-                        new BezierCurve(scorePose,
+                        new BezierCurve(follower::getPose,
                                 new Pose(7.000, 25),
                                 line1Pose)
                 )
@@ -82,7 +82,7 @@ public class AutoFarBlue9 extends OpMode{
         scorePickup1 = follower
                 .pathBuilder()
                 .addPath(
-                        new BezierLine(line1Pose,scorePose)
+                        new BezierLine(follower::getPose,scorePose)
                 )
                 .setLinearHeadingInterpolation(line1Pose.getHeading(),scorePose.getHeading())
                 .build();
@@ -91,7 +91,7 @@ public class AutoFarBlue9 extends OpMode{
                 .pathBuilder()
                 .addPath(
                         new BezierCurve(
-                                scorePose,
+                                follower::getPose,
                                 new Pose(8, 6),
                                 line2Pose
                         )
@@ -103,7 +103,7 @@ public class AutoFarBlue9 extends OpMode{
                 .pathBuilder()
                 .addPath(
                         new BezierCurve(
-                                line2Pose,
+                                follower::getPose,
                                 new Pose(39, 12),
                                 scorePose
                         )
@@ -114,7 +114,7 @@ public class AutoFarBlue9 extends OpMode{
         end = follower
                 .pathBuilder()
                 .addPath(
-                        new BezierLine(scorePose,endPose)
+                        new BezierLine(follower::getPose,endPose)
                 )
                 .setLinearHeadingInterpolation(scorePose.getHeading(),endPose.getHeading())
                 .build();
