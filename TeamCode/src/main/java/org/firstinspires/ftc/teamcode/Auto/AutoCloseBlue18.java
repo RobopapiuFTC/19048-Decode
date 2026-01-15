@@ -128,10 +128,16 @@ public class AutoCloseBlue18 extends OpMode{
                 follower.followPath(scorePreload,true);
                 r.pids=true;
                 okp=true;
-                r.shooter();
+                okf=true;
+                r.shoot=true;
+                r.oks=true;
                 nextPath();
                 break;
             case 1:
+                if(follower.getPose().getY()<105 && okf){
+                    r.aiming=true;
+                    okf=false;
+                }
                 if(!follower.isBusy()) {
                     if(okp){
                         pathTimer.resetTimer();
@@ -142,6 +148,7 @@ public class AutoCloseBlue18 extends OpMode{
                         follower.followPath(grabPickup2, true);
                         r.intake();
                         okp=true;
+                        okf=true;
                         r.aiming=false;
                         nextPath();
                     }
