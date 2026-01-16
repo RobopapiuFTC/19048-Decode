@@ -23,14 +23,13 @@ public class AutoFarBlue extends OpMode{
     private TelemetryManager t;
 
     private int pathState;
-    private final Pose goalPose = new Pose(0,144,0);
     private final Pose startPose = new Pose(56, 9, Math.toRadians(90));
     private final Pose scorePose = new Pose(52, 12, Math.toRadians(180));
     private final Pose positionPose= new Pose(36,17,Math.toRadians(200));
     private final Pose line1Pose = new Pose(11, 6, Math.toRadians(200));
     private final Pose line2Pose = new Pose(11, 16, Math.toRadians(200));
     public final Pose endPose = new Pose(40,14,Math.toRadians(180));
-    private final Pose linePose = new Pose(17,36,Math.toRadians(180));
+    private final Pose linePose = new Pose(11,36,Math.toRadians(180));
     private PathChain scorePreload,position,grabLine,scoreLine,grabPickup1, scorePickup1, grabPickup2, scorePickup2, grabPickup3, scorePickup3,end;
     public void buildPaths() {
         scorePreload = follower
@@ -127,7 +126,7 @@ public class AutoFarBlue extends OpMode{
                 r.pids=true;
                 okp=true;
                 r.shooter();
-                setPathState(1);
+                nextPath();
                 break;
             case 1:
                 if(!follower.isBusy()) {
@@ -146,21 +145,22 @@ public class AutoFarBlue extends OpMode{
                         r.intake();
                         okp=true;
                         r.aiming=false;
-                        setPathState(2);
+                        nextPath();
                     }
                 }
                 break;
             case 2:
                 if(!follower.isBusy()) {
                     follower.followPath(grabPickup1,true);
-                    setPathState(3);
+                    nextPath();
                 }
                 break;
 
             case 3:
                 if(!follower.isBusy()) {
+                    r.i.pornit=false;
                     follower.followPath(scorePickup1,true);
-                    setPathState(4);
+                    nextPath();
                 }
                 break;
             case 4:
@@ -180,14 +180,15 @@ public class AutoFarBlue extends OpMode{
                         r.intake();
                         okp=true;
                         r.aiming=false;
-                        setPathState(5);
+                        nextPath();
                     }
                 }
                 break;
             case 5:
                 if(!follower.isBusy()) {
+                    r.i.pornit=false;
                     follower.followPath(scorePickup2,true);
-                    setPathState(6);
+                    nextPath();
                 }
                 break;
             case 6:
@@ -207,14 +208,15 @@ public class AutoFarBlue extends OpMode{
                         r.intake();
                         okp=true;
                         r.aiming=false;
-                        setPathState(7);
+                        nextPath();
                     }
                 }
                 break;
             case 7:
                 if(!follower.isBusy()) {
+                    r.i.pornit=false;
                     follower.followPath(scorePickup2, true);
-                    setPathState(8);
+                    nextPath();
                 }
                 break;
             case 8:
@@ -234,17 +236,18 @@ public class AutoFarBlue extends OpMode{
                         r.intake();
                         okp=true;
                         r.aiming=false;
-                        setPathState(9);
+                        nextPath();
                     }
 
                 }
                 break;
             case 9:
                 if(!follower.isBusy()) {
+                    r.i.pornit=false;
                     r.aim=false;
                     r.aima=false;
                     r.tu.setYaw(0);
-                    setPathState(-1);
+                    endPath();
                 }
                 break;
         }
@@ -252,6 +255,15 @@ public class AutoFarBlue extends OpMode{
 
     public void setPathState(int pState) {
         pathState = pState;
+        pathTimer.resetTimer();
+    }
+    public void nextPath(){
+        pathState++;
+        pathTimer.resetTimer();
+    }
+
+    public void endPath(){
+        pathState=-1;
         pathTimer.resetTimer();
     }
     @Override
@@ -282,6 +294,7 @@ public class AutoFarBlue extends OpMode{
         r = new Robot(hardwareMap,follower,t,gamepad1,gamepad2,true,true,startPose);
         r.aInit();
         r.setShootTargetFar();
+        r.s.shootc=970;
     }
     @Override
     public void init_loop() {}

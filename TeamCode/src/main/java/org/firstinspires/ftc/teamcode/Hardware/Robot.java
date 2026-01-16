@@ -38,6 +38,7 @@ public class Robot {
     public Follower f;
     public boolean a,shoot,oks,aim,auto,intake,oki,pids=false,aima=true,shooting=false,aiming=true;
     public Timer iTimer,rTimer,rsTimer,sTimer,oTimer;
+    public boolean slowmode=false;
     public PathChain park;
     public Robot(HardwareMap h, Follower f, TelemetryManager t, Gamepad g1, Gamepad g2, boolean blue, boolean auto,Pose startingPose) {
         this.h = h;
@@ -159,6 +160,8 @@ public class Robot {
         if(g1.a && g1.left_bumper){
             shooting=true;
         }
+        if(g1.right_trigger>0.3)slowmode=true;
+        else slowmode=false;
     }
     public void intake(){
         intake=true;

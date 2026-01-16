@@ -23,14 +23,13 @@ public class AutoFarRed9 extends OpMode{
     private TelemetryManager t;
 
     private int pathState;
-    private final Pose goalPose = new Pose(0,144,0);
-    private final Pose startPose = new Pose(56, 9, Math.toRadians(90));
-    private final Pose scorePose = new Pose(52, 12, Math.toRadians(180));
-    private final Pose positionPose= new Pose(36,17,Math.toRadians(200));
-    private final Pose line1Pose = new Pose(11, 6, Math.toRadians(200));
-    private final Pose line2Pose = new Pose(11, 16, Math.toRadians(200));
-    public final Pose endPose = new Pose(40,14,Math.toRadians(180));
-    private final Pose linePose = new Pose(17,36,Math.toRadians(180));
+    private  Pose startPose = new Pose(56, 9, Math.toRadians(90));
+    private  Pose scorePose = new Pose(52, 12, Math.toRadians(180));
+    private  Pose positionPose= new Pose(36,17,Math.toRadians(200));
+    private  Pose line1Pose = new Pose(11, 6, Math.toRadians(200));
+    private  Pose line2Pose = new Pose(11, 16, Math.toRadians(200));
+    public  Pose endPose = new Pose(40,14,Math.toRadians(180));
+    private  Pose linePose = new Pose(11,36,Math.toRadians(180));
     private PathChain scorePreload,position,grabLine,scoreLine,grabPickup1, scorePickup1, grabPickup2, scorePickup2, grabPickup3, scorePickup3,end;
     public void buildPaths() {
         scorePreload = follower
@@ -46,18 +45,18 @@ public class AutoFarRed9 extends OpMode{
                 .addPath(
                         new BezierLine(follower::getPose,positionPose)
                 )
-                .setLinearHeadingInterpolation(Math.toRadians(90),Math.toRadians(180))
+                .setLinearHeadingInterpolation(Math.toRadians(90),Math.toRadians(0))
                 .build();
         grabLine = follower
                 .pathBuilder()
                 .addPath(
                         new BezierCurve(
                                 follower::getPose,
-                                new Pose(75,38),
+                                new Pose(75,38).mirror(),
                                 linePose
                         )
                 )
-                .setLinearHeadingInterpolation(Math.toRadians(180),Math.toRadians(180))
+                .setLinearHeadingInterpolation(Math.toRadians(0),Math.toRadians(0))
                 .build();
         scoreLine = follower
                 .pathBuilder()
@@ -73,10 +72,10 @@ public class AutoFarRed9 extends OpMode{
                 .pathBuilder()
                 .addPath(
                         new BezierCurve(follower::getPose,
-                                new Pose(7.000, 25),
+                                new Pose(7.000, 25).mirror(),
                                 line1Pose)
                 )
-                .setLinearHeadingInterpolation(scorePose.getHeading(),line1Pose.getHeading())
+                .setLinearHeadingInterpolation(scorePose.getHeading(),line1Pose.getHeading(),0.5)
                 .build();
 
         scorePickup1 = follower
@@ -92,7 +91,7 @@ public class AutoFarRed9 extends OpMode{
                 .addPath(
                         new BezierCurve(
                                 follower::getPose,
-                                new Pose(8, 6),
+                                new Pose(8, 6).mirror(),
                                 line2Pose
                         )
                 )
@@ -104,7 +103,7 @@ public class AutoFarRed9 extends OpMode{
                 .addPath(
                         new BezierCurve(
                                 follower::getPose,
-                                new Pose(39, 12),
+                                new Pose(39, 12).mirror(),
                                 scorePose
                         )
                 )
@@ -119,6 +118,7 @@ public class AutoFarRed9 extends OpMode{
                 .setLinearHeadingInterpolation(scorePose.getHeading(),endPose.getHeading())
                 .build();
 
+
     }
     public void autonomousPathUpdate() {
         switch (pathState) {
@@ -127,7 +127,7 @@ public class AutoFarRed9 extends OpMode{
                 r.pids=true;
                 okp=true;
                 r.shooter();
-                setPathState(1);
+                nextPath();
                 break;
             case 1:
                 if(!follower.isBusy()) {
@@ -146,21 +146,22 @@ public class AutoFarRed9 extends OpMode{
                         r.intake();
                         okp=true;
                         r.aiming=false;
-                        setPathState(2);
+                        nextPath();
                     }
                 }
                 break;
             case 2:
                 if(!follower.isBusy()) {
                     follower.followPath(grabLine,true);
-                    setPathState(3);
+                    nextPath();
                 }
                 break;
 
             case 3:
                 if(!follower.isBusy()) {
+                    r.i.pornit=false;
                     follower.followPath(scoreLine,true);
-                    setPathState(4);
+                    nextPath();
                 }
                 break;
             case 4:
@@ -180,14 +181,15 @@ public class AutoFarRed9 extends OpMode{
                         r.intake();
                         okp=true;
                         r.aiming=false;
-                        setPathState(5);
+                        nextPath();
                     }
                 }
                 break;
             case 5:
                 if(!follower.isBusy()) {
+                    r.i.pornit=false;
                     follower.followPath(scorePickup1,true);
-                    setPathState(6);
+                    nextPath();
                 }
                 break;
             case 6:
@@ -207,14 +209,15 @@ public class AutoFarRed9 extends OpMode{
                         r.intake();
                         okp=true;
                         r.aiming=false;
-                        setPathState(7);
+                        nextPath();
                     }
                 }
                 break;
             case 7:
                 if(!follower.isBusy()) {
+                    r.i.pornit=false;
                     follower.followPath(scorePickup2, true);
-                    setPathState(8);
+                    nextPath();
                 }
                 break;
             case 8:
@@ -234,17 +237,18 @@ public class AutoFarRed9 extends OpMode{
                         r.intake();
                         okp=true;
                         r.aiming=false;
-                        setPathState(9);
+                        nextPath();
                     }
 
                 }
                 break;
             case 9:
                 if(!follower.isBusy()) {
+                    r.i.pornit=false;
                     r.aim=false;
                     r.aima=false;
                     r.tu.setYaw(0);
-                    setPathState(-1);
+                    endPath();
                 }
                 break;
         }
@@ -252,6 +256,15 @@ public class AutoFarRed9 extends OpMode{
 
     public void setPathState(int pState) {
         pathState = pState;
+        pathTimer.resetTimer();
+    }
+    public void nextPath(){
+        pathState++;
+        pathTimer.resetTimer();
+    }
+
+    public void endPath(){
+        pathState=-1;
         pathTimer.resetTimer();
     }
     @Override
@@ -275,6 +288,13 @@ public class AutoFarRed9 extends OpMode{
         opmodeTimer = new Timer();
         opmodeTimer.resetTimer();
 
+        startPose = startPose.mirror();
+        scorePose = scorePose.mirror();
+        line1Pose = line1Pose.mirror();
+        line2Pose = line2Pose.mirror();
+        linePose = linePose.mirror();
+        endPose = endPose.mirror();
+        positionPose = positionPose.mirror();
 
         follower = Constants.createFollower(hardwareMap);
         buildPaths();
@@ -282,6 +302,7 @@ public class AutoFarRed9 extends OpMode{
         r = new Robot(hardwareMap,follower,t,gamepad1,gamepad2,false,true,startPose);
         r.aInit();
         r.setShootTargetFar();
+        r.s.shootc=970;
     }
     @Override
     public void init_loop() {}

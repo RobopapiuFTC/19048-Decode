@@ -127,7 +127,7 @@ public class AutoFarBlue9 extends OpMode{
                 r.pids=true;
                 okp=true;
                 r.shooter();
-                setPathState(1);
+                nextPath();
                 break;
             case 1:
                 if(!follower.isBusy()) {
@@ -146,14 +146,14 @@ public class AutoFarBlue9 extends OpMode{
                         r.intake();
                         okp=true;
                         r.aiming=false;
-                        setPathState(2);
+                        nextPath();
                     }
                 }
                 break;
             case 2:
                 if(!follower.isBusy()) {
                     follower.followPath(grabLine,true);
-                    setPathState(3);
+                    nextPath();
                 }
                 break;
 
@@ -161,7 +161,7 @@ public class AutoFarBlue9 extends OpMode{
                 if(!follower.isBusy()) {
                     r.i.pornit=false;
                     follower.followPath(scoreLine,true);
-                    setPathState(4);
+                    nextPath();
                 }
                 break;
             case 4:
@@ -181,7 +181,7 @@ public class AutoFarBlue9 extends OpMode{
                         r.intake();
                         okp=true;
                         r.aiming=false;
-                        setPathState(5);
+                        nextPath();
                     }
                 }
                 break;
@@ -189,7 +189,7 @@ public class AutoFarBlue9 extends OpMode{
                 if(!follower.isBusy()) {
                     r.i.pornit=false;
                     follower.followPath(scorePickup1,true);
-                    setPathState(6);
+                    nextPath();
                 }
                 break;
             case 6:
@@ -209,7 +209,7 @@ public class AutoFarBlue9 extends OpMode{
                         r.intake();
                         okp=true;
                         r.aiming=false;
-                        setPathState(7);
+                        nextPath();
                     }
                 }
                 break;
@@ -217,7 +217,7 @@ public class AutoFarBlue9 extends OpMode{
                 if(!follower.isBusy()) {
                     r.i.pornit=false;
                     follower.followPath(scorePickup2, true);
-                    setPathState(8);
+                    nextPath();
                 }
                 break;
             case 8:
@@ -237,7 +237,7 @@ public class AutoFarBlue9 extends OpMode{
                         r.intake();
                         okp=true;
                         r.aiming=false;
-                        setPathState(9);
+                        nextPath();
                     }
 
                 }
@@ -248,7 +248,7 @@ public class AutoFarBlue9 extends OpMode{
                     r.aim=false;
                     r.aima=false;
                     r.tu.setYaw(0);
-                    setPathState(-1);
+                    endPath();
                 }
                 break;
         }
@@ -256,6 +256,15 @@ public class AutoFarBlue9 extends OpMode{
 
     public void setPathState(int pState) {
         pathState = pState;
+        pathTimer.resetTimer();
+    }
+    public void nextPath(){
+        pathState++;
+        pathTimer.resetTimer();
+    }
+
+    public void endPath(){
+        pathState=-1;
         pathTimer.resetTimer();
     }
     @Override
@@ -286,6 +295,7 @@ public class AutoFarBlue9 extends OpMode{
         r = new Robot(hardwareMap,follower,t,gamepad1,gamepad2,true,true,startPose);
         r.aInit();
         r.setShootTargetFar();
+        r.s.shootc=970;
     }
     @Override
     public void init_loop() {}
