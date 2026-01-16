@@ -207,8 +207,17 @@ public class AutoCloseBlue15 extends OpMode{
                 break;
             case 4:
                 if(!follower.isBusy()) {
-                    follower.followPath(doorMove,true);
-                    nextPath();
+                    if(okp){
+                        pathTimer.resetTimer();
+                        r.pids=true;
+                        okp=false;
+
+                    }
+                    if(pathTimer.getElapsedTimeSeconds()>0.5) {
+                        follower.followPath(doorMove, true);
+                        okp=true;
+                        nextPath();
+                    }
                 }
                 break;
             case 5:
@@ -383,6 +392,7 @@ public class AutoCloseBlue15 extends OpMode{
         r = new Robot(hardwareMap,follower,t,gamepad1,gamepad2,true,true,startPose);
         r.aInit();
         r.setShootTarget();
+        r.s.shootc=970;
     }
     @Override
     public void init_loop() {}

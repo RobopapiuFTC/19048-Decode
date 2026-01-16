@@ -67,7 +67,10 @@ public class Robot {
         sequenceshoot();
         sequenceintake();
         hood();
-        if(shooting)shooting();
+        if(shooting){
+            shooting();
+            sc();
+        }
         if(aim)turret();
         else{
             tu.setYaw(0);
@@ -300,6 +303,16 @@ public class Robot {
         else {
             shootp = new Pose(144, 144, 0);
             parkPose= new Pose(38,34,Math.toRadians(90));
+        }
+    }
+    public void sc(){
+        if(a) {
+            if (f.getPose().getX() < 72) s.shootc = s.shootn;
+            else s.shootc = s.shootn - 30;
+        }
+        else{
+            if (f.getPose().getX() > 72) s.shootc = s.shootn;
+            else s.shootc = s.shootn - 30;
         }
     }
     public void setShootTargetFar(){

@@ -118,7 +118,7 @@ public class AutoCloseRed15L extends OpMode{
                                 new Pose(60,108,Math.toRadians(180)).mirror())
                 )
                 .setBrakingStrength(2)
-                .setLinearHeadingInterpolation(line3Pose.getHeading(),Math.toRadians(180))
+                .setLinearHeadingInterpolation(line3Pose.getHeading(),Math.toRadians(0))
                 .build();
 
         end = follower
@@ -185,7 +185,7 @@ public class AutoCloseRed15L extends OpMode{
                             .pathBuilder()
                             .addPath(
                                     new BezierCurve(follower.getPose(),
-                                            new Pose(55, 60),
+                                            new Pose(55, 60).mirror(),
                                             doorPose)
                             )
                             .setBrakingStrength(2)
@@ -208,8 +208,17 @@ public class AutoCloseRed15L extends OpMode{
                 break;
             case 4:
                 if(!follower.isBusy()) {
-                    follower.followPath(doorMove,true);
-                    nextPath();
+                    if(okp){
+                        pathTimer.resetTimer();
+                        r.pids=true;
+                        okp=false;
+
+                    }
+                    if(pathTimer.getElapsedTimeSeconds()>0.5) {
+                        follower.followPath(doorMove, true);
+                        okp=true;
+                        nextPath();
+                    }
                 }
                 break;
             case 5:
@@ -219,7 +228,7 @@ public class AutoCloseRed15L extends OpMode{
                             .addPath(
                                     new BezierCurve(
                                             follower.getPose(),
-                                            new Pose(55, 60),
+                                            new Pose(55, 60).mirror(),
                                             scorePose
                                     )
                             )
@@ -257,7 +266,7 @@ public class AutoCloseRed15L extends OpMode{
                             .pathBuilder()
                             .addPath(
                                     new BezierCurve(follower.getPose(),
-                                            new Pose(55, 60),
+                                            new Pose(55, 60).mirror(),
                                             doorPose)
                             )
                             .setBrakingStrength(2)
@@ -280,8 +289,17 @@ public class AutoCloseRed15L extends OpMode{
                 break;
             case 7:
                 if(!follower.isBusy()) {
-                    follower.followPath(doorMove,true);
-                    nextPath();
+                    if(okp){
+                        pathTimer.resetTimer();
+                        r.pids=true;
+                        okp=false;
+
+                    }
+                    if(pathTimer.getElapsedTimeSeconds()>1) {
+                        follower.followPath(doorMove, true);
+                        okp=true;
+                        nextPath();
+                    }
                 }
                 break;
             case 8:
@@ -291,7 +309,7 @@ public class AutoCloseRed15L extends OpMode{
                             .addPath(
                                     new BezierCurve(
                                             follower.getPose(),
-                                            new Pose(55, 60),
+                                            new Pose(55, 60).mirror(),
                                             scorePose
                                     )
                             )
@@ -431,6 +449,7 @@ public class AutoCloseRed15L extends OpMode{
         r = new Robot(hardwareMap,follower,t,gamepad1,gamepad2,false,true,startPose);
         r.aInit();
         r.setShootTarget();
+        r.s.shootc=970;
     }
     @Override
     public void init_loop() {}
