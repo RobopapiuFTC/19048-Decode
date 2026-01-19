@@ -16,7 +16,7 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.Hardware.Robot;
 import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
 
-@TeleOp(name = "Loop", group = "...Sigma")
+@TeleOp(name = "Loop", group = "Bar")
 public class LoopTest extends OpMode {
     TelemetryManager t;
 
