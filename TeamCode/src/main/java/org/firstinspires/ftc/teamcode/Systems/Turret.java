@@ -57,17 +57,7 @@ public class Turret {
         return turret.getCurrentPosition();
     }
 
-    public void periodic(boolean auto,boolean aim) {
-       /* if(!auto) {
-            c.periodic();
-            if (aim) {
-                if (a) {
-                    tpc = -c.tx * 5.27777777778 / 2;
-                } else {
-                    tpc = c.tx * 5.27777777778 / 2;
-                }
-            } else tpc = 0;
-        }else tpc=0; */
+    public void periodic() {
         if (on) {
             if (manual) {
                 turret.setPower(manualPower);
@@ -90,12 +80,6 @@ public class Turret {
         }
 
     }
-
-    public void manual(double power) {
-        manual = true;
-        manualPower = power;
-    }
-
     public void automatic() {
         manual = false;
     }
@@ -118,10 +102,6 @@ public class Turret {
         setTurretTarget(radians/rpt+tpc);
     }
 
-    public void addYaw(double radians) {
-        setYaw(getYaw() + radians);
-    }
-
     public void face(Pose targetPose, Pose robotPose) {
         double angleToTargetFromCenter = Math.atan2(targetPose.getY() - robotPose.getY(), targetPose.getX() - robotPose.getX());
         double robotAngleDiff = normalizeAngle(angleToTargetFromCenter - robotPose.getHeading()+tti);
@@ -140,26 +120,5 @@ public class Turret {
         if (angle <= -Math.PI) angle += Math.PI * 2D;
         if (angle > Math.PI) angle -= Math.PI * 2D;
         return angle;
-    }
-
-    public double getError() {
-        return error;
-    }
-
-    public boolean isReady() {
-        return Math.abs(getError()) < 30;
-    }
-
-    public InstantCommand reset() {
-        return new InstantCommand(this::resetTurret);
-    }
-
-    public InstantCommand set(double radians) {
-        return new InstantCommand(() -> set(radians));
-
-    }
-
-    public InstantCommand add(double radians) {
-        return new InstantCommand(() -> setYaw(getYaw() + radians));
     }
 }

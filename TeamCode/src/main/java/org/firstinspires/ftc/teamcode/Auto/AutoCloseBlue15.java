@@ -22,14 +22,14 @@ public class AutoCloseBlue15 extends OpMode{
     private boolean okp,okf;
 
     private int pathState;
-    private final Pose startPose = new Pose(20, 125, Math.toRadians(234));
-    private final Pose scorePose = new Pose(54, 96, Math.toRadians(180));
-    private final Pose doorPose = new Pose(15,65,Math.toRadians(180));
-    private final Pose doorM = new Pose(14.5,53,Math.toRadians(153));
-    private final Pose line1Pose = new Pose(13.5, 84, Math.toRadians(180));
-    private final Pose line2Pose = new Pose(10, 59, Math.toRadians(180));
-    private final Pose line3Pose = new Pose(10, 36, Math.toRadians(180));
-    public final Pose endPose = new Pose(36,90,Math.toRadians(180));
+    private  Pose startPose = new Pose(20, 125, Math.toRadians(234));
+    private  Pose scorePose = new Pose(54, 96, Math.toRadians(180));
+    private  Pose doorPose = new Pose(14.5,65,Math.toRadians(180));
+    private  Pose doorM = new Pose(14,53,Math.toRadians(153));
+    private  Pose line1Pose = new Pose(13, 84, Math.toRadians(180));
+    private  Pose line2Pose = new Pose(8.5, 59, Math.toRadians(180));
+    private  Pose line3Pose = new Pose(8.5, 35, Math.toRadians(180));
+    public  Pose endPose = new Pose(36,90,Math.toRadians(180));
     private PathChain scorePreload,doorPickup,grabPickup1, scorePickup1, grabPickup2, scorePickup2, grabPickup3, scorePickup3,end,scoreDoor,doorMove;
     public void buildPaths() {
         scorePreload = follower
@@ -101,7 +101,7 @@ public class AutoCloseBlue15 extends OpMode{
                 .addPath(
                         new BezierCurve(
                                 follower::getPose,
-                                new Pose(83.483, 39),
+                                new Pose(83.483, 30),
                                 line3Pose
                         )
                 )
@@ -213,7 +213,7 @@ public class AutoCloseBlue15 extends OpMode{
                         okp=false;
 
                     }
-                    if(pathTimer.getElapsedTimeSeconds()>0.5) {
+                    if(pathTimer.getElapsedTimeSeconds()>0.1) {
                         follower.followPath(doorMove, true);
                         okp=true;
                         nextPath();

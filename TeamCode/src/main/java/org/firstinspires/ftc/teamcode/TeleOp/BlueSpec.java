@@ -4,8 +4,10 @@ import com.bylazar.telemetry.PanelsTelemetry;
 import com.bylazar.telemetry.TelemetryManager;
 import com.pedropathing.follower.Follower;
 import com.pedropathing.geometry.Pose;
+import com.pedropathing.util.Timer;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 
 import org.firstinspires.ftc.teamcode.Hardware.Robot;
@@ -47,9 +49,9 @@ public class BlueSpec extends OpMode {
         follower.update();
         if(r.slowmode){
             follower.setTeleOpDrive(
-                    -gamepad1.left_stick_y*0.7,
-                    -gamepad1.left_stick_x*0.7,
-                    -gamepad1.right_stick_x*0.7,
+                    -gamepad1.left_stick_y*0.5,
+                    -gamepad1.left_stick_x*0.5,
+                    -gamepad1.right_stick_x*0.5,
                     true
             );
         }
@@ -66,6 +68,8 @@ public class BlueSpec extends OpMode {
         t.addData("Dist: ", r.dist);
         t.addData("Turret Ticks", r.tu.getTurret());
         t.addData("Follower Pose", r.f.getPose().toString());
+        t.addData("Loop time", r.getLoopTimeMs());
+        t.addData("Loop time hz", r.getLoopTimeHz());
         t.update(telemetry);
     }
 }

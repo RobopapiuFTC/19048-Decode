@@ -38,6 +38,9 @@ public class Robot {
     public Follower f;
     public boolean a,shoot,oks,aim,auto,intake,oki,pids=false,aima=true,shooting=false,aiming=true;
     public Timer iTimer,rTimer,rsTimer,sTimer,oTimer;
+    public Timer looptimer;
+    public int loops;
+    public double loopTime,lastLoop;
     public boolean slowmode=false;
     public PathChain park;
     public Robot(HardwareMap h, Follower f, TelemetryManager t, Gamepad g1, Gamepad g2, boolean blue, boolean auto,Pose startingPose) {
@@ -58,6 +61,8 @@ public class Robot {
         rsTimer = new Timer();
         sTimer = new Timer();
         oTimer = new Timer();
+        looptimer = new Timer();
+        looptimer.resetTimer();
     }
     public void stop() {
         endPose = f.getPose();
@@ -67,19 +72,30 @@ public class Robot {
         setShootTarget();
         sequenceshoot();
         sequenceintake();
+        isFull();
         hood();
         if(shooting){
             shooting();
             sc();
         }
-        if(aim)turret();
-        else{
-            tu.setYaw(0);
+        if(!tu.manual) {
+            if (aim) turret();
+            else {
+                tu.setYaw(0);
+            }
         }
-        //m.periodic(g1);
+        else tu.setYaw(Math.toRadians(90));
         i.periodic();
         s.periodic();
-        tu.periodic(auto,aim);
+        tu.periodic();
+        loops++;
+
+        if (loops > 10) {
+            double now = looptimer.getElapsedTime();
+            loopTime = (now - lastLoop) / loops;
+            lastLoop = now;
+            loops = 0;
+        }
     }
     public void tStart(){
         setShootTarget();
@@ -90,8 +106,8 @@ public class Robot {
             f.setPose(startingPose);
         }
         else f.setPose(endPose);
-        tu.resetTurret();
         setTurretOffset();
+        tu.automatic();
     }
     public void aPeriodic(){
         sequenceshoot();
@@ -102,7 +118,7 @@ public class Robot {
         if(!aiming)tu.setYaw(0);
         if(pids){
             s.periodic();
-            tu.periodic(auto,aim);
+            tu.periodic();
         }
         i.periodic();
     }
@@ -129,15 +145,26 @@ public class Robot {
             intake=false;
             oki=false;
         }
-        if(g1.dpad_left){
+        if(g1.dpad_left && !g1.left_bumper){
             if(oTimer.getElapsedTimeSeconds()>0.3){
                 tu.offset=tu.offset+0.0872665;
                 oTimer.resetTimer();
             }
         }
-        if(g1.dpad_right){
+        if(g1.dpad_right && !g1.left_bumper){
             if(oTimer.getElapsedTimeSeconds()>0.3){
                 tu.offset=tu.offset-0.0872665;
+                oTimer.resetTimer();
+            }
+        }if(g1.dpad_left && g1.left_bumper){
+            if(oTimer.getElapsedTimeSeconds()>0.3){
+                tu.offset=tu.offset+1.5707963268;
+                oTimer.resetTimer();
+            }
+        }
+        if(g1.dpad_right && g1.left_bumper){
+            if(oTimer.getElapsedTimeSeconds()>0.3){
+                tu.offset=tu.offset-1.5707963268;
                 oTimer.resetTimer();
             }
         }
@@ -160,8 +187,14 @@ public class Robot {
         if(g1.a && g1.left_bumper){
             shooting=true;
         }
-        if(g1.right_trigger>0.3)slowmode=true;
-        else slowmode=false;
+        slowmode = g1.right_trigger > 0.3;
+        if(g1.left_trigger > 0.3 && g1.right_bumper)f.setPose(startingPose);
+        if(g1.options){
+            if(rTimer.getElapsedTimeSeconds()>0.3){
+                tu.manual=!tu.manual;
+                rTimer.resetTimer();
+            }
+        }
     }
     public void intake(){
         intake=true;
@@ -224,21 +257,6 @@ public class Robot {
             }
         }
     }
-    public void shootauto(){
-        if (f.getPose().getY() > 40) {
-            s.shootc=970;
-            dist = shootp.distanceFrom(f.getPose());
-            s.forDistance(dist);
-        } else {
-            s.shootc=970;
-            dist = shootp.distanceFrom(f.getPose());
-            s.forDistance(dist);
-        }
-    }
-    public void turretauto(){
-        tu.face(getShootTarget(),f.getPose());
-        tu.automatic();
-    }
     public void turret() {
             if(a){
                 if(f.getPose().getX()<80){
@@ -247,7 +265,7 @@ public class Robot {
                         dist = shootp.distanceFrom(f.getPose());
                         s.forDistance(dist);
                     } else {
-                        shootp = new Pose(2, 144, 0);
+                        shootp = new Pose(4, 144, 0);
                         dist = shootp.distanceFrom(f.getPose());
                         s.forDistance(dist);
                     }
@@ -258,7 +276,7 @@ public class Robot {
                         dist = shootp.distanceFrom(f.getPose());
                         s.forDistance(dist);
                     } else {
-                        shootp = new Pose(2, 144, 0);
+                        shootp = new Pose(4, 144, 0);
                         dist = shootp.distanceFrom(f.getPose());
                         s.forDistance(dist);
                     }
@@ -271,7 +289,7 @@ public class Robot {
                         dist = shootp.distanceFrom(f.getPose());
                         s.forDistance(dist);
                     } else {
-                        shootp = new Pose(142, 144, 0);
+                        shootp = new Pose(140, 144, 0);
                         dist = shootp.distanceFrom(f.getPose());
                         s.forDistance(dist);
                     }
@@ -282,7 +300,7 @@ public class Robot {
                         dist = shootp.distanceFrom(f.getPose());
                         s.forDistance(dist);
                     } else {
-                        shootp = new Pose(142, 144, 0);
+                        shootp = new Pose(140, 144, 0);
                         dist = shootp.distanceFrom(f.getPose());
                         s.forDistance(dist);
                     }
@@ -294,8 +312,6 @@ public class Robot {
             }
     }
     public void setTurretOffset(){
-        /*if(a)tu.tti=1.5707963268;
-        else tu.tti=1.62; */
         tu.tti=1.5707963268;
     }
     public void setShootTarget() {
@@ -328,6 +344,17 @@ public class Robot {
     }
     public Pose getShootTarget() {
         return shootp;
+    }
+    public double getLoopTimeMs(){
+        return loopTime;
+    }
+    public double getLoopTimeHz(){
+        return 1000/loopTime;
+    }
+
+    public void isFull(){
+        if(!i.pornit)return;
+        if(i.getVelocity()<1200)g1.rumble(1000);
     }
 
 }

@@ -19,6 +19,7 @@ public class Intake {
     public Intake(HardwareMap hardwareMap, TelemetryManager telemetry){
 
         intake=hardwareMap.get(DcMotorEx.class, "i");
+        intake.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
     }
     public void periodic(){
@@ -31,5 +32,9 @@ public class Intake {
         }else{
             intake.setPower(0);
         }
+    }
+
+    public double getVelocity(){
+        return intake.getVelocity();
     }
 }
