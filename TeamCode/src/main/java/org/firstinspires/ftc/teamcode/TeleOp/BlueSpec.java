@@ -19,7 +19,7 @@ public class BlueSpec extends OpMode {
     Robot r;
     private Follower follower;
     TelemetryManager t;
-    public static Pose startingPose = new Pose(72,135,Math.toRadians(90));
+    public static Pose startingPose = new Pose(20, 125, Math.toRadians(234));
 
 
     @Override
@@ -66,11 +66,12 @@ public class BlueSpec extends OpMode {
         r.tPeriodic();
         t.addData("Velocity: ", r.s.getVelocity());
         t.addData("Dist: ", r.dist);
-        t.addData("Turret Ticks", r.tu.getTurret());
-        t.addData("Follower Pose", r.f.getPose().toString());
-        t.addData("Loop time", r.getLoopTimeMs());
-        t.addData("Loop time hz", r.getLoopTimeHz());
-        t.addData("Intake Velocity", r.i.getVelocity());
+        t.addData("Shooter offset: ", r.s.offset);
+        t.addData("Turret Ticks: ", r.tu.getTurret());
+        t.addData("Follower Pose: ", r.f.getPose().toString());
+        t.addData("Loop time: ", r.getLoopTimeMs());
+        t.addData("Loop time hz: ", r.getLoopTimeHz());
+        t.addData("Intake Velocity: ", r.i.getVelocity());
         t.update(telemetry);
     }
 }

@@ -33,7 +33,7 @@ public class Robot {
     public Turret tu;
     public double dist;
     public static Pose shootp = new Pose(0 ,144,0);
-    public static Pose parkPose,endPose,startingPose=new Pose(72,135,Math.toRadians(90));
+    public static Pose parkPose,endPose,startingPose;
     public Gamepad g1,g2;
     public Follower f;
     public boolean a,shoot,oks,aim,auto,intake,oki,pids=false,aima=true,shooting=false,aiming=true;
@@ -51,6 +51,7 @@ public class Robot {
         this.g2 = g2;
         this.a = blue;
         this.auto = auto;
+        this.startingPose=startingPose;
         s=new Shooter(this.h,this.t);
         m=new Movement(this.h, this.t);
         i=new Intake(this.h,this.t);

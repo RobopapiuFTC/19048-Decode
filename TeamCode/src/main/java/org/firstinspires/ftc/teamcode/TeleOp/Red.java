@@ -19,7 +19,7 @@ public class Red extends OpMode {
     Robot r;
     private Follower follower;
     TelemetryManager t;
-    public static Pose startingPose = new Pose(72,135,Math.toRadians(90));
+    public static Pose startingPose = new Pose(20, 125, Math.toRadians(234)).mirror();
 
 
     @Override

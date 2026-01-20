@@ -13,7 +13,12 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.teamcode.Util.ShotSample;
+
 import com.pedropathing.util.Timer;
+
+import java.util.Arrays;
+import java.util.List;
 
 import dev.nextftc.control.ControlSystem;
 import dev.nextftc.control.KineticState;
@@ -27,6 +32,20 @@ public class Shooter {
 
     public double shootn=1000,shootc=1000,offset;
     public static double hood,angle=0.0006;
+
+    public static List<ShotSample> samples = Arrays.asList(
+            new ShotSample(32, 1200, 0.97),
+            new ShotSample(38, 1250, 0.97),
+            new ShotSample(46, 1300, 0.85),
+            new ShotSample(56, 1350, 0.8),
+            new ShotSample(68, 1400, 0.76),
+            new ShotSample(79, 1450, 0.58),
+            new ShotSample(86, 1500, 0.55),
+            new ShotSample(114, 1550, 0.5),
+
+            new ShotSample(135, 1700, 0.35),
+            new ShotSample(145, 1750, 0.3)
+    );
 
     public Shooter(HardwareMap hardwareMap, TelemetryManager telemetry){
 
@@ -59,6 +78,41 @@ public class Shooter {
         activated = false;
         setPower(0);
     }
+    private double lerp(double a, double b, double t) {
+        return a + (b - a) * t;
+    }
+    private ShotSample lookupShot(double d) {
+
+        ShotSample before = null;
+        ShotSample after  = null;
+
+        // find closest sample <= d  and closest sample >= d
+        for (ShotSample s : samples) {
+            if (s.distance <= d) {
+                if (before == null || s.distance > before.distance) {
+                    before = s;
+                }
+            }
+            if (s.distance >= d) {
+                if (after == null || s.distance < after.distance) {
+                    after = s;
+                }
+            }
+        }
+
+        if (before == null) return after;
+        if (after == null) return before;
+        if (before.distance == after.distance) {
+            return before;
+        }
+
+        double t = (d - before.distance) / (after.distance - before.distance);
+
+        double power = lerp(before.power, after.power, t);
+
+        return new ShotSample(d, power, angle);
+    }
+
     public void on() {
         activated = true;
     }
@@ -69,7 +123,9 @@ public class Shooter {
         return Math.abs((getTarget()- getVelocity())) < 50;
     }
     public void forDistance(double distance) {
-        setTarget((0.00180088*Math.pow(distance, 2))+(4.14265*distance)+shootc+offset);
+        //setTarget((0.00180088*Math.pow(distance, 2))+(4.14265*distance)+shootc+offset);
+        ShotSample shoot = lookupShot(distance);
+        setTarget(shoot.power + offset);
     }
     public void hoodfar(){
         SVD.setPosition(0.15);
