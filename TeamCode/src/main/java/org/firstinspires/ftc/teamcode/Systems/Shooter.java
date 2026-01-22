@@ -34,17 +34,26 @@ public class Shooter {
     public static double hood,angle=0.0006;
 
     public static List<ShotSample> samples = Arrays.asList(
-            new ShotSample(32, 1200, 0.97),
-            new ShotSample(38, 1250, 0.97),
-            new ShotSample(46, 1300, 0.85),
-            new ShotSample(56, 1350, 0.8),
-            new ShotSample(68, 1400, 0.76),
-            new ShotSample(79, 1450, 0.58),
-            new ShotSample(86, 1500, 0.55),
-            new ShotSample(114, 1550, 0.5),
-
-            new ShotSample(135, 1700, 0.35),
-            new ShotSample(145, 1750, 0.3)
+            new ShotSample(50, 1280, 0.97),
+            new ShotSample(55, 1290, 0.97),
+            new ShotSample(60, 1300, 0.97),
+            new ShotSample(65, 1310, 0.97),
+            new ShotSample(70, 1320, 0.85),
+            new ShotSample(75, 1330, 0.85),
+            new ShotSample(80, 1340, 0.8),
+            new ShotSample(85, 1360, 0.8),
+            new ShotSample(90, 1380, 0.76),
+            new ShotSample(95, 1400, 0.76),
+            new ShotSample(100, 1420, 0.58),
+            new ShotSample(105, 1440, 0.58),
+            new ShotSample(110, 1460, 0.55),
+            new ShotSample(115, 1500, 0.55),
+            new ShotSample(120, 1540, 0.5),
+            new ShotSample(125, 1560, 0.5),
+            new ShotSample(130, 1580, 0.5),
+            new ShotSample(140, 1620, 0.35),
+            new ShotSample(150, 1680, 0.35),
+            new ShotSample(160, 1700, 0.3)
     );
 
     public Shooter(HardwareMap hardwareMap, TelemetryManager telemetry){

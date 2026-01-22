@@ -73,7 +73,7 @@ public class Robot {
         setShootTarget();
         sequenceshoot();
         sequenceintake();
-        isFull();
+       // isFull();
         hood();
         if(shooting){
             shooting();
@@ -171,13 +171,13 @@ public class Robot {
         }
         if(g1.dpad_up){
             if(oTimer.getElapsedTimeSeconds()>0.3){
-                s.offset=s.offset+20;
+                s.offset=s.offset+10;
                 oTimer.resetTimer();
             }
         }
         if(g1.dpad_down){
             if(oTimer.getElapsedTimeSeconds()>0.3){
-                s.offset=s.offset-20;
+                s.offset=s.offset-10;
                 oTimer.resetTimer();
             }
         }
