@@ -393,6 +393,7 @@ public class AutoCloseBlue15 extends OpMode{
         r.aInit();
         r.setShootTarget();
         r.s.shootc=970;
+        //r.s.offset=-20;
     }
     @Override
     public void init_loop() {}

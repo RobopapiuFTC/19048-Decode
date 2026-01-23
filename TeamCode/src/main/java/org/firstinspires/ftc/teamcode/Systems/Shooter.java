@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.Systems;
 
+import static org.firstinspires.ftc.teamcode.Hardware.Robot.auto;
+
 import android.service.controls.Control;
 
 import com.bylazar.configurables.annotations.Configurable;
@@ -30,30 +32,30 @@ public class Shooter {
     public static double kS = 0.08, kV = 0.00039, kP = 0.001;
     private boolean activated = true;
 
-    public double shootn=1000,shootc=1000,offset;
-    public static double hood,angle=0.0006;
+    public double shootn=970,shootc=970,offset;
+    public static double hood,angle=0.0005;
 
     public static List<ShotSample> samples = Arrays.asList(
-            new ShotSample(50, 1280, 0.97),
-            new ShotSample(55, 1290, 0.97),
-            new ShotSample(60, 1300, 0.97),
-            new ShotSample(65, 1310, 0.97),
-            new ShotSample(70, 1320, 0.85),
-            new ShotSample(75, 1330, 0.85),
-            new ShotSample(80, 1340, 0.8),
-            new ShotSample(85, 1360, 0.8),
-            new ShotSample(90, 1380, 0.76),
-            new ShotSample(95, 1400, 0.76),
-            new ShotSample(100, 1420, 0.58),
-            new ShotSample(105, 1440, 0.58),
-            new ShotSample(110, 1460, 0.55),
-            new ShotSample(115, 1500, 0.55),
-            new ShotSample(120, 1540, 0.5),
-            new ShotSample(125, 1560, 0.5),
-            new ShotSample(130, 1580, 0.5),
-            new ShotSample(140, 1620, 0.35),
-            new ShotSample(150, 1680, 0.35),
-            new ShotSample(160, 1700, 0.3)
+            new ShotSample(50, 1280, 0.0005),
+            new ShotSample(55, 1290, 0.0005),
+            new ShotSample(60, 1300, 0.0005),
+            new ShotSample(65, 1310, 0.0005),
+            new ShotSample(70, 1320, 0.0005),
+            new ShotSample(75, 1330, 0.0005),
+            new ShotSample(80, 1340, 0.0005),
+            new ShotSample(85, 1360, 0.0005),
+            new ShotSample(90, 1380, 0.0005),
+            new ShotSample(95, 1400, 0.0005),
+            new ShotSample(100, 1420, 0.0005),
+            new ShotSample(105, 1440, 0.0005),
+            new ShotSample(110, 1460, 0.0005),
+            new ShotSample(115, 1500, 0.0005),
+            new ShotSample(120, 1540, 0.0005),
+            new ShotSample(125, 1560, 0.0005),
+            new ShotSample(130, 1580, 0.0005),
+            new ShotSample(140, 1620, 0.0005),
+            new ShotSample(150, 1680, 0.0005),
+            new ShotSample(160, 1700, 0.0005)
     );
 
     public Shooter(HardwareMap hardwareMap, TelemetryManager telemetry){
@@ -118,6 +120,7 @@ public class Shooter {
         double t = (d - before.distance) / (after.distance - before.distance);
 
         double power = lerp(before.power, after.power, t);
+        angle = lerp(before.angle, after.angle, t);
 
         return new ShotSample(d, power, angle);
     }
@@ -132,9 +135,13 @@ public class Shooter {
         return Math.abs((getTarget()- getVelocity())) < 50;
     }
     public void forDistance(double distance) {
-        //setTarget((0.00180088*Math.pow(distance, 2))+(4.14265*distance)+shootc+offset);
-        ShotSample shoot = lookupShot(distance);
-        setTarget(shoot.power + offset);
+        if(auto) {
+            setTarget((0.00180088*Math.pow(distance, 2))+(4.14265*distance)+shootc+offset);
+        }
+        else{
+            ShotSample shoot = lookupShot(distance);
+            setTarget(shoot.power + offset);
+        }
     }
     public void hoodfar(){
         SVD.setPosition(0.15);

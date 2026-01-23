@@ -495,6 +495,7 @@ public class AutoCloseRed18 extends OpMode{
         r = new Robot(hardwareMap,follower,t,gamepad1,gamepad2,false,true,startPose);
         r.aInit();
         r.setShootTarget();
+        //r.s.offset=-20;
     }
     @Override
     public void init_loop() {}

@@ -36,7 +36,7 @@ public class Robot {
     public static Pose parkPose,endPose,startingPose;
     public Gamepad g1,g2;
     public Follower f;
-    public boolean a,shoot,oks,aim,auto,intake,oki,pids=false,aima=true,shooting=false,aiming=true;
+    public static boolean a,shoot,oks,aim,auto,intake,oki,pids=false,aima=true,shooting=false,aiming=true;
     public Timer iTimer,rTimer,rsTimer,sTimer,oTimer;
     public Timer looptimer;
     public int loops;
