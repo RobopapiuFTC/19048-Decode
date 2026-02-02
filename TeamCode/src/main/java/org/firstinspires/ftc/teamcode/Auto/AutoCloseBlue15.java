@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.Auto;
 import com.bylazar.telemetry.TelemetryManager;
 import com.pedropathing.geometry.BezierCurve;
+import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.pedropathing.follower.Follower;
 import com.pedropathing.geometry.BezierLine;
@@ -9,12 +10,15 @@ import com.pedropathing.paths.PathChain;
 import com.pedropathing.util.Timer;
 import  com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
+import org.firstinspires.ftc.teamcode.Hardware.HubBulkRead;
 import org.firstinspires.ftc.teamcode.Hardware.Robot;
 
 import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
 
 @Autonomous(name="Auto Close Blue 15", group="Blue")
 public class AutoCloseBlue15 extends OpMode{
+
+    public HubBulkRead bulk;
     private TelemetryManager t;
     private Follower follower;
     private Timer pathTimer, actionTimer, opmodeTimer;
@@ -367,6 +371,7 @@ public class AutoCloseBlue15 extends OpMode{
     }
     @Override
     public void loop() {
+        bulk.clearCache(HubBulkRead.Hubs.ALL);
         follower.update();
         r.aPeriodic();
         autonomousPathUpdate();
@@ -381,6 +386,7 @@ public class AutoCloseBlue15 extends OpMode{
 
     @Override
     public void init() {
+        bulk = new HubBulkRead(hardwareMap, LynxModule.BulkCachingMode.MANUAL);
         pathTimer = new Timer();
         opmodeTimer = new Timer();
         opmodeTimer.resetTimer();

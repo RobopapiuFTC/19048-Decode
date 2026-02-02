@@ -15,8 +15,8 @@ import org.firstinspires.ftc.teamcode.Hardware.Robot;
 
 import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
 
-@Autonomous(name="Auto Close Red 15", group="Red")
-public class AutoCloseRed15 extends OpMode{
+@Autonomous(name="Auto 15 Blue Tangent", group="Blue")
+public class AutoBlue15T extends OpMode{
 
     public HubBulkRead bulk;
     private TelemetryManager t;
@@ -27,7 +27,7 @@ public class AutoCloseRed15 extends OpMode{
 
     private int pathState;
     private  Pose startPose = new Pose(20, 125, Math.toRadians(234));
-    private  Pose scorePose = new Pose(54, 96, Math.toRadians(180));
+    private  Pose scorePose = new Pose(53, 92, Math.toRadians(180));
     private  Pose doorPose = new Pose(14.5,65,Math.toRadians(180));
     private  Pose doorM = new Pose(14,53,Math.toRadians(153));
     private  Pose line1Pose = new Pose(13, 84, Math.toRadians(180));
@@ -42,14 +42,14 @@ public class AutoCloseRed15 extends OpMode{
                         new BezierLine(follower::getPose, scorePose)
                 )
                 .setBrakingStrength(2)
-                .setLinearHeadingInterpolation(startPose.getHeading(),scorePose.getHeading())
+                .setLinearHeadingInterpolation(startPose.getHeading(), scorePose.getHeading())
                 .build();
 
         grabPickup1 = follower
                 .pathBuilder()
                 .addPath(
                         new BezierCurve(follower::getPose,
-                                new Pose(55,86).mirror(),
+                                new Pose(55,86),
                                 line1Pose)
                 )
                 .setBrakingStrength(2)
@@ -58,7 +58,8 @@ public class AutoCloseRed15 extends OpMode{
         doorMove = follower
                 .pathBuilder()
                 .addPath(
-                        new BezierCurve(follower::getPose,new Pose(18.000, 55.000).mirror(),
+                        new BezierCurve(follower::getPose,
+                                new Pose(18.000, 55.000),
                                 doorM)
                 )
                 .setBrakingStrength(2)
@@ -78,13 +79,13 @@ public class AutoCloseRed15 extends OpMode{
                 .addPath(
                         new BezierCurve(
                                 follower::getPose,
-                                new Pose(57.667, 51.464).mirror(),
-                                new Pose(54.802, 60.557).mirror(),
+                                new Pose(63, 65),
+                                new Pose(59, 60),
                                 line2Pose
                         )
                 )
                 .setBrakingStrength(2)
-                .setLinearHeadingInterpolation(scorePose.getHeading(),line2Pose.getHeading())
+                .setTangentHeadingInterpolation()
                 .build();
 
         scorePickup2 = follower
@@ -92,12 +93,12 @@ public class AutoCloseRed15 extends OpMode{
                 .addPath(
                         new BezierCurve(
                                 follower::getPose,
-                                new Pose(59, 60).mirror(),
+                                new Pose(42, 66),
                                 scorePose
                         )
                 )
                 .setBrakingStrength(2)
-                .setLinearHeadingInterpolation(line2Pose.getHeading(),scorePose.getHeading())
+                .setTangentHeadingInterpolation().setReversed()
                 .build();
 
         grabPickup3 = follower
@@ -105,7 +106,7 @@ public class AutoCloseRed15 extends OpMode{
                 .addPath(
                         new BezierCurve(
                                 follower::getPose,
-                                new Pose(83.483, 30).mirror(),
+                                new Pose(83.483, 30),
                                 line3Pose
                         )
                 )
@@ -118,10 +119,10 @@ public class AutoCloseRed15 extends OpMode{
                 .pathBuilder()
                 .addPath(
                         new BezierLine(follower::getPose,
-                                new Pose(60,108,Math.toRadians(180)).mirror())
+                                new Pose(60,108,Math.toRadians(180)))
                 )
                 .setBrakingStrength(2)
-                .setLinearHeadingInterpolation(line3Pose.getHeading(),Math.toRadians(0))
+                .setLinearHeadingInterpolation(line3Pose.getHeading(),Math.toRadians(180))
                 .build();
 
         end = follower
@@ -188,7 +189,7 @@ public class AutoCloseRed15 extends OpMode{
                             .pathBuilder()
                             .addPath(
                                     new BezierCurve(follower.getPose(),
-                                            new Pose(55, 60).mirror(),
+                                            new Pose(55, 60),
                                             doorPose)
                             )
                             .setBrakingStrength(2)
@@ -231,7 +232,7 @@ public class AutoCloseRed15 extends OpMode{
                             .addPath(
                                     new BezierCurve(
                                             follower.getPose(),
-                                            new Pose(55, 60).mirror(),
+                                            new Pose(55, 60),
                                             scorePose
                                     )
                             )
@@ -391,23 +392,15 @@ public class AutoCloseRed15 extends OpMode{
         opmodeTimer = new Timer();
         opmodeTimer.resetTimer();
 
-        startPose = startPose.mirror();
-        scorePose = scorePose.mirror();
-        doorPose = doorPose.mirror();
-        doorM = doorM.mirror();
-        line1Pose = line1Pose.mirror();
-        line2Pose = line2Pose.mirror();
-        line3Pose = line3Pose.mirror();
-        endPose = endPose.mirror();
 
         follower = Constants.createFollower(hardwareMap);
         buildPaths();
         follower.setStartingPose(startPose);
-        r = new Robot(hardwareMap,follower,t,gamepad1,gamepad2,false,true,startPose);
+        r = new Robot(hardwareMap,follower,t,gamepad1,gamepad2,true,true,startPose);
         r.aInit();
         r.setShootTarget();
         r.s.shootc=970;
-        //r.s.offset=-20;
+        //  r.s.offset=-20;
     }
     @Override
     public void init_loop() {}

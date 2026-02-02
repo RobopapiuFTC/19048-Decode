@@ -7,11 +7,13 @@ import com.pedropathing.geometry.BezierLine;
 import com.pedropathing.geometry.Pose;
 import com.pedropathing.paths.PathChain;
 import com.pedropathing.util.Timer;
+import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 
+import org.firstinspires.ftc.teamcode.Hardware.HubBulkRead;
 import org.firstinspires.ftc.teamcode.Hardware.Robot;
 import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
 
@@ -24,11 +26,13 @@ public class BlueSpec extends OpMode {
     public static Pose startingPose = new Pose(20, 125, Math.toRadians(234));
     public static Pose parkPose = new Pose(111,40,Math.toRadians(270));
     public static PathChain park;
+    public HubBulkRead bulk;
 
 
     @Override
     public void init() {
         follower = Constants.createFollower(hardwareMap);
+        bulk = new HubBulkRead(hardwareMap, LynxModule.BulkCachingMode.MANUAL);
         t = PanelsTelemetry.INSTANCE.getTelemetry();
         r = new Robot(hardwareMap,follower, t, gamepad1 , gamepad2,true,false,startingPose);
         r.tInit();
@@ -50,6 +54,7 @@ public class BlueSpec extends OpMode {
 
     @Override
     public void loop() {
+        bulk.clearCache(HubBulkRead.Hubs.ALL);
         follower.update();
         if(r.slowmode){
             follower.setTeleOpDrive(

@@ -68,6 +68,7 @@ public class Turret {
             error = getTurretTarget() - getTurret();
             if (error > pidfSwitch) {
                 p.updateError(error);
+                p.updateFeedForwardInput(Math.signum(error));
                 power = p.run();
             } else {
                 s.updateError(error);

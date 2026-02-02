@@ -14,6 +14,7 @@ import  com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import org.firstinspires.ftc.teamcode.Hardware.Robot;
 import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
 
+
 @Autonomous(name="Auto Far Blue 6", group="Blue")
 public class AutoFarBlue extends OpMode{
     private Follower follower;

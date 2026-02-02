@@ -32,7 +32,7 @@ public class Shooter {
     public static double kS = 0.08, kV = 0.00039, kP = 0.001;
     private boolean activated = true;
 
-    public double shootn=970,shootc=970,offset;
+    public double shootn=1000,shootc=1000,offset;
     public static double hood,angle=0.0005;
 
     public static List<ShotSample> samples = Arrays.asList(

@@ -4,6 +4,7 @@ import static java.lang.Math.asin;
 import static java.lang.Math.pow;
 import static java.lang.Math.sqrt;
 
+import com.bylazar.configurables.annotations.Configurable;
 import com.bylazar.telemetry.TelemetryManager;
 import com.pedropathing.follower.Follower;
 import com.pedropathing.geometry.BezierLine;
@@ -24,6 +25,7 @@ import org.firstinspires.ftc.teamcode.Systems.Intake;
 import org.firstinspires.ftc.teamcode.Systems.Camera;
 import org.firstinspires.ftc.teamcode.Systems.Turret;
 
+@Configurable
 public class Robot {
     private HardwareMap h;
     private TelemetryManager t;
@@ -33,14 +35,14 @@ public class Robot {
     public Turret tu;
     public double dist;
     public static Pose shootp = new Pose(0 ,144,0);
-    public static Pose parkPose,endPose,startingPose;
+    public static Pose parkPose,endPose,startingPose,currentPose,futurePose;
     public Gamepad g1,g2;
     public Follower f;
     public static boolean a,shoot,oks,aim,auto,intake,oki,pids=false,aima=true,shooting=false,aiming=true;
     public Timer iTimer,rTimer,rsTimer,sTimer,oTimer;
     public Timer looptimer;
     public int loops;
-    public double loopTime,lastLoop;
+    public double loopTime,lastLoop,timing=0.2;
     public boolean slowmode=false;
     public PathChain park;
     public Robot(HardwareMap h, Follower f, TelemetryManager t, Gamepad g1, Gamepad g2, boolean blue, boolean auto,Pose startingPose) {
@@ -70,6 +72,7 @@ public class Robot {
     }
 
     public void tPeriodic() {
+        poses();
         setShootTarget();
         sequenceshoot();
         sequenceintake();
@@ -80,7 +83,8 @@ public class Robot {
             sc();
         }
         if(!tu.manual) {
-            if (aim) turret();
+            //if (aim) turret();
+            if(aim)sotm();
             else {
                 tu.setYaw(0);
             }
@@ -98,6 +102,21 @@ public class Robot {
             loops = 0;
         }
     }
+    public void aPeriodic(){
+        poses();
+        sequenceshoot();
+        hood();
+        sequenceintake();
+        //turret();
+        sotm();
+        if(shooting)shooting();
+        if(!aiming)tu.setYaw(0);
+        if(pids){
+            s.periodic();
+            tu.periodic();
+        }
+        i.periodic();
+    }
     public void tStart(){
         setShootTarget();
         setTurretOffset();
@@ -109,19 +128,6 @@ public class Robot {
         else f.setPose(endPose);
         setTurretOffset();
         tu.automatic();
-    }
-    public void aPeriodic(){
-        sequenceshoot();
-        hood();
-        sequenceintake();
-        turret();
-        if(shooting)shooting();
-        if(!aiming)tu.setYaw(0);
-        if(pids){
-            s.periodic();
-            tu.periodic();
-        }
-        i.periodic();
     }
     public void aInit(){
         tu.resetTurret();
@@ -258,59 +264,117 @@ public class Robot {
             }
         }
     }
-    public void turret() {
+    public void poses(){
+        currentPose=f.getPose();
+        futurePose = new Pose(currentPose.getX()+f.getVelocity().getXComponent()*f.getAcceleration().getXComponent()*0.2, currentPose.getY()+f.getVelocity().getYComponent()*f.getAcceleration().getYComponent()*0.2,currentPose.getHeading());
+    }
+    public void sotm() {
             if(a){
-                if(f.getPose().getX()<80){
-                    if (f.getPose().getY() > 40) {
+                if(futurePose.getX()<80){
+                    if (futurePose.getY() > 40) {
                         shootp = new Pose(0, 144, 0);
-                        dist = shootp.distanceFrom(f.getPose());
+                        dist = shootp.distanceFrom(futurePose);
                         s.forDistance(dist);
                     } else {
                         shootp = new Pose(4, 144, 0);
-                        dist = shootp.distanceFrom(f.getPose());
+                        dist = shootp.distanceFrom(futurePose);
                         s.forDistance(dist);
                     }
                 }
                 else{
-                    if (f.getPose().getY() > 40) {
+                    if (futurePose.getY() > 40) {
                         shootp = new Pose(0, 144, 0);
-                        dist = shootp.distanceFrom(f.getPose());
+                        dist = shootp.distanceFrom(futurePose);
                         s.forDistance(dist);
                     } else {
                         shootp = new Pose(4, 144, 0);
-                        dist = shootp.distanceFrom(f.getPose());
+                        dist = shootp.distanceFrom(futurePose);
                         s.forDistance(dist);
                     }
                 }
             }
             else{
-                if(f.getPose().getX()<80) {
-                    if (f.getPose().getY() > 40) {
+                if(futurePose.getX()<80) {
+                    if (futurePose.getY() > 40) {
                         shootp = new Pose(144, 144, 0);
-                        dist = shootp.distanceFrom(f.getPose());
+                        dist = shootp.distanceFrom(futurePose);
                         s.forDistance(dist);
                     } else {
                         shootp = new Pose(140, 144, 0);
-                        dist = shootp.distanceFrom(f.getPose());
+                        dist = shootp.distanceFrom(futurePose);
                         s.forDistance(dist);
                     }
                 }
                 else{
-                    if (f.getPose().getY() > 40) {
+                    if (futurePose.getY() > 40) {
                         shootp = new Pose(144, 144, 0);
-                        dist = shootp.distanceFrom(f.getPose());
+                        dist = shootp.distanceFrom(futurePose);
                         s.forDistance(dist);
                     } else {
                         shootp = new Pose(140, 144, 0);
-                        dist = shootp.distanceFrom(f.getPose());
+                        dist = shootp.distanceFrom(futurePose);
                         s.forDistance(dist);
                     }
                 }
             }
             if(aiming){
-                tu.face(getShootTarget(),f.getPose());
+                tu.face(getShootTarget(),futurePose);
                 tu.automatic();
             }
+    }
+    public void turret() {
+        if(a){
+            if(currentPose.getX()<80){
+                if (currentPose.getY() > 40) {
+                    shootp = new Pose(0, 144, 0);
+                    dist = shootp.distanceFrom(currentPose);
+                    s.forDistance(dist);
+                } else {
+                    shootp = new Pose(4, 144, 0);
+                    dist = shootp.distanceFrom(currentPose);
+                    s.forDistance(dist);
+                }
+            }
+            else{
+                if (currentPose.getY() > 40) {
+                    shootp = new Pose(0, 144, 0);
+                    dist = shootp.distanceFrom(currentPose);
+                    s.forDistance(dist);
+                } else {
+                    shootp = new Pose(4, 144, 0);
+                    dist = shootp.distanceFrom(currentPose);
+                    s.forDistance(dist);
+                }
+            }
+        }
+        else{
+            if(currentPose.getX()<80) {
+                if (currentPose.getY() > 40) {
+                    shootp = new Pose(144, 144, 0);
+                    dist = shootp.distanceFrom(currentPose);
+                    s.forDistance(dist);
+                } else {
+                    shootp = new Pose(140, 144, 0);
+                    dist = shootp.distanceFrom(currentPose);
+                    s.forDistance(dist);
+                }
+            }
+            else{
+                if (currentPose.getY() > 40) {
+                    shootp = new Pose(144, 144, 0);
+                    dist = shootp.distanceFrom(currentPose);
+                    s.forDistance(dist);
+                } else {
+                    shootp = new Pose(140, 144, 0);
+                    dist = shootp.distanceFrom(currentPose);
+                    s.forDistance(dist);
+                }
+            }
+        }
+        if(aiming){
+            tu.face(getShootTarget(),currentPose);
+            tu.automatic();
+        }
     }
     public void setTurretOffset(){
         tu.tti=1.5707963268;
@@ -327,11 +391,11 @@ public class Robot {
     }
     public void sc(){
         if(a) {
-            if (f.getPose().getX() < 72) s.shootc = s.shootn;
+            if (currentPose.getX() < 72) s.shootc = s.shootn;
             else s.shootc = s.shootn - 30;
         }
         else{
-            if (f.getPose().getX() > 72) s.shootc = s.shootn;
+            if (currentPose.getX() > 72) s.shootc = s.shootn;
             else s.shootc = s.shootn - 30;
         }
     }
@@ -357,5 +421,7 @@ public class Robot {
         if(!i.pornit)return;
         if(i.getVelocity()>-900)g1.rumble(200);
     }
+
+
 
 }
