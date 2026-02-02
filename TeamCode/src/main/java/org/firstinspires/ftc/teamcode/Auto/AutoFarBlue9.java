@@ -30,7 +30,7 @@ public class AutoFarBlue9 extends OpMode{
     private final Pose line1Pose = new Pose(11, 6, Math.toRadians(200));
     private final Pose line2Pose = new Pose(11, 16, Math.toRadians(200));
     public final Pose endPose = new Pose(40,14,Math.toRadians(180));
-    private final Pose linePose = new Pose(8,36,Math.toRadians(180));
+    private final Pose linePose = new Pose(7.5,36,Math.toRadians(180));
     private PathChain scorePreload,position,grabLine,scoreLine,grabPickup1, scorePickup1, grabPickup2, scorePickup2, grabPickup3, scorePickup3,end;
     public void buildPaths() {
         scorePreload = follower
@@ -295,7 +295,7 @@ public class AutoFarBlue9 extends OpMode{
         r = new Robot(hardwareMap,follower,t,gamepad1,gamepad2,true,true,startPose);
         r.aInit();
         r.setShootTargetFar();
-        r.s.shootc=970;
+        r.s.shootc=950;
     }
     @Override
     public void init_loop() {}

@@ -27,8 +27,8 @@ public class AutoCloseBlue15 extends OpMode{
     private  Pose doorPose = new Pose(14.5,65,Math.toRadians(180));
     private  Pose doorM = new Pose(14,53,Math.toRadians(153));
     private  Pose line1Pose = new Pose(13, 84, Math.toRadians(180));
-    private  Pose line2Pose = new Pose(8.5, 59, Math.toRadians(180));
-    private  Pose line3Pose = new Pose(8.5, 35, Math.toRadians(180));
+    private  Pose line2Pose = new Pose(8, 59, Math.toRadians(180));
+    private  Pose line3Pose = new Pose(8, 35, Math.toRadians(180));
     public  Pose endPose = new Pose(36,90,Math.toRadians(180));
     private PathChain scorePreload,doorPickup,grabPickup1, scorePickup1, grabPickup2, scorePickup2, grabPickup3, scorePickup3,end,scoreDoor,doorMove;
     public void buildPaths() {
@@ -393,7 +393,7 @@ public class AutoCloseBlue15 extends OpMode{
         r.aInit();
         r.setShootTarget();
         r.s.shootc=970;
-        //r.s.offset=-20;
+      //  r.s.offset=-20;
     }
     @Override
     public void init_loop() {}

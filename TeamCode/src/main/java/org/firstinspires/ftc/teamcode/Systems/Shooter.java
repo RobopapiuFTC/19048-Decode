@@ -36,26 +36,26 @@ public class Shooter {
     public static double hood,angle=0.0005;
 
     public static List<ShotSample> samples = Arrays.asList(
-            new ShotSample(50, 1280, 0.0005),
-            new ShotSample(55, 1290, 0.0005),
-            new ShotSample(60, 1300, 0.0005),
-            new ShotSample(65, 1310, 0.0005),
-            new ShotSample(70, 1320, 0.0005),
-            new ShotSample(75, 1330, 0.0005),
-            new ShotSample(80, 1340, 0.0005),
-            new ShotSample(85, 1360, 0.0005),
-            new ShotSample(90, 1380, 0.0005),
-            new ShotSample(95, 1400, 0.0005),
-            new ShotSample(100, 1420, 0.0005),
-            new ShotSample(105, 1440, 0.0005),
-            new ShotSample(110, 1460, 0.0005),
-            new ShotSample(115, 1500, 0.0005),
-            new ShotSample(120, 1540, 0.0005),
-            new ShotSample(125, 1560, 0.0005),
-            new ShotSample(130, 1580, 0.0005),
-            new ShotSample(140, 1620, 0.0005),
-            new ShotSample(150, 1680, 0.0005),
-            new ShotSample(160, 1700, 0.0005)
+            new ShotSample(50, 1260, 0.0005),
+            new ShotSample(55, 1270, 0.0005),
+            new ShotSample(60, 1280, 0.0005),
+            new ShotSample(65, 1290, 0.0005),
+            new ShotSample(70, 1300, 0.0005),
+            new ShotSample(75, 1310, 0.0005),
+            new ShotSample(80, 1320, 0.0005),
+            new ShotSample(85, 1340, 0.0005),
+            new ShotSample(90, 1360, 0.0005),
+            new ShotSample(95, 1380, 0.0005),
+            new ShotSample(100, 1400, 0.0005),
+            new ShotSample(105, 1420, 0.0005),
+            new ShotSample(110, 1440, 0.0005),
+            new ShotSample(115, 1480, 0.0005),
+            new ShotSample(120, 1520, 0.0005),
+            new ShotSample(125, 1540, 0.0005),
+            new ShotSample(130, 1560, 0.0005),
+            new ShotSample(140, 1600, 0.0005),
+            new ShotSample(150, 1660, 0.0005),
+            new ShotSample(160, 1680, 0.0005)
     );
 
     public Shooter(HardwareMap hardwareMap, TelemetryManager telemetry){
@@ -135,13 +135,15 @@ public class Shooter {
         return Math.abs((getTarget()- getVelocity())) < 50;
     }
     public void forDistance(double distance) {
-        if(auto) {
+       /* if(auto) {
             setTarget((0.00180088*Math.pow(distance, 2))+(4.14265*distance)+shootc+offset);
         }
         else{
             ShotSample shoot = lookupShot(distance);
             setTarget(shoot.power + offset);
-        }
+        } */
+        ShotSample shoot = lookupShot(distance);
+        setTarget(shoot.power + offset);
     }
     public void hoodfar(){
         SVD.setPosition(0.15);

@@ -73,7 +73,7 @@ public class Robot {
         setShootTarget();
         sequenceshoot();
         sequenceintake();
-       // isFull();
+        isFull();
         hood();
         if(shooting){
             shooting();
@@ -355,7 +355,7 @@ public class Robot {
 
     public void isFull(){
         if(!i.pornit)return;
-        if(i.getVelocity()<1200)g1.rumble(1000);
+        if(i.getVelocity()>-900)g1.rumble(200);
     }
 
 }
