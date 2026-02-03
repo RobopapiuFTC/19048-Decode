@@ -1,10 +1,14 @@
 package org.firstinspires.ftc.teamcode.Systems;
 
+import static org.firstinspires.ftc.teamcode.Hardware.Robot.aim;
+import static org.firstinspires.ftc.teamcode.Hardware.Robot.auto;
+
 import com.bylazar.telemetry.TelemetryManager;
 import com.pedropathing.control.PIDFCoefficients;
 import com.pedropathing.control.PIDFController;
 import com.pedropathing.geometry.Pose;
 import com.pedropathing.math.MathFunctions;
+import com.pedropathing.util.Timer;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -30,6 +34,7 @@ public class Turret {
     public static double t = 0;
     public static double pidfSwitch = 50;
     public static double kp = 0.01, kf = 0.0, kd = 0.000, sp = .013, sf = 0, sd = 0.0001;
+    public Timer cameraTimer;
 
     public static boolean on = true, manual = false;
 
@@ -38,10 +43,11 @@ public class Turret {
         turret.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         turret.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         this.a=a;
-        //c = new Camera(hardwareMap,telemetry,a);
+        c = new Camera(hardwareMap,telemetry,a);
 
         p = new PIDFController(new PIDFCoefficients(kp, 0, kd, kf));
         s = new PIDFController(new PIDFCoefficients(sp, 0, sd, sf));
+        cameraTimer = new Timer();
     }
 
     private void setTurretTarget(double ticks) {
@@ -58,6 +64,19 @@ public class Turret {
     }
 
     public void periodic() {
+        c.periodic();
+        if(cameraTimer.getElapsedTimeSeconds()>0.1){
+            if(!auto) {
+                if (aim) {
+                    if (a) {
+                        tpc = -c.tx * 5.27777777778 / 2;
+                    } else {
+                        tpc = c.tx * 5.27777777778 / 2;
+                    }
+                } else tpc = 0;
+            }else tpc=0;
+            cameraTimer.resetTimer();
+        }
         if (on) {
             if (manual) {
                 turret.setPower(manualPower);
