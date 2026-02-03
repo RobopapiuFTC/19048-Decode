@@ -1,4 +1,6 @@
 package org.firstinspires.ftc.teamcode.Auto;
+import android.graphics.Point;
+
 import com.bylazar.telemetry.TelemetryManager;
 import com.pedropathing.geometry.BezierCurve;
 import com.qualcomm.hardware.lynx.LynxModule;
@@ -27,13 +29,13 @@ public class AutoBlue15T extends OpMode{
 
     private int pathState;
     private  Pose startPose = new Pose(20, 125, Math.toRadians(234));
-    private  Pose scorePose = new Pose(53, 92, Math.toRadians(180));
-    private  Pose doorPose = new Pose(14.5,65,Math.toRadians(180));
-    private  Pose doorM = new Pose(14,53,Math.toRadians(153));
+    private  Pose scorePose = new Pose(50, 84, Math.toRadians(180));
+    private  Pose doorPose = new Pose(24,60,Math.toRadians(180));
+    private  Pose doorM = new Pose(13,62,Math.toRadians(153));
     private  Pose line1Pose = new Pose(13, 84, Math.toRadians(180));
     private  Pose line2Pose = new Pose(8, 59, Math.toRadians(180));
     private  Pose line3Pose = new Pose(8, 35, Math.toRadians(180));
-    public  Pose endPose = new Pose(36,90,Math.toRadians(180));
+    public  Pose endPose = new Pose(59,106,Math.toRadians(180));
     private PathChain scorePreload,doorPickup,grabPickup1, scorePickup1, grabPickup2, scorePickup2, grabPickup3, scorePickup3,end,scoreDoor,doorMove;
     public void buildPaths() {
         scorePreload = follower
@@ -44,43 +46,13 @@ public class AutoBlue15T extends OpMode{
                 .setBrakingStrength(2)
                 .setLinearHeadingInterpolation(startPose.getHeading(), scorePose.getHeading())
                 .build();
-
-        grabPickup1 = follower
-                .pathBuilder()
-                .addPath(
-                        new BezierCurve(follower::getPose,
-                                new Pose(55,86),
-                                line1Pose)
-                )
-                .setBrakingStrength(2)
-                .setLinearHeadingInterpolation(scorePose.getHeading(),line1Pose.getHeading())
-                .build();
-        doorMove = follower
-                .pathBuilder()
-                .addPath(
-                        new BezierCurve(follower::getPose,
-                                new Pose(18.000, 55.000),
-                                doorM)
-                )
-                .setBrakingStrength(2)
-                .setLinearHeadingInterpolation(doorPose.getHeading(),doorM.getHeading())
-                .build();
-        scorePickup1 = follower
-                .pathBuilder()
-                .addPath(
-                        new BezierLine(follower::getPose, scorePose)
-                )
-                .setBrakingStrength(2)
-                .setLinearHeadingInterpolation(line1Pose.getHeading(),scorePose.getHeading())
-                .build();
-
         grabPickup2 = follower
                 .pathBuilder()
                 .addPath(
                         new BezierCurve(
                                 follower::getPose,
-                                new Pose(63, 65),
-                                new Pose(59, 60),
+                                new Pose(52, 53),
+                                new Pose(56, 62),
                                 line2Pose
                         )
                 )
@@ -93,7 +65,7 @@ public class AutoBlue15T extends OpMode{
                 .addPath(
                         new BezierCurve(
                                 follower::getPose,
-                                new Pose(42, 66),
+                                new Pose(40, 64),
                                 scorePose
                         )
                 )
@@ -101,37 +73,79 @@ public class AutoBlue15T extends OpMode{
                 .setTangentHeadingInterpolation().setReversed()
                 .build();
 
-        grabPickup3 = follower
+        doorPickup = follower
                 .pathBuilder()
                 .addPath(
                         new BezierCurve(
                                 follower::getPose,
-                                new Pose(83.483, 30),
+                                new Pose(52, 53),
+                                new Pose(56, 62),
+                                doorPose
+                        )
+                )
+                .setBrakingStrength(2)
+                .setTangentHeadingInterpolation()
+                .build();
+        scoreDoor = follower
+                .pathBuilder()
+                .addPath(
+                        new BezierCurve(
+                                follower::getPose,
+                                new Pose(36,57),
+                                scorePose
+                        )
+                )
+                .setBrakingStrength(2)
+                .setTangentHeadingInterpolation().setReversed()
+                .build();
+        grabPickup1 = follower
+                .pathBuilder()
+                .addPath(
+                        new BezierCurve(
+                                follower::getPose,
+                                line1Pose
+                        )
+                )
+                .setBrakingStrength(2)
+                .setTangentHeadingInterpolation()
+                .build();
+        scorePickup1 = follower
+                .pathBuilder()
+                .addPath(
+                        new BezierCurve(
+                                follower::getPose,
+                                scorePose
+                        )
+                )
+                .setBrakingStrength(2)
+                .setTangentHeadingInterpolation().setReversed()
+                .build();
+         grabPickup3 = follower
+                .pathBuilder()
+                .addPath(
+                        new BezierCurve(
+                                follower::getPose,
+                                new Pose(58,27),
+                                new Pose(53,38),
                                 line3Pose
                         )
                 )
                 .setBrakingStrength(2)
-                .setLinearHeadingInterpolation(scorePose.getHeading(),line3Pose.getHeading())
+                .setTangentHeadingInterpolation()
                 .build();
-
-
-        scorePickup3 = follower
-                .pathBuilder()
-                .addPath(
-                        new BezierLine(follower::getPose,
-                                new Pose(60,108,Math.toRadians(180)))
-                )
-                .setBrakingStrength(2)
-                .setLinearHeadingInterpolation(line3Pose.getHeading(),Math.toRadians(180))
-                .build();
-
-        end = follower
-                .pathBuilder()
-                .addPath(
-                        new BezierLine(follower::getPose,endPose)
-                )
-                .setLinearHeadingInterpolation(scorePose.getHeading(),endPose.getHeading())
-                .build();
+         scorePickup3 = follower
+                 .pathBuilder()
+                 .addPath(
+                         new BezierCurve(
+                                 follower::getPose,
+                                 new Pose(41,36),
+                                 new Pose(52,28),
+                                 endPose
+                         )
+                 )
+                 .setBrakingStrength(2)
+                 .setTangentHeadingInterpolation().setReversed()
+                 .build();
 
     }
     public void autonomousPathUpdate() {
@@ -188,12 +202,15 @@ public class AutoBlue15T extends OpMode{
                     doorPickup = follower
                             .pathBuilder()
                             .addPath(
-                                    new BezierCurve(follower.getPose(),
-                                            new Pose(55, 60),
-                                            doorPose)
+                                    new BezierCurve(
+                                            follower::getPose,
+                                            new Pose(52, 53),
+                                            new Pose(56, 62),
+                                            doorPose
+                                    )
                             )
                             .setBrakingStrength(2)
-                            .setLinearHeadingInterpolation(scorePose.getHeading(),doorPose.getHeading())
+                            .setTangentHeadingInterpolation()
                             .build();
                     if(okp){
                         pathTimer.resetTimer();
@@ -212,13 +229,24 @@ public class AutoBlue15T extends OpMode{
                 break;
             case 4:
                 if(!follower.isBusy()) {
+                    doorMove = follower
+                            .pathBuilder()
+                            .addPath(
+                                    new BezierCurve(
+                                            follower::getPose,
+                                            doorM
+                                    )
+                            )
+                            .setBrakingStrength(2)
+                            .setLinearHeadingInterpolation(follower.getPose().getHeading(), doorM.getHeading())
+                            .build();
                     if(okp){
                         pathTimer.resetTimer();
                         r.pids=true;
                         okp=false;
 
                     }
-                    if(pathTimer.getElapsedTimeSeconds()>0.1) {
+                    if(pathTimer.getElapsedTimeSeconds()>0) {
                         follower.followPath(doorMove, true);
                         okp=true;
                         nextPath();
@@ -231,13 +259,13 @@ public class AutoBlue15T extends OpMode{
                             .pathBuilder()
                             .addPath(
                                     new BezierCurve(
-                                            follower.getPose(),
-                                            new Pose(55, 60),
+                                            follower::getPose,
+                                            new Pose(36,57),
                                             scorePose
                                     )
                             )
                             .setBrakingStrength(2)
-                            .setLinearHeadingInterpolation(doorPose.getHeading(),scorePose.getHeading())
+                            .setTangentHeadingInterpolation().setReversed()
                             .build();
                     if(okp){
                         pathTimer.resetTimer();
