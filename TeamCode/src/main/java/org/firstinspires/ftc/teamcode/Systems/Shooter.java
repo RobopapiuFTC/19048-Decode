@@ -29,7 +29,7 @@ public class Shooter {
     public DcMotorEx SS,SD;
     public Servo SVD,latch;
     private double t = 0;
-    public static double kS = 0.08, kV = 0.00039, kP = 0.001;
+    public static double kS = 0.08, kV = 0.00039, kP = 0.01;
     private boolean activated = true;
 
     public double shootn=1000,shootc=1000,offset;

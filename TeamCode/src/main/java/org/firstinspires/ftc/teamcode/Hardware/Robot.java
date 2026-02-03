@@ -42,7 +42,7 @@ public class Robot {
     public Timer iTimer,rTimer,rsTimer,sTimer,oTimer;
     public Timer looptimer;
     public int loops;
-    public double loopTime,lastLoop,timing=0.2;
+    public double loopTime,lastLoop,timing=1;
     public boolean slowmode=false;
     public PathChain park;
     public Robot(HardwareMap h, Follower f, TelemetryManager t, Gamepad g1, Gamepad g2, boolean blue, boolean auto,Pose startingPose) {
@@ -266,7 +266,7 @@ public class Robot {
     }
     public void poses(){
         currentPose=f.getPose();
-        futurePose = new Pose(currentPose.getX()+f.getVelocity().getXComponent()*f.getAcceleration().getXComponent()*0.2, currentPose.getY()+f.getVelocity().getYComponent()*f.getAcceleration().getYComponent()*0.2,currentPose.getHeading());
+        futurePose = new Pose(currentPose.getX()+f.getVelocity().getXComponent()*timing, currentPose.getY()+f.getVelocity().getYComponent()*timing,currentPose.getHeading());
     }
     public void sotm() {
             if(a){
