@@ -32,8 +32,9 @@ public class Turret {
     public final DcMotorEx turret;
     private PIDFController p, s;
     public static double t = 0;
-    public static double pidfSwitch = 50;
-    public static double kp = 0.01, kf = 0.0, kd = 0.000, sp = .013, sf = 0, sd = 0.0001;
+    public static double pidfSwitch = 30;
+    //public static double kp = 0.01, kf = 0.0, kd = 0.000, sp = .013, sf = 0, sd = 0.0001;
+    public static double kp = 0.003, kf = 0.0, kd = 0.000, sp = .005, sf = 0, sd = 0.0001;
     public Timer cameraTimer;
 
     public static boolean on = true, manual = false;
@@ -64,20 +65,20 @@ public class Turret {
     }
 
     public void periodic() {
-        c.periodic();
-        if(cameraTimer.getElapsedTimeSeconds()>0.1){
-            if(!auto) {
-                if (aim) {
-                    if (a) {
-                        tpc = -c.tx * 5.27777777778 / 2;
-                    } else {
-                        tpc = c.tx * 5.27777777778 / 2;
-                    }
-                } else tpc = 0;
-            }else tpc=0;
-            cameraTimer.resetTimer();
-        }
         if (on) {
+            c.periodic();
+            if(cameraTimer.getElapsedTimeSeconds()>0.1){
+                if(!auto) {
+                    if (aim) {
+                        if (a) {
+                            tpc = -c.tx * 5.27777777778 / 2;
+                        } else {
+                            tpc = c.tx * 5.27777777778 / 2;
+                        }
+                    } else tpc = 0;
+                }else tpc=0;
+                cameraTimer.resetTimer();
+            }
             if (manual) {
                 turret.setPower(manualPower);
                 return;
