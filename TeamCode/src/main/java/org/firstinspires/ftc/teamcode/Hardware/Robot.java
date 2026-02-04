@@ -107,8 +107,8 @@ public class Robot {
         sequenceshoot();
         hood();
         sequenceintake();
-        //turret();
-        sotm();
+        turret();
+        //sotm();
         if(shooting)shooting();
         if(!aiming)tu.setYaw(0);
         if(pids){

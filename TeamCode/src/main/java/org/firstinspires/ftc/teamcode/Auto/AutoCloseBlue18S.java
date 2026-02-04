@@ -13,7 +13,7 @@ import org.firstinspires.ftc.teamcode.Hardware.Robot;
 
 import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
 
-@Autonomous(name="Auto Close Blue 18 Solo", group="Blue")
+@Autonomous(name="Auto Close Blue 18 No Line", group="Blue")
 public class AutoCloseBlue18S extends OpMode{
     private TelemetryManager t;
     private Follower follower;

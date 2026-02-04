@@ -101,7 +101,7 @@ public class AutoBlue15T extends OpMode{
         grabPickup1 = follower
                 .pathBuilder()
                 .addPath(
-                        new BezierCurve(
+                        new BezierLine(
                                 follower::getPose,
                                 line1Pose
                         )
@@ -112,7 +112,7 @@ public class AutoBlue15T extends OpMode{
         scorePickup1 = follower
                 .pathBuilder()
                 .addPath(
-                        new BezierCurve(
+                        new BezierLine(
                                 follower::getPose,
                                 scorePose
                         )
@@ -232,7 +232,7 @@ public class AutoBlue15T extends OpMode{
                     doorMove = follower
                             .pathBuilder()
                             .addPath(
-                                    new BezierCurve(
+                                    new BezierLine(
                                             follower::getPose,
                                             doorM
                                     )

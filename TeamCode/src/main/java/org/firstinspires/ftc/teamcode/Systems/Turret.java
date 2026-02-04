@@ -22,7 +22,7 @@ import org.firstinspires.ftc.teamcode.Systems.Camera;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 public class Turret {
-    public Camera c;
+    //public Camera c;
     public static double error = 0, power = 0, manualPower = 0;
     public static double rpt = 6.28319/1900;
     public double tti,tpc=0;
@@ -33,8 +33,8 @@ public class Turret {
     private PIDFController p, s;
     public static double t = 0;
     public static double pidfSwitch = 30;
-    //public static double kp = 0.01, kf = 0.0, kd = 0.000, sp = .013, sf = 0, sd = 0.0001;
-    public static double kp = 0.003, kf = 0.0, kd = 0.000, sp = .005, sf = 0, sd = 0.0001;
+    public static double kp = 0.01, kf = 0.0, kd = 0.000, sp = .013, sf = 0, sd = 0.0001;
+    //public static double kp = 0.003, kf = 0.0, kd = 0.000, sp = .005, sf = 0, sd = 0.0001;
     public Timer cameraTimer;
 
     public static boolean on = true, manual = false;
@@ -44,7 +44,8 @@ public class Turret {
         turret.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         turret.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         this.a=a;
-        c = new Camera(hardwareMap,telemetry,a);
+       /* c = new Camera(hardwareMap,telemetry,a);
+        c.start(); */
 
         p = new PIDFController(new PIDFCoefficients(kp, 0, kd, kf));
         s = new PIDFController(new PIDFCoefficients(sp, 0, sd, sf));
@@ -66,19 +67,19 @@ public class Turret {
 
     public void periodic() {
         if (on) {
-            c.periodic();
+            /* c.periodic();
             if(cameraTimer.getElapsedTimeSeconds()>0.1){
                 if(!auto) {
                     if (aim) {
                         if (a) {
-                            tpc = -c.tx * 5.27777777778 / 2;
+                            tpc = -c.tx * 5.27777777778;
                         } else {
-                            tpc = c.tx * 5.27777777778 / 2;
+                            tpc = c.tx * 5.27777777778;
                         }
                     } else tpc = 0;
                 }else tpc=0;
                 cameraTimer.resetTimer();
-            }
+            } */
             if (manual) {
                 turret.setPower(manualPower);
                 return;
