@@ -22,7 +22,7 @@ import org.firstinspires.ftc.teamcode.Systems.Camera;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 public class Turret {
-    //public Camera c;
+    public Camera c;
     public static double error = 0, power = 0, manualPower = 0;
     public static double rpt = 6.28319/1900;
     public double tti,tpc=0;
@@ -31,11 +31,12 @@ public class Turret {
 
     public final DcMotorEx turret;
     private PIDFController p, s;
-    public static double t = 0;
+    public static double t = 0, cameraerror=0;
     public static double pidfSwitch = 30;
     public static double kp = 0.01, kf = 0.0, kd = 0.000, sp = .013, sf = 0, sd = 0.0001;
     //public static double kp = 0.003, kf = 0.0, kd = 0.000, sp = .005, sf = 0, sd = 0.0001;
     public Timer cameraTimer;
+    public boolean okt=false;
 
     public static boolean on = true, manual = false;
 
@@ -44,8 +45,8 @@ public class Turret {
         turret.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         turret.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         this.a=a;
-       /* c = new Camera(hardwareMap,telemetry,a);
-        c.start(); */
+        c = new Camera(hardwareMap,telemetry,a);
+        c.start();
 
         p = new PIDFController(new PIDFCoefficients(kp, 0, kd, kf));
         s = new PIDFController(new PIDFCoefficients(sp, 0, sd, sf));
@@ -67,19 +68,20 @@ public class Turret {
 
     public void periodic() {
         if (on) {
-            /* c.periodic();
-            if(cameraTimer.getElapsedTimeSeconds()>0.1){
-                if(!auto) {
-                    if (aim) {
-                        if (a) {
-                            tpc = -c.tx * 5.27777777778;
-                        } else {
-                            tpc = c.tx * 5.27777777778;
-                        }
-                    } else tpc = 0;
-                }else tpc=0;
-                cameraTimer.resetTimer();
-            } */
+            if(okt){
+                if(getTurret()>=getTurretTarget()-10 && getTurret()<=getTurretTarget()+10){
+                    c.detect();
+                    if (a) {
+                        tpc = -c.tx * 5.27777777778;
+                        cameraerror=cameraerror+tpc;
+
+                    } else {
+                        tpc = c.tx * 5.27777777778;
+                        cameraerror=cameraerror+tpc;
+                    }
+                    okt=false;
+                }
+            }
             if (manual) {
                 turret.setPower(manualPower);
                 return;
@@ -87,14 +89,18 @@ public class Turret {
             p.setCoefficients(new PIDFCoefficients(kp, 0, kd, kf));
             s.setCoefficients(new PIDFCoefficients(sp, 0, sd, sf));
             error = getTurretTarget() - getTurret();
-            if (error > pidfSwitch) {
+
+            s.updateError(error);
+            s.updateFeedForwardInput(Math.signum(error));
+            power = s.run();
+            /* if (error > pidfSwitch) {
                 p.updateError(error);
                 p.updateFeedForwardInput(Math.signum(error));
                 power = p.run();
             } else {
                 s.updateError(error);
                 power = s.run();
-            }
+            }*/
 
             turret.setPower(power);
         } else {
@@ -121,7 +127,7 @@ public class Turret {
 
     public void setYaw(double radians) {
         radians = normalizeAngle(radians);
-        setTurretTarget(radians/rpt+tpc);
+        setTurretTarget(radians/rpt+cameraerror);
     }
 
     public void face(Pose targetPose, Pose robotPose) {

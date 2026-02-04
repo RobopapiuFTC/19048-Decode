@@ -212,6 +212,7 @@ public class Robot {
         shoot=true;
         oks=true;
         aiming=true;
+        tu.okt=true;
     }
     public void hood(){
         s.hood=clamp(0.05+(s.getTarget()-s.getVelocity()-20)*s.angle,0.05,0.5);
