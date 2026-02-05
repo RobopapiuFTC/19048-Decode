@@ -402,8 +402,8 @@ public class AutoCloseBlue15 extends OpMode{
         r = new Robot(hardwareMap,follower,t,gamepad1,gamepad2,true,true,startPose);
         r.aInit();
         r.setShootTarget();
-        r.s.shootc=970;
-        r.s.offset=-30;
+     //   r.s.shootc=970;
+     //   r.s.offset=-30;
     }
     @Override
     public void init_loop() {}

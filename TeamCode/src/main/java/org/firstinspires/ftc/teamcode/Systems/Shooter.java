@@ -36,26 +36,26 @@ public class Shooter {
     public static double hood,angle=0.0005;
 
     public static List<ShotSample> samples = Arrays.asList(
-            new ShotSample(50, 1260, 0.0005),
-            new ShotSample(55, 1270, 0.0005),
-            new ShotSample(60, 1280, 0.0005),
-            new ShotSample(65, 1290, 0.0005),
-            new ShotSample(70, 1300, 0.0005),
-            new ShotSample(75, 1310, 0.0005),
-            new ShotSample(80, 1320, 0.0005),
-            new ShotSample(85, 1340, 0.0005),
-            new ShotSample(90, 1360, 0.0005),
-            new ShotSample(95, 1380, 0.0005),
-            new ShotSample(100, 1400, 0.0005),
-            new ShotSample(105, 1420, 0.0005),
-            new ShotSample(110, 1440, 0.0005),
-            new ShotSample(115, 1480, 0.0005),
-            new ShotSample(120, 1520, 0.0005),
-            new ShotSample(125, 1540, 0.0005),
-            new ShotSample(130, 1560, 0.0005),
-            new ShotSample(140, 1600, 0.0005),
-            new ShotSample(150, 1660, 0.0005),
-            new ShotSample(160, 1680, 0.0005)
+            new ShotSample(50, 1230, 0.0005),
+            new ShotSample(55, 1240, 0.0005),
+            new ShotSample(60, 1250, 0.0005),
+            new ShotSample(65, 1260, 0.0005),
+            new ShotSample(70, 1270, 0.0005),
+            new ShotSample(75, 1280, 0.0005),
+            new ShotSample(80, 1290, 0.0005),
+            new ShotSample(85, 1310, 0.0005),
+            new ShotSample(90, 1330, 0.0005),
+            new ShotSample(95, 1350, 0.0005),
+            new ShotSample(100, 1370, 0.0005),
+            new ShotSample(105, 1390, 0.0005),
+            new ShotSample(110, 1410, 0.0005),
+            new ShotSample(115, 1450, 0.0005),
+            new ShotSample(120, 1490, 0.0005),
+            new ShotSample(125, 1510, 0.0005),
+            new ShotSample(130, 1530, 0.0005),
+            new ShotSample(140, 1570, 0.0005),
+            new ShotSample(150, 1630, 0.0005),
+            new ShotSample(160, 1650, 0.0005)
     );
 
     public Shooter(HardwareMap hardwareMap, TelemetryManager telemetry){
