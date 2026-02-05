@@ -8,13 +8,14 @@ import com.pedropathing.geometry.BezierLine;
 import com.pedropathing.geometry.Pose;
 import com.pedropathing.paths.PathChain;
 import com.pedropathing.util.Timer;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import  com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
 import org.firstinspires.ftc.teamcode.Hardware.HubBulkRead;
 import org.firstinspires.ftc.teamcode.Hardware.Robot;
 
 import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
-
+@Disabled
 @Autonomous(name="Auto Close Blue 15 NEW", group="Blue")
 public class AutoCloseBlue15L extends OpMode{
     public HubBulkRead bulk;
@@ -26,13 +27,14 @@ public class AutoCloseBlue15L extends OpMode{
 
     private int pathState;
     private  Pose startPose = new Pose(20, 125, Math.toRadians(234));
-    private  Pose scorePose = new Pose(57, 73, Math.toRadians(210));
+    private  Pose scorePose = new Pose(57, 79, Math.toRadians(210));
     private  Pose doorPose = new Pose(14.5,65,Math.toRadians(153));
     private  Pose doorM = new Pose(14,53,Math.toRadians(153));
     private  Pose line1Pose = new Pose(13, 84, Math.toRadians(180));
     private  Pose line2Pose = new Pose(15, 60, Math.toRadians(180));
     private  Pose line3Pose = new Pose(8, 36, Math.toRadians(180));
-    public  Pose endPose = new Pose(36,90,Math.toRadians(180));
+    public  Pose endPose = new Pose(60,108,Math.toRadians(180));
+    public double aimPose = 0;
     private PathChain scorePreload,doorPickup,grabPickup1, scorePickup1, grabPickup2, scorePickup2, grabPickup3, scorePickup3,end,scoreDoor,doorMove;
     public void buildPaths() {
         scorePreload = follower
@@ -111,12 +113,12 @@ public class AutoCloseBlue15L extends OpMode{
                 .pathBuilder()
                 .addPath(
                         new BezierCurve(follower::getPose,
-                                new Pose(),
-                                new Pose(),
+                                new Pose(58,29),
+                                new Pose(44,36),
                                 line3Pose)
                 )
                 .setBrakingStrength(2)
-                .setLinearHeadingInterpolation(Math.toRadians(270), line3Pose.getHeading(),0.7,0.4)
+                .setLinearHeadingInterpolation(Math.toRadians(270), line3Pose.getHeading(),0.4,0.1)
                 .build();
         end = follower
                 .pathBuilder()
@@ -132,6 +134,8 @@ public class AutoCloseBlue15L extends OpMode{
         switch (pathState) {
             case 0:
                 follower.followPath(scorePreload,true);
+                r.aiming=false;
+                r.aim=true;
                 r.pids=true;
                 okp=true;
                 okf=true;
@@ -141,7 +145,7 @@ public class AutoCloseBlue15L extends OpMode{
                 break;
             case 1:
                 if(follower.getPose().getY()<105 && okf){
-                    r.aiming=true;
+                    r.tu.setYaw(r.tu.Yaw(r.getShootTarget(),scorePose));
                     okf=false;
                 }
                 if(!follower.isBusy()) {
@@ -162,10 +166,10 @@ public class AutoCloseBlue15L extends OpMode{
                 break;
             case 2:
                 if(!follower.isBusy()) {
-                    r.aim=true;
-                    r.aiming=true;
                     r.s.on();
                     okf=true;
+                    r.aim=true;
+                    r.tu.setYaw(r.tu.Yaw(r.getShootTarget(),scorePose));
                     follower.followPath(scorePickup2,true);
                     nextPath();
                 }
@@ -235,7 +239,7 @@ public class AutoCloseBlue15L extends OpMode{
                                     new BezierLine(follower::getPose, scorePose)
                             )
                             .setBrakingStrength(2)
-                            .setLinearHeadingInterpolation(follower.getPose().getHeading(), scorePose.getHeading())
+                            .setLinearHeadingInterpolation(follower.getPose().getHeading(), scorePose.getHeading(),0.2)
                             .build();
                     if(okp){
                         pathTimer.resetTimer();
@@ -248,7 +252,7 @@ public class AutoCloseBlue15L extends OpMode{
                         r.intake=false;
                         r.oki=false;
                         r.aim=true;
-                        r.aiming=true;
+                        r.tu.setYaw(r.tu.Yaw(r.getShootTarget(),scorePose));
                         r.s.on();
                         okf=true;
                         okp=true;
@@ -280,11 +284,11 @@ public class AutoCloseBlue15L extends OpMode{
                 break;
             case 7:
                 if(!follower.isBusy()) {
-                    r.aim=true;
-                    r.aiming=true;
                     r.s.on();
                     okf=true;
                     okp=true;
+                    r.aim=true;
+                    r.tu.setYaw(r.tu.Yaw(r.getShootTarget(),new Pose(scorePose.getX(),scorePose.getY(),Math.toRadians(270))));
                     follower.followPath(scorePickup1,true);
                     nextPath();
                 }
@@ -313,12 +317,10 @@ public class AutoCloseBlue15L extends OpMode{
                 break;
             case 9:
                 if(!follower.isBusy()) {
-                    r.aim=true;
-                    r.aiming=true;
                     r.s.on();
                     okf=true;
                     okp=true;
-                    follower.followPath(scorePickup3,true);
+                    follower.followPath(end,true);
                     nextPath();
                 }
                 break;
@@ -327,6 +329,10 @@ public class AutoCloseBlue15L extends OpMode{
                     r.i.pornit=false;
                     r.s.latchdown();
                     okf=false;
+                }
+                if(follower.getPose().getX()>40){
+                    r.aim=true;
+                    r.aiming=true;
                 }
                 if(!follower.isBusy()) {
                     if(okp){
@@ -348,7 +354,7 @@ public class AutoCloseBlue15L extends OpMode{
                     r.i.pornit=false;
                     r.aim=false;
                     r.aima=false;
-                    r.tu.setYaw(0);
+                    r.tu.setTurretTarget(0);
                     endPath();
                 }
                 break;

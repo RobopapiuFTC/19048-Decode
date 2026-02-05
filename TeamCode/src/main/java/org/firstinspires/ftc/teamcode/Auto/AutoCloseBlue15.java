@@ -28,7 +28,7 @@ public class AutoCloseBlue15 extends OpMode{
     private int pathState;
     private  Pose startPose = new Pose(20, 125, Math.toRadians(234));
     private  Pose scorePose = new Pose(54, 96, Math.toRadians(180));
-    private  Pose doorPose = new Pose(14.5,65,Math.toRadians(180));
+    private  Pose doorPose = new Pose(14,65,Math.toRadians(153));
     private  Pose doorM = new Pose(14,53,Math.toRadians(153));
     private  Pose line1Pose = new Pose(13, 84, Math.toRadians(180));
     private  Pose line2Pose = new Pose(8, 59, Math.toRadians(180));
@@ -187,12 +187,12 @@ public class AutoCloseBlue15 extends OpMode{
                     doorPickup = follower
                             .pathBuilder()
                             .addPath(
-                                    new BezierCurve(follower.getPose(),
-                                            new Pose(55, 60),
+                                    new BezierCurve(follower::getPose,
+                                            new Pose(44,62),
                                             doorPose)
                             )
                             .setBrakingStrength(2)
-                            .setLinearHeadingInterpolation(scorePose.getHeading(),doorPose.getHeading())
+                            .setLinearHeadingInterpolation(follower.getPose().getHeading(), doorPose.getHeading(),0.3)
                             .build();
                     if(okp){
                         pathTimer.resetTimer();
@@ -211,6 +211,14 @@ public class AutoCloseBlue15 extends OpMode{
                 break;
             case 4:
                 if(!follower.isBusy()) {
+                    doorMove = follower
+                            .pathBuilder()
+                            .addPath(
+                                    new BezierLine(follower::getPose, doorM)
+                            )
+                            .setBrakingStrength(2)
+                            .setLinearHeadingInterpolation(follower.getPose().getHeading(), doorM.getHeading())
+                            .build();
                     if(okp){
                         pathTimer.resetTimer();
                         r.pids=true;
@@ -229,14 +237,10 @@ public class AutoCloseBlue15 extends OpMode{
                     scoreDoor = follower
                             .pathBuilder()
                             .addPath(
-                                    new BezierCurve(
-                                            follower.getPose(),
-                                            new Pose(55, 60),
-                                            scorePose
-                                    )
+                                    new BezierLine(follower::getPose, scorePose)
                             )
                             .setBrakingStrength(2)
-                            .setLinearHeadingInterpolation(doorPose.getHeading(),scorePose.getHeading())
+                            .setLinearHeadingInterpolation(follower.getPose().getHeading(), scorePose.getHeading(),0.2)
                             .build();
                     if(okp){
                         pathTimer.resetTimer();
@@ -399,7 +403,7 @@ public class AutoCloseBlue15 extends OpMode{
         r.aInit();
         r.setShootTarget();
         r.s.shootc=970;
-      //  r.s.offset=-20;
+        r.s.offset=-30;
     }
     @Override
     public void init_loop() {}

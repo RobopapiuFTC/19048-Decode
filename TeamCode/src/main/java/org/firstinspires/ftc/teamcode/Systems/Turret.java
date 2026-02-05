@@ -53,7 +53,7 @@ public class Turret {
         cameraTimer = new Timer();
     }
 
-    private void setTurretTarget(double ticks) {
+    public void setTurretTarget(double ticks) {
         if(ticks>=1900)ticks=ticks-1900;
         if(ticks<0)ticks=ticks+1900;
         t = ticks;
@@ -68,20 +68,25 @@ public class Turret {
 
     public void periodic() {
         if (on) {
-            if(okt){
-                if(getTurret()>=getTurretTarget()-10 && getTurret()<=getTurretTarget()+10){
-                    c.detect();
-                    if (a) {
-                        tpc = -c.tx * 5.27777777778;
-                        cameraerror=cameraerror+tpc;
+            /*if(!auto) {
+                if (okt) {
+                    if (getTurret() >= getTurretTarget() - 3 && getTurret() <= getTurretTarget() + 3) {
+                        c.detect();
+                        if (c.result != null && c.result.isValid()) {
+                            if (a) {
+                                tpc = -c.tx * 5.27777777778;
+                                cameraerror = cameraerror + tpc;
 
-                    } else {
-                        tpc = c.tx * 5.27777777778;
-                        cameraerror=cameraerror+tpc;
+                            } else {
+                                tpc = c.tx * 5.27777777778;
+                                cameraerror = cameraerror + tpc;
+                            }
+                            c.result = null;
+                            okt = false;
+                        }
                     }
-                    okt=false;
                 }
-            }
+            } */
             if (manual) {
                 turret.setPower(manualPower);
                 return;
@@ -134,6 +139,11 @@ public class Turret {
         double angleToTargetFromCenter = Math.atan2(targetPose.getY() - robotPose.getY(), targetPose.getX() - robotPose.getX());
         double robotAngleDiff = normalizeAngle(angleToTargetFromCenter - robotPose.getHeading()+tti);
         setYaw(robotAngleDiff+offset);
+    }
+    public double Yaw(Pose targetPose, Pose robotPose){
+        double angleToTargetFromCenter = Math.atan2(targetPose.getY() - robotPose.getY(), targetPose.getX() - robotPose.getX());
+        double robotAngleDiff = normalizeAngle(angleToTargetFromCenter - robotPose.getHeading()+tti);
+        return robotAngleDiff;
     }
 
     public void resetTurret() {

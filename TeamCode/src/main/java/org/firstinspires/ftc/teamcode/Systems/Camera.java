@@ -10,6 +10,7 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 public class Camera {
     private Limelight3A limelight;
+    public LLResult result;
     private Telemetry telemetry;
     private boolean blue;
     public double tx,ty,ta;
@@ -28,7 +29,7 @@ public class Camera {
         limelight.start();
     }
     public void detect(){
-        LLResult result = limelight.getLatestResult();
+        result = limelight.getLatestResult();
         if(result!=null && result.isValid()){
             tx= result.getTx();
             ty= result.getTy();

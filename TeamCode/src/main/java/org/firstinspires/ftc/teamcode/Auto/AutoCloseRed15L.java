@@ -7,12 +7,13 @@ import com.pedropathing.geometry.BezierLine;
 import com.pedropathing.geometry.Pose;
 import com.pedropathing.paths.PathChain;
 import com.pedropathing.util.Timer;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import  com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
 import org.firstinspires.ftc.teamcode.Hardware.Robot;
 
 import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
-
+@Disabled
 @Autonomous(name="Auto Close Red 15 No Line", group="Red")
 public class AutoCloseRed15L extends OpMode{
     private TelemetryManager t;
@@ -179,6 +180,7 @@ public class AutoCloseRed15L extends OpMode{
                     r.s.latchdown();
                     okf=false;
                 }
+                if(follower.getPose().getHeading()<Math.toRadians(234))
                 if(!follower.isBusy()) {
 
                     doorPickup = follower

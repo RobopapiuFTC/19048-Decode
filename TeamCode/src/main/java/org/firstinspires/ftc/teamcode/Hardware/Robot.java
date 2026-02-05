@@ -83,10 +83,10 @@ public class Robot {
             sc();
         }
         if(!tu.manual) {
-            //if (aim) turret();
-            if(aim)sotm();
+            if (aim) turret();
+           // if(aim)sotm();
             else {
-                tu.setYaw(0);
+                tu.setTurretTarget(0);
             }
         }
         else tu.setYaw(Math.toRadians(90));
@@ -110,7 +110,7 @@ public class Robot {
         turret();
         //sotm();
         if(shooting)shooting();
-        if(!aiming)tu.setYaw(0);
+        //if(!aiming)tu.setTurretTarget(0);
         if(pids){
             s.periodic();
             tu.periodic();

@@ -87,6 +87,7 @@ public class BlueSpec extends OpMode {
         t.addData("Velocity: ", r.s.getVelocity());
         t.addData("Dist: ", r.dist);
         t.addData("Shooter offset: ", r.s.offset);
+        t.addData("Camera Error", r.tu.cameraerror);
         t.addData("Turret Ticks: ", r.tu.getTurret());
         t.addData("Follower Pose: ", r.f.getPose().toString());
         t.addData("Loop time: ", r.getLoopTimeMs());
