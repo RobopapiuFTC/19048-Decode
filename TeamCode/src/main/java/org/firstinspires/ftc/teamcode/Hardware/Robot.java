@@ -42,7 +42,7 @@ public class Robot {
     public Timer iTimer,rTimer,rsTimer,sTimer,oTimer;
     public Timer looptimer;
     public int loops;
-    public double loopTime,lastLoop,timing=1;
+    public double loopTime,lastLoop,timing=0.7;
     public boolean slowmode=false;
     public PathChain park;
     public Robot(HardwareMap h, Follower f, TelemetryManager t, Gamepad g1, Gamepad g2, boolean blue, boolean auto,Pose startingPose) {
@@ -83,8 +83,8 @@ public class Robot {
             sc();
         }
         if(!tu.manual) {
-            if (aim) turret();
-           // if(aim)sotm();
+           // if (aim) turret();
+            if(aim)sotm();
             else {
                 tu.setTurretTarget(0);
             }
