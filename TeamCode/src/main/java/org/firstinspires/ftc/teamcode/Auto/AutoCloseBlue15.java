@@ -237,7 +237,9 @@ public class AutoCloseBlue15 extends OpMode{
                     scoreDoor = follower
                             .pathBuilder()
                             .addPath(
-                                    new BezierLine(follower::getPose, scorePose)
+                                    new BezierCurve(follower::getPose,
+                                            new Pose(45,65),
+                                            scorePose)
                             )
                             .setBrakingStrength(2)
                             .setLinearHeadingInterpolation(follower.getPose().getHeading(), scorePose.getHeading(),0.2)
