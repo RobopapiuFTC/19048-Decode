@@ -225,6 +225,7 @@ public class Robot {
                     s.off();
                 }
                 shooting=false;
+                i.pornit=false;
                 iTimer.resetTimer();
                 oki = false;
             }
