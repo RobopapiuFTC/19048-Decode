@@ -270,7 +270,7 @@ public class Robot {
         futurePose = new Pose(currentPose.getX()+f.getVelocity().getXComponent()*timing, currentPose.getY()+f.getVelocity().getYComponent()*timing,currentPose.getHeading());
     }
     public void sotm() {
-            if(a){
+           /* if(a){
                 if(futurePose.getX()<80){
                     if (futurePose.getY() > 40) {
                         shootp = new Pose(0, 144, 0);
@@ -317,14 +317,20 @@ public class Robot {
                         s.forDistance(dist);
                     }
                 }
+            }*/
+            if(a){
+                shootp= new Pose(0,144,0);
             }
+            else shootp = new Pose(144,144,0);
+            dist = shootp.distanceFrom(futurePose);
+            s.forDistance(dist);
             if(aiming){
                 tu.face(getShootTarget(),futurePose);
                 tu.automatic();
             }
     }
     public void turret() {
-        if(a){
+      /* if(a){
             if(currentPose.getX()<80){
                 if (currentPose.getY() > 40) {
                     shootp = new Pose(0, 144, 0);
@@ -371,7 +377,13 @@ public class Robot {
                     s.forDistance(dist);
                 }
             }
+        }*/
+        if(a){
+            shootp= new Pose(0,144,0);
         }
+        else shootp = new Pose(144,144,0);
+        dist = shootp.distanceFrom(currentPose);
+        s.forDistance(dist);
         if(aiming){
             tu.face(getShootTarget(),currentPose);
             tu.automatic();
@@ -402,10 +414,10 @@ public class Robot {
     }
     public void setShootTargetFar(){
         if (a){
-            shootp = new Pose(2, 144, 0);
+            shootp = new Pose(0, 144, 0);
         }
         else {
-            shootp = new Pose(142, 144, 0);
+            shootp = new Pose(144, 144, 0);
         }
     }
     public Pose getShootTarget() {
