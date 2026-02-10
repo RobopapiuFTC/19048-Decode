@@ -28,7 +28,7 @@ public class AutoCloseRed15 extends OpMode{
     private int pathState;
     private  Pose startPose = new Pose(20, 125, Math.toRadians(234));
     private  Pose scorePose = new Pose(54, 96, Math.toRadians(180));
-    private  Pose doorPose = new Pose(14,65,Math.toRadians(153));
+    private  Pose doorPose = new Pose(14,63,Math.toRadians(153));
     private  Pose doorM = new Pose(14,53,Math.toRadians(153));
     private  Pose line1Pose = new Pose(13, 84, Math.toRadians(180));
     private  Pose line2Pose = new Pose(8, 59, Math.toRadians(180));

@@ -84,6 +84,7 @@ public class BlueSpec extends OpMode {
         else if(gamepad1.share)follower.startTeleopDrive();
         r.dualControls();
         r.tPeriodic();
+        t.addData("Distance",r.i.distance);
         t.addData("Velocity: ", r.s.getVelocity());
         t.addData("Dist: ", r.dist);
         t.addData("Shooter offset: ", r.s.offset);

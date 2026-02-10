@@ -86,7 +86,7 @@ public class Robot {
            // if (aim) turret();
             if(aim)sotm();
             else {
-                tu.setTurretTarget(0);
+                tu.setYaw(0);
             }
         }
         else tu.setYaw(Math.toRadians(90));
@@ -319,10 +319,8 @@ public class Robot {
                     }
                 }
             }*/
-            if(a){
-                shootp= new Pose(0,144,0);
-            }
-            else shootp = new Pose(144,144,0);
+            if(futurePose.getY()>40)setShootTarget();
+            else setShootTargetFar();
             dist = shootp.distanceFrom(futurePose);
             s.forDistance(dist);
             if(aiming){
@@ -379,10 +377,8 @@ public class Robot {
                 }
             }
         }*/
-        if(a){
-            shootp= new Pose(0,144,0);
-        }
-        else shootp = new Pose(144,144,0);
+        if(currentPose.getY()>40)setShootTarget();
+        else setShootTargetFar();
         dist = shootp.distanceFrom(currentPose);
         s.forDistance(dist);
         if(aiming){
@@ -391,7 +387,7 @@ public class Robot {
         }
     }
     public void setTurretOffset(){
-        tu.tti=1.5707963268;
+        tu.tti=-1.5707963268;
     }
     public void setShootTarget() {
         if (a){
@@ -415,10 +411,10 @@ public class Robot {
     }
     public void setShootTargetFar(){
         if (a){
-            shootp = new Pose(0, 144, 0);
+            shootp = new Pose(2, 142, 0);
         }
         else {
-            shootp = new Pose(144, 144, 0);
+            shootp = new Pose(142, 142, 0);
         }
     }
     public Pose getShootTarget() {
@@ -433,7 +429,7 @@ public class Robot {
 
     public void isFull(){
         if(!i.pornit)return;
-        if(i.getVelocity()>-900)g1.rumble(200);
+        if(i.getVelocity()>-1200)g1.rumble(200);
     }
 
 
