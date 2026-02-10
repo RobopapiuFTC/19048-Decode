@@ -30,7 +30,7 @@ public class Constants {
             .useSecondaryHeadingPIDF(true)
             .useSecondaryTranslationalPIDF(true); */
     public static FollowerConstants followerConstants = new FollowerConstants()
-          .mass(11)
+          .mass(10)
           .forwardZeroPowerAcceleration((-38.04 + (-32) + (-40.17)) / 3.0)
           .lateralZeroPowerAcceleration(((-70.57) + (-66.93) + (-67.08)) / 3.0)
           .predictiveBrakingCoefficients(new PredictiveBrakingCoefficients(0.05, 0.11, 0.0008))

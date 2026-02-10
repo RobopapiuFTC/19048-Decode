@@ -136,6 +136,7 @@ public class AutoCloseBlue15 extends OpMode{
     public void autonomousPathUpdate() {
         switch (pathState) {
             case 0:
+                follower.setMaxPower(1);
                 follower.followPath(scorePreload,true);
                 r.pids=true;
                 okp=true;
@@ -400,6 +401,7 @@ public class AutoCloseBlue15 extends OpMode{
 
         follower = Constants.createFollower(hardwareMap);
         buildPaths();
+        follower.usePredictiveBraking=true;
         follower.setStartingPose(startPose);
         r = new Robot(hardwareMap,follower,t,gamepad1,gamepad2,true,true,startPose);
         r.aInit();
