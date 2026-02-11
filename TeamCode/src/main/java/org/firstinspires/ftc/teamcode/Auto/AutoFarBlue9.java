@@ -97,15 +97,13 @@ public class AutoFarBlue9 extends OpMode{
                 okf=true;
                 r.shoot=true;
                 r.oks=true;
+                r.tu.face(r.getShootTarget(),new Pose(scorePose.getX(),scorePose.getY(),Math.toRadians(90)));
                 nextPath();
                 break;
             case 1:
-                if(follower.getPose().getY()<105 && okf){
-                    r.aiming=true;
-                    okf=false;
-                }
                 if(!follower.isBusy()) {
                     if(okp){
+                        r.aiming=true;
                         pathTimer.resetTimer();
                         r.i.pornit=true;
                         okp=false;
@@ -123,7 +121,7 @@ public class AutoFarBlue9 extends OpMode{
             case 2:
                 if(!follower.isBusy()) {
                     r.aim=true;
-                    r.aiming=true;
+                    r.tu.face(r.getShootTarget(),scorePose);
                     r.s.on();
                     okf=true;
                     follower.followPath(scoreLine,true);
@@ -131,7 +129,7 @@ public class AutoFarBlue9 extends OpMode{
                 }
                 break;
 
-            case 6:
+            case 3:
                 if(follower.getPose().getX()>20 && okf){
                     r.i.pornit=false;
                     r.s.latchdown();
@@ -141,6 +139,7 @@ public class AutoFarBlue9 extends OpMode{
                     if(okp){
                         pathTimer.resetTimer();
                         r.pids=true;
+                        r.aiming=true;
                         r.i.pornit=true;
                         okp=false;
                     }
@@ -151,53 +150,89 @@ public class AutoFarBlue9 extends OpMode{
                         r.aiming=false;
                         nextPath();
                     }
+                }
+                break;
+            case 4:
+                if(!follower.isBusy()) {
+                    r.aim=true;
+                    r.tu.face(r.getShootTarget(),scorePose);
+                    r.s.on();
+                    okf=true;
+                    okp=true;
+                    follower.followPath(humanScore,true);
+                    nextPath();
+                }
+                break;
+            case 5:
+                if(follower.getPose().getX()>20 && okf){
+                    r.i.pornit=false;
+                    r.s.latchdown();
+                    okf=false;
+                }
+                if(!follower.isBusy()) {
+                    if(okp){
+                        pathTimer.resetTimer();
+                        r.pids=true;
+                        r.aiming=true;
+                        r.i.pornit=true;
+                        okp=false;
+                    }
+                    if(pathTimer.getElapsedTimeSeconds()>1) {
+                        follower.followPath(humanGrab,true);
+                        r.intake();
+                        okp=true;
+                        r.aiming=false;
+                        nextPath();
+                    }
+                }
+                break;
+            case 6:
+                if(!follower.isBusy()) {
+                    r.aim=true;
+                    r.tu.face(r.getShootTarget(),scorePose);
+                    r.s.on();
+                    okf=true;
+                    okp=true;
+                    follower.followPath(humanScore,true);
+                    nextPath();
                 }
                 break;
             case 7:
+                if(follower.getPose().getX()>20 && okf){
+                    r.i.pornit=false;
+                    r.s.latchdown();
+
+                    okf=false;
+                }
                 if(!follower.isBusy()) {
-                    r.aim=true;
-                    r.aiming=true;
-                    r.s.on();
-                    okf=true;
-                    okp=true;
-                    follower.followPath(humanScore,true);
-                    nextPath();
+                    if(okp){
+                        pathTimer.resetTimer();
+                        r.pids=true;
+                        r.i.pornit=true;
+                        r.aiming=true;
+                        okp=false;
+                    }
+                    if(pathTimer.getElapsedTimeSeconds()>1) {
+                        follower.followPath(humanGrab,true);
+                        r.intake();
+                        okp=true;
+                        r.aiming=false;
+                        nextPath();
+                    }
                 }
                 break;
             case 8:
-                if(follower.getPose().getX()>20 && okf){
-                    r.i.pornit=false;
-                    r.s.latchdown();
-                    okf=false;
-                }
                 if(!follower.isBusy()) {
-                    if(okp){
-                        pathTimer.resetTimer();
-                        r.pids=true;
-                        r.i.pornit=true;
-                        okp=false;
-                    }
-                    if(pathTimer.getElapsedTimeSeconds()>1) {
-                        follower.followPath(humanGrab,true);
-                        r.intake();
-                        okp=true;
-                        r.aiming=false;
-                        nextPath();
-                    }
+                    r.aim=true;
+                    r.tu.face(r.getShootTarget(),scorePose);
+                    r.s.on();
+                    okf=true;
+                    okp=true;
+                    follower.followPath(humanScore,true);
+                    nextPath();
                 }
                 break;
             case 9:
-                if(!follower.isBusy()) {
-                    r.aim=true;
-                    r.aiming=true;
-                    r.s.on();
-                    okf=true;
-                    okp=true;
-                    follower.followPath(humanScore,true);
-                    nextPath();
-                }
-                break;
-            case 10:
                 if(follower.getPose().getX()>20 && okf){
                     r.i.pornit=false;
                     r.s.latchdown();
@@ -207,39 +242,7 @@ public class AutoFarBlue9 extends OpMode{
                     if(okp){
                         pathTimer.resetTimer();
                         r.pids=true;
-                        r.i.pornit=true;
-                        okp=false;
-                    }
-                    if(pathTimer.getElapsedTimeSeconds()>1) {
-                        follower.followPath(humanGrab,true);
-                        r.intake();
-                        okp=true;
-                        r.aiming=false;
-                        nextPath();
-                    }
-                }
-                break;
-            case 11:
-                if(!follower.isBusy()) {
-                    r.aim=true;
-                    r.aiming=true;
-                    r.s.on();
-                    okf=true;
-                    okp=true;
-                    follower.followPath(humanScore,true);
-                    nextPath();
-                }
-                break;
-            case 12:
-                if(follower.getPose().getX()>20 && okf){
-                    r.i.pornit=false;
-                    r.s.latchdown();
-                    okf=false;
-                }
-                if(!follower.isBusy()) {
-                    if(okp){
-                        pathTimer.resetTimer();
-                        r.pids=true;
+                        r.aiming=true;
                         r.i.pornit=true;
                         okp=false;
                     }
