@@ -28,11 +28,11 @@ public class AutoCloseBlue15 extends OpMode{
     private int pathState;
     private  Pose startPose = new Pose(23, 128, Math.toRadians(234));
     private  Pose scorePose = new Pose(54, 96, Math.toRadians(180));
-    private  Pose doorPose = new Pose(16,66,Math.toRadians(153));
-    private  Pose doorM = new Pose(16,56,Math.toRadians(153));
-    private  Pose line1Pose = new Pose(16, 84, Math.toRadians(180));
-    private  Pose line2Pose = new Pose(12, 59, Math.toRadians(180));
-    private  Pose line3Pose = new Pose(12, 35, Math.toRadians(180));
+    private  Pose doorPose = new Pose(16,61,Math.toRadians(153));
+    private  Pose doorM = new Pose(17,54,Math.toRadians(153));
+    private  Pose line1Pose = new Pose(18, 84, Math.toRadians(180));
+    private  Pose line2Pose = new Pose(13, 59, Math.toRadians(180));
+    private  Pose line3Pose = new Pose(13, 35, Math.toRadians(180));
     public  Pose endPose = new Pose(36,90,Math.toRadians(180));
     private PathChain scorePreload,doorPickup,grabPickup1, scorePickup1, grabPickup2, scorePickup2, grabPickup3, scorePickup3,end,scoreDoor,doorMove;
     public void buildPaths() {
@@ -78,8 +78,8 @@ public class AutoCloseBlue15 extends OpMode{
                 .addPath(
                         new BezierCurve(
                                 follower::getPose,
-                                new Pose(57.667, 51.464),
-                                new Pose(54.802, 60.557),
+                                new Pose(57.667, 55),
+                                new Pose(54.802, 63),
                                 line2Pose
                         )
                 )
@@ -243,7 +243,7 @@ public class AutoCloseBlue15 extends OpMode{
                                             scorePose)
                             )
                             .setBrakingStrength(2)
-                            .setLinearHeadingInterpolation(follower.getPose().getHeading(), scorePose.getHeading(),0.2)
+                            .setLinearHeadingInterpolation(follower.getPose().getHeading(), scorePose.getHeading())
                             .build();
                     if(okp){
                         pathTimer.resetTimer();
