@@ -22,133 +22,99 @@ public class AutoFarBlue9 extends OpMode{
     public HubBulkRead bulk;
     private Follower follower;
     private Timer pathTimer, actionTimer, opmodeTimer;
-    private boolean okp;
+    private boolean okp,okf;
     private Robot r;
     private TelemetryManager t;
 
     private int pathState;
-    private final Pose goalPose = new Pose(0,144,0);
-    private final Pose startPose = new Pose(56, 9, Math.toRadians(90));
-    private final Pose scorePose = new Pose(52, 12, Math.toRadians(180));
-    private final Pose positionPose= new Pose(36,17,Math.toRadians(200));
-    private final Pose line1Pose = new Pose(11, 6, Math.toRadians(200));
-    private final Pose line2Pose = new Pose(11, 16, Math.toRadians(200));
+    private final Pose startPose = new Pose(56, 6, Math.toRadians(90));
+    private final Pose scorePose = new Pose(52, 10, Math.toRadians(180));
+    private final Pose humanPose = new Pose(12,8,Math.toRadians(180));
+    private final Pose linePose = new Pose(12,36,Math.toRadians(180));
     public final Pose endPose = new Pose(40,14,Math.toRadians(180));
-    private final Pose linePose = new Pose(6.5,36,Math.toRadians(180));
-    private PathChain scorePreload,position,grabLine,scoreLine,grabPickup1, scorePickup1, grabPickup2, scorePickup2, grabPickup3, scorePickup3,end;
+
+    private PathChain scorePreload,grabLine,scoreLine,humanGrab,humanScore,end;
     public void buildPaths() {
         scorePreload = follower
                 .pathBuilder()
                 .addPath(
                         new BezierLine(follower::getPose, scorePose)
                 )
-                .setLinearHeadingInterpolation(startPose.getHeading(),Math.toRadians(90))
-                .build();
-
-        position = follower
-                .pathBuilder()
-                .addPath(
-                        new BezierLine(follower::getPose,positionPose)
-                )
-                .setLinearHeadingInterpolation(Math.toRadians(90),Math.toRadians(180))
+                .setBrakingStrength(2)
+                .setConstantHeadingInterpolation(startPose.getHeading())
                 .build();
         grabLine = follower
                 .pathBuilder()
                 .addPath(
-                        new BezierCurve(
-                                follower::getPose,
-                                new Pose(75,38),
-                                linePose
-                                )
+                        new BezierCurve(follower::getPose,
+                                new Pose(58,41),
+                                new Pose(42,35),
+                                linePose)
                 )
-                .setLinearHeadingInterpolation(Math.toRadians(180),Math.toRadians(180))
+                .setBrakingStrength(2)
+                .setLinearHeadingInterpolation(startPose.getHeading(),linePose.getHeading(),0.3)
                 .build();
         scoreLine = follower
                 .pathBuilder()
                 .addPath(
-                        new BezierLine(
-                                follower::getPose,
-                                scorePose
-                        )
+                        new BezierLine(follower::getPose, scorePose)
                 )
+                .setBrakingStrength(2)
                 .setLinearHeadingInterpolation(linePose.getHeading(),scorePose.getHeading())
                 .build();
-        grabPickup1 = follower
+        humanGrab = follower
                 .pathBuilder()
                 .addPath(
-                        new BezierCurve(follower::getPose,
-                                new Pose(7.000, 25),
-                                line1Pose)
+                        new BezierLine(follower::getPose, humanPose)
                 )
-                .setLinearHeadingInterpolation(scorePose.getHeading(),line1Pose.getHeading(),0.5)
+                .setBrakingStrength(2)
+                .setLinearHeadingInterpolation(scorePose.getHeading(),humanPose.getHeading())
                 .build();
-
-        scorePickup1 = follower
+        humanScore = follower
                 .pathBuilder()
                 .addPath(
-                        new BezierLine(follower::getPose,scorePose)
+                        new BezierLine(follower::getPose, scorePose)
                 )
-                .setLinearHeadingInterpolation(line1Pose.getHeading(),scorePose.getHeading())
+                .setBrakingStrength(2)
+                .setLinearHeadingInterpolation(humanPose.getHeading(),scorePose.getHeading())
                 .build();
-
-        grabPickup2 = follower
-                .pathBuilder()
-                .addPath(
-                        new BezierCurve(
-                                follower::getPose,
-                                new Pose(8, 6),
-                                line2Pose
-                        )
-                )
-                .setLinearHeadingInterpolation(scorePose.getHeading(),line2Pose.getHeading())
-                .build();
-
-        scorePickup2 = follower
-                .pathBuilder()
-                .addPath(
-                        new BezierCurve(
-                                follower::getPose,
-                                new Pose(39, 12),
-                                scorePose
-                        )
-                )
-                .setLinearHeadingInterpolation(line2Pose.getHeading(),scorePose.getHeading())
-                .build();
-
         end = follower
                 .pathBuilder()
                 .addPath(
-                        new BezierLine(follower::getPose,endPose)
+                        new BezierLine(follower::getPose, endPose)
                 )
+                .setBrakingStrength(2)
                 .setLinearHeadingInterpolation(scorePose.getHeading(),endPose.getHeading())
                 .build();
-
     }
     public void autonomousPathUpdate() {
         switch (pathState) {
             case 0:
+                follower.setMaxPower(1);
                 follower.followPath(scorePreload,true);
                 r.pids=true;
                 okp=true;
-                r.shooter();
+                okf=true;
+                r.shoot=true;
+                r.oks=true;
                 nextPath();
                 break;
             case 1:
+                if(follower.getPose().getY()<105 && okf){
+                    r.aiming=true;
+                    okf=false;
+                }
                 if(!follower.isBusy()) {
                     if(okp){
                         pathTimer.resetTimer();
+                        r.i.pornit=true;
                         okp=false;
                     }
-                    if(pathTimer.getElapsedTimeSeconds()<0.1){
-                        r.shooter();
-                    }
-                    if(pathTimer.getElapsedTimeSeconds()>0.5){
-                        r.shooting=true;
-                    }
-                    if(pathTimer.getElapsedTimeSeconds()>3) {
-                        follower.followPath(position, true);
+                    if(pathTimer.getElapsedTimeSeconds()>1) {
+                        follower.followPath(grabLine, true);
                         r.intake();
                         okp=true;
+                        okf=true;
                         r.aiming=false;
                         nextPath();
                     }
@@ -156,60 +122,30 @@ public class AutoFarBlue9 extends OpMode{
                 break;
             case 2:
                 if(!follower.isBusy()) {
-                    follower.followPath(grabLine,true);
-                    nextPath();
-                }
-                break;
-
-            case 3:
-                if(!follower.isBusy()) {
-                    r.i.pornit=false;
+                    r.aim=true;
+                    r.aiming=true;
+                    r.s.on();
+                    okf=true;
                     follower.followPath(scoreLine,true);
                     nextPath();
                 }
                 break;
-            case 4:
-                if(!follower.isBusy()) {
-                    if(okp){
-                        pathTimer.resetTimer();
-                        okp=false;
-                    }
-                    if(pathTimer.getElapsedTimeSeconds()<0.1){
-                        r.shooter();
-                    }
-                    if(pathTimer.getElapsedTimeSeconds()>0.5){
-                        r.shooting=true;
-                    }
-                    if(pathTimer.getElapsedTimeSeconds()>3) {
-                        follower.followPath(grabPickup1, true);
-                        r.intake();
-                        okp=true;
-                        r.aiming=false;
-                        nextPath();
-                    }
-                }
-                break;
-            case 5:
-                if(!follower.isBusy()) {
-                    r.i.pornit=false;
-                    follower.followPath(scorePickup1,true);
-                    nextPath();
-                }
-                break;
+
             case 6:
+                if(follower.getPose().getX()>20 && okf){
+                    r.i.pornit=false;
+                    r.s.latchdown();
+                    okf=false;
+                }
                 if(!follower.isBusy()) {
                     if(okp){
                         pathTimer.resetTimer();
+                        r.pids=true;
+                        r.i.pornit=true;
                         okp=false;
                     }
-                    if(pathTimer.getElapsedTimeSeconds()<0.1){
-                        r.shooter();
-                    }
-                    if(pathTimer.getElapsedTimeSeconds()>0.5){
-                        r.shooting=true;
-                    }
-                    if(pathTimer.getElapsedTimeSeconds()>3) {
-                        follower.followPath(grabPickup2, true);
+                    if(pathTimer.getElapsedTimeSeconds()>1) {
+                        follower.followPath(humanGrab,true);
                         r.intake();
                         okp=true;
                         r.aiming=false;
@@ -219,40 +155,103 @@ public class AutoFarBlue9 extends OpMode{
                 break;
             case 7:
                 if(!follower.isBusy()) {
-                    r.i.pornit=false;
-                    follower.followPath(scorePickup2, true);
+                    r.aim=true;
+                    r.aiming=true;
+                    r.s.on();
+                    okf=true;
+                    okp=true;
+                    follower.followPath(humanScore,true);
                     nextPath();
                 }
                 break;
             case 8:
+                if(follower.getPose().getX()>20 && okf){
+                    r.i.pornit=false;
+                    r.s.latchdown();
+                    okf=false;
+                }
                 if(!follower.isBusy()) {
                     if(okp){
                         pathTimer.resetTimer();
+                        r.pids=true;
+                        r.i.pornit=true;
                         okp=false;
                     }
-                    if(pathTimer.getElapsedTimeSeconds()<0.1){
-                        r.shooter();
-                    }
-                    if(pathTimer.getElapsedTimeSeconds()>0.5){
-                        r.shooting=true;
-                    }
-                    if(pathTimer.getElapsedTimeSeconds()>3) {
-                        follower.followPath(end, true);
+                    if(pathTimer.getElapsedTimeSeconds()>1) {
+                        follower.followPath(humanGrab,true);
                         r.intake();
                         okp=true;
                         r.aiming=false;
                         nextPath();
                     }
-
                 }
                 break;
             case 9:
                 if(!follower.isBusy()) {
+                    r.aim=true;
+                    r.aiming=true;
+                    r.s.on();
+                    okf=true;
+                    okp=true;
+                    follower.followPath(humanScore,true);
+                    nextPath();
+                }
+                break;
+            case 10:
+                if(follower.getPose().getX()>20 && okf){
                     r.i.pornit=false;
-                    r.aim=false;
-                    r.aima=false;
-                    r.tu.setYaw(0);
-                    endPath();
+                    r.s.latchdown();
+                    okf=false;
+                }
+                if(!follower.isBusy()) {
+                    if(okp){
+                        pathTimer.resetTimer();
+                        r.pids=true;
+                        r.i.pornit=true;
+                        okp=false;
+                    }
+                    if(pathTimer.getElapsedTimeSeconds()>1) {
+                        follower.followPath(humanGrab,true);
+                        r.intake();
+                        okp=true;
+                        r.aiming=false;
+                        nextPath();
+                    }
+                }
+                break;
+            case 11:
+                if(!follower.isBusy()) {
+                    r.aim=true;
+                    r.aiming=true;
+                    r.s.on();
+                    okf=true;
+                    okp=true;
+                    follower.followPath(humanScore,true);
+                    nextPath();
+                }
+                break;
+            case 12:
+                if(follower.getPose().getX()>20 && okf){
+                    r.i.pornit=false;
+                    r.s.latchdown();
+                    okf=false;
+                }
+                if(!follower.isBusy()) {
+                    if(okp){
+                        pathTimer.resetTimer();
+                        r.pids=true;
+                        r.i.pornit=true;
+                        okp=false;
+                    }
+                    if(pathTimer.getElapsedTimeSeconds()>1) {
+                        follower.followPath(end,true);
+                        r.shooting=false;
+                        r.i.pornit=false;
+                        r.aim=false;
+                        okp=true;
+                        r.aiming=false;
+                        endPath();
+                    }
                 }
                 break;
         }
@@ -298,10 +297,10 @@ public class AutoFarBlue9 extends OpMode{
         follower = Constants.createFollower(hardwareMap);
         buildPaths();
         follower.setStartingPose(startPose);
+        follower.usePredictiveBraking=true;
         r = new Robot(hardwareMap,follower,t,gamepad1,gamepad2,true,true,startPose);
         r.aInit();
         r.setShootTargetFar();
-        r.s.shootc=950;
     }
     @Override
     public void init_loop() {}
