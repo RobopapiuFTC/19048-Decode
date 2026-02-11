@@ -35,7 +35,7 @@ public class Robot {
     public Turret tu;
     public double dist;
     public static Pose shootp = new Pose(0 ,144,0);
-    public static Pose parkPose,endPose,startingPose,currentPose,futurePose;
+    public static Pose parkPose,endPose,startingPose,currentPose,futurePose,relocalization;
     public Gamepad g1,g2;
     public Follower f;
     public static boolean a,shoot,oks,aim,auto,intake,oki,pids=false,aima=true,shooting=false,aiming=true;
@@ -195,13 +195,16 @@ public class Robot {
             shooting=true;
         }
         slowmode = g1.right_trigger > 0.3;
-        if(g1.left_trigger > 0.3 && g1.right_bumper)f.setPose(startingPose);
         if(g1.options){
             if(rTimer.getElapsedTimeSeconds()>0.3){
                 tu.manual=!tu.manual;
                 rTimer.resetTimer();
             }
         }
+        if(g1.left_trigger > 0.3 && g1.right_bumper)f.setPose(relocalization);
+    }
+    public void setRelocalization(Pose relocalization){
+        this.relocalization=relocalization;
     }
     public void intake(){
         intake=true;

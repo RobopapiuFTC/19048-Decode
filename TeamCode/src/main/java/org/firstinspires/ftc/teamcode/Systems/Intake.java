@@ -21,20 +21,20 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import com.pedropathing.util.Timer;
 public class Intake {
     public DcMotorEx intake;
-    public RevColorSensorV3 sensor;
+    public RevColorSensorV3 s1,s2,s3;
     public Servo SVS,SVD;
     public Telemetry telemetry;
     public NormalizedRGBA colors;
     public boolean pornit=false,looping=false;
     public int pos,f1,f2;
-    public double distance;
+    public double d1,d2,d3;
     public boolean[] full;
     public Timer loopTimer,readTimer;
     public Intake(HardwareMap hardwareMap, TelemetryManager telemetry){
 
         intake=hardwareMap.get(DcMotorEx.class, "i");
         intake.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        sensor = hardwareMap.get(RevColorSensorV3.class,"color");
+        s1 = hardwareMap.get(RevColorSensorV3.class,"s1");
         full = new boolean[]{false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false};
 
         loopTimer=new Timer();
@@ -54,7 +54,7 @@ public class Intake {
     }
     public void isFull(){
         if(!pornit)return;
-            if(loopTimer.getElapsedTimeSeconds()<0.6) {
+       /* if(loopTimer.getElapsedTimeSeconds()<0.6) {
                 if(readTimer.getElapsedTimeSeconds()<0.05) {
                     if(looping) {
                         distance = sensor.getDistance(DistanceUnit.MM);
@@ -86,8 +86,24 @@ public class Intake {
                     f1=0;
                     f2=0;
                 }
+            } */
+        /*if(readTimer.getElapsedTimeSeconds()<0.05) {
+            if(looping) {
+                d1 = s1.getDistance(DistanceUnit.MM);
+                d2 = s2.getDistance(DistanceUnit.MM);
+                d3 = s3.getDistance(DistanceUnit.MM);
+                if(d3<30)if(d2<20)if(d1<25)pornit=false;
+                looping=false;
             }
-
+        }
+        else{
+            looping=true;
+            readTimer.resetTimer();
+        } */
+        d1 = s1.getDistance(DistanceUnit.MM);
+        d2 = s2.getDistance(DistanceUnit.MM);
+        d3 = s3.getDistance(DistanceUnit.MM);
+        if(d3<30 && d2<20 && d3<25)pornit=false;
     }
 
     public double getVelocity(){

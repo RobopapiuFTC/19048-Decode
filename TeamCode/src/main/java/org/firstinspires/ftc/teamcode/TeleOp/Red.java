@@ -25,6 +25,7 @@ public class Red extends OpMode {
     TelemetryManager t;
     public static Pose startingPose = new Pose(20, 125, Math.toRadians(234)).mirror();
     public static Pose parkPose = new Pose(111,40,Math.toRadians(270)).mirror();
+    public static Pose relocalization = new Pose(134,8,Math.toRadians(0)).mirror();
     public static PathChain park;
     public HubBulkRead bulk;
 
@@ -36,6 +37,7 @@ public class Red extends OpMode {
         t = PanelsTelemetry.INSTANCE.getTelemetry();
         r = new Robot(hardwareMap,follower, t, gamepad1 , gamepad2,false,false,startingPose);
         r.tInit();
+        r.setRelocalization(relocalization);
     }
 
     @Override
