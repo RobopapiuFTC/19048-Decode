@@ -238,8 +238,7 @@ public class AutoCloseBlue18 extends OpMode{
                     scoreDoor = follower
                             .pathBuilder()
                             .addPath(
-                                    new BezierCurve(follower::getPose,
-                                            new Pose(45,65),
+                                    new BezierLine(follower::getPose,
                                             scorePose)
                             )
                             .setBrakingStrength(2)
@@ -325,8 +324,7 @@ public class AutoCloseBlue18 extends OpMode{
                     scoreDoor = follower
                             .pathBuilder()
                             .addPath(
-                                    new BezierCurve(follower::getPose,
-                                            new Pose(45,65),
+                                    new BezierLine(follower::getPose,
                                             scorePose)
                             )
                             .setBrakingStrength(2)

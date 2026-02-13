@@ -32,7 +32,7 @@ public class Shooter {
     public static double kS = 0.08, kV = 0.00039, kP = 0.01;
     private boolean activated = true;
 
-    public double shootn=1000,shootc=1000,offset;
+    public double shootn=1000,shootc=1000,offset,latching=0.75;
     public static double hood,angle=0.0005;
 
     public static List<ShotSample> samples = Arrays.asList(
@@ -152,6 +152,7 @@ public class Shooter {
         SVD.setPosition(0.15);
     }
     public void latchdown(){latch.setPosition(0.24);}
-    public void latchup(){latch.setPosition(0.7);}
+    public void latchup(){//latch.setPosition(0.7);
+        latch.setPosition(latching); }
 
 }

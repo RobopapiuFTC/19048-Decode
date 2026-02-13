@@ -26,13 +26,13 @@ public class AutoCloseRed15 extends OpMode{
     private boolean okp,okf;
 
     private int pathState;
-    private  Pose startPose = new Pose(20, 125, Math.toRadians(234));
+    private  Pose startPose = new Pose(23, 128, Math.toRadians(234));
     private  Pose scorePose = new Pose(54, 96, Math.toRadians(180));
-    private  Pose doorPose = new Pose(14,63,Math.toRadians(153));
-    private  Pose doorM = new Pose(14,53,Math.toRadians(153));
-    private  Pose line1Pose = new Pose(13, 84, Math.toRadians(180));
-    private  Pose line2Pose = new Pose(8, 59, Math.toRadians(180));
-    private  Pose line3Pose = new Pose(8, 35, Math.toRadians(180));
+    private  Pose doorPose = new Pose(16,61,Math.toRadians(153));
+    private  Pose doorM = new Pose(17,54,Math.toRadians(153));
+    private  Pose line1Pose = new Pose(18, 84, Math.toRadians(180));
+    private  Pose line2Pose = new Pose(13, 59, Math.toRadians(180));
+    private  Pose line3Pose = new Pose(13, 35, Math.toRadians(180));
     public  Pose endPose = new Pose(36,90,Math.toRadians(180));
     private PathChain scorePreload,doorPickup,grabPickup1, scorePickup1, grabPickup2, scorePickup2, grabPickup3, scorePickup3,end,scoreDoor,doorMove;
     public void buildPaths() {
@@ -49,7 +49,8 @@ public class AutoCloseRed15 extends OpMode{
                 .pathBuilder()
                 .addPath(
                         new BezierCurve(follower::getPose,
-                                new Pose(55,86).mirror(),
+                                new Pose(56,80).mirror(),
+                                new Pose(38,84).mirror(),
                                 line1Pose)
                 )
                 .setBrakingStrength(2)
@@ -79,8 +80,8 @@ public class AutoCloseRed15 extends OpMode{
                 .addPath(
                         new BezierCurve(
                                 follower::getPose,
-                                new Pose(57.667, 51.464).mirror(),
-                                new Pose(54.802, 60.557).mirror(),
+                                new Pose(57.667, 55).mirror(),
+                                new Pose(54.802, 63).mirror(),
                                 line2Pose
                         )
                 )
@@ -106,7 +107,8 @@ public class AutoCloseRed15 extends OpMode{
                 .addPath(
                         new BezierCurve(
                                 follower::getPose,
-                                new Pose(83.483, 30).mirror(),
+                                new Pose(68,17).mirror(),
+                                new Pose(41,40).mirror(),
                                 line3Pose
                         )
                 )
@@ -132,10 +134,12 @@ public class AutoCloseRed15 extends OpMode{
                 )
                 .setLinearHeadingInterpolation(scorePose.getHeading(),endPose.getHeading())
                 .build();
+
     }
     public void autonomousPathUpdate() {
         switch (pathState) {
             case 0:
+                follower.setMaxPower(1);
                 follower.followPath(scorePreload,true);
                 r.pids=true;
                 okp=true;
@@ -177,11 +181,12 @@ public class AutoCloseRed15 extends OpMode{
                 break;
 
             case 3:
-                if(follower.getPose().getX()<144-20 && okf){
+                if(follower.getPose().getX()>20 && okf){
                     r.i.pornit=false;
-                    r.s.latchdown();
+                    pathTimer.resetTimer();
                     okf=false;
                 }
+                if(follower.getPose().getX()>20 && pathTimer.getElapsedTimeSeconds()<0.2 && !okf)r.s.latchdown();
                 if(!follower.isBusy()) {
 
                     doorPickup = follower
@@ -219,17 +224,9 @@ public class AutoCloseRed15 extends OpMode{
                             .setBrakingStrength(2)
                             .setLinearHeadingInterpolation(follower.getPose().getHeading(), doorM.getHeading())
                             .build();
-                    if(okp){
-                        pathTimer.resetTimer();
-                        r.pids=true;
-                        okp=false;
-
-                    }
-                    if(pathTimer.getElapsedTimeSeconds()>0.1) {
-                        follower.followPath(doorMove, true);
-                        okp=true;
-                        nextPath();
-                    }
+                    follower.followPath(doorMove, true);
+                    okp=true;
+                    nextPath();
                 }
                 break;
             case 5:
@@ -238,11 +235,11 @@ public class AutoCloseRed15 extends OpMode{
                             .pathBuilder()
                             .addPath(
                                     new BezierCurve(follower::getPose,
-                                            new Pose(45,65).mirror(),
+                                            new Pose(60,51).mirror(),
                                             scorePose)
                             )
                             .setBrakingStrength(2)
-                            .setLinearHeadingInterpolation(follower.getPose().getHeading(), scorePose.getHeading(),0.2)
+                            .setLinearHeadingInterpolation(follower.getPose().getHeading(), scorePose.getHeading())
                             .build();
                     if(okp){
                         pathTimer.resetTimer();
@@ -264,11 +261,12 @@ public class AutoCloseRed15 extends OpMode{
                 }
                 break;
             case 6:
-                if(follower.getPose().getX()<144-20 && okf){
+                if(follower.getPose().getX()>20 && okf){
                     r.i.pornit=false;
-                    r.s.latchdown();
+                    pathTimer.resetTimer();
                     okf=false;
                 }
+                if(follower.getPose().getX()>20 && pathTimer.getElapsedTimeSeconds()<0.2 && !okf)r.s.latchdown();
                 if(!follower.isBusy()) {
                     if(okp){
                         pathTimer.resetTimer();
@@ -297,11 +295,12 @@ public class AutoCloseRed15 extends OpMode{
                 }
                 break;
             case 8:
-                if(follower.getPose().getX()<144-20 && okf){
+                if(follower.getPose().getX()>20 && okf){
                     r.i.pornit=false;
-                    r.s.latchdown();
+                    pathTimer.resetTimer();
                     okf=false;
                 }
+                if(follower.getPose().getX()>20 && pathTimer.getElapsedTimeSeconds()<0.2 && !okf)r.s.latchdown();
                 if(!follower.isBusy()) {
                     if(okp){
                         pathTimer.resetTimer();
@@ -330,11 +329,12 @@ public class AutoCloseRed15 extends OpMode{
                 }
                 break;
             case 10:
-                if(follower.getPose().getX()<144-20 && okf){
+                if(follower.getPose().getX()>20 && okf){
                     r.i.pornit=false;
-                    r.s.latchdown();
+                    pathTimer.resetTimer();
                     okf=false;
                 }
+                if(follower.getPose().getX()>20 && pathTimer.getElapsedTimeSeconds()<0.2 && !okf)r.s.latchdown();
                 if(!follower.isBusy()) {
                     if(okp){
                         pathTimer.resetTimer();
@@ -392,28 +392,29 @@ public class AutoCloseRed15 extends OpMode{
 
     @Override
     public void init() {
+        startPose=startPose.mirror();
+        scorePose=scorePose.mirror();
+        line1Pose=line1Pose.mirror();
+        line2Pose=line2Pose.mirror();
+        line3Pose=line3Pose.mirror();
+        doorM=doorM.mirror();
+        doorPose=doorPose.mirror();
+        endPose = endPose.mirror();
         bulk = new HubBulkRead(hardwareMap, LynxModule.BulkCachingMode.MANUAL);
         pathTimer = new Timer();
         opmodeTimer = new Timer();
         opmodeTimer.resetTimer();
 
-        startPose = startPose.mirror();
-        scorePose = scorePose.mirror();
-        doorPose = doorPose.mirror();
-        doorM = doorM.mirror();
-        line1Pose = line1Pose.mirror();
-        line2Pose = line2Pose.mirror();
-        line3Pose = line3Pose.mirror();
-        endPose = endPose.mirror();
 
         follower = Constants.createFollower(hardwareMap);
         buildPaths();
+        follower.usePredictiveBraking=true;
         follower.setStartingPose(startPose);
         r = new Robot(hardwareMap,follower,t,gamepad1,gamepad2,false,true,startPose);
         r.aInit();
         r.setShootTarget();
-        //r.s.shootc=970;
-        //r.s.offset=-20;
+        //   r.s.shootc=970;
+        //   r.s.offset=-30;
     }
     @Override
     public void init_loop() {}

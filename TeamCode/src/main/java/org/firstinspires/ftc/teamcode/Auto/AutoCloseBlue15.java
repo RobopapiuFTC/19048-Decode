@@ -49,7 +49,8 @@ public class AutoCloseBlue15 extends OpMode{
                 .pathBuilder()
                 .addPath(
                         new BezierCurve(follower::getPose,
-                                new Pose(55,86),
+                                new Pose(56,80),
+                                new Pose(38,84),
                                 line1Pose)
                 )
                 .setBrakingStrength(2)
@@ -105,7 +106,8 @@ public class AutoCloseBlue15 extends OpMode{
                 .addPath(
                         new BezierCurve(
                                 follower::getPose,
-                                new Pose(83.483, 30),
+                                new Pose(68,17),
+                                new Pose(41,40),
                                 line3Pose
                         )
                 )
@@ -180,9 +182,10 @@ public class AutoCloseBlue15 extends OpMode{
             case 3:
                 if(follower.getPose().getX()>20 && okf){
                     r.i.pornit=false;
-                    r.s.latchdown();
+                    pathTimer.resetTimer();
                     okf=false;
                 }
+                if(follower.getPose().getX()>20 && pathTimer.getElapsedTimeSeconds()<0.2 && !okf)r.s.latchdown();
                 if(!follower.isBusy()) {
 
                     doorPickup = follower
@@ -220,17 +223,9 @@ public class AutoCloseBlue15 extends OpMode{
                             .setBrakingStrength(2)
                             .setLinearHeadingInterpolation(follower.getPose().getHeading(), doorM.getHeading())
                             .build();
-                    if(okp){
-                        pathTimer.resetTimer();
-                        r.pids=true;
-                        okp=false;
-
-                    }
-                    if(pathTimer.getElapsedTimeSeconds()>0.1) {
-                        follower.followPath(doorMove, true);
-                        okp=true;
-                        nextPath();
-                    }
+                    follower.followPath(doorMove, true);
+                    okp=true;
+                    nextPath();
                 }
                 break;
             case 5:
@@ -239,7 +234,7 @@ public class AutoCloseBlue15 extends OpMode{
                             .pathBuilder()
                             .addPath(
                                     new BezierCurve(follower::getPose,
-                                            new Pose(45,65),
+                                            new Pose(60,51),
                                             scorePose)
                             )
                             .setBrakingStrength(2)
@@ -267,9 +262,10 @@ public class AutoCloseBlue15 extends OpMode{
             case 6:
                 if(follower.getPose().getX()>20 && okf){
                 r.i.pornit=false;
-                r.s.latchdown();
+                pathTimer.resetTimer();
                 okf=false;
             }
+                if(follower.getPose().getX()>20 && pathTimer.getElapsedTimeSeconds()<0.2 && !okf)r.s.latchdown();
                 if(!follower.isBusy()) {
                     if(okp){
                         pathTimer.resetTimer();
@@ -299,10 +295,11 @@ public class AutoCloseBlue15 extends OpMode{
                 break;
             case 8:
                 if(follower.getPose().getX()>20 && okf){
-                r.i.pornit=false;
-                r.s.latchdown();
-                okf=false;
-            }
+                    r.i.pornit=false;
+                    pathTimer.resetTimer();
+                    okf=false;
+                }
+                if(follower.getPose().getX()>20 && pathTimer.getElapsedTimeSeconds()<0.2 && !okf)r.s.latchdown();
                 if(!follower.isBusy()) {
                     if(okp){
                         pathTimer.resetTimer();
@@ -332,10 +329,11 @@ public class AutoCloseBlue15 extends OpMode{
                 break;
             case 10:
                 if(follower.getPose().getX()>20 && okf){
-                r.i.pornit=false;
-                r.s.latchdown();
-                okf=false;
-            }
+                    r.i.pornit=false;
+                    pathTimer.resetTimer();
+                    okf=false;
+                }
+                if(follower.getPose().getX()>20 && pathTimer.getElapsedTimeSeconds()<0.2 && !okf)r.s.latchdown();
                 if(!follower.isBusy()) {
                     if(okp){
                         pathTimer.resetTimer();

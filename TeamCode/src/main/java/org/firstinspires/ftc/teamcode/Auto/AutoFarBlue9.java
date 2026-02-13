@@ -47,8 +47,8 @@ public class AutoFarBlue9 extends OpMode{
                 .pathBuilder()
                 .addPath(
                         new BezierCurve(follower::getPose,
-                                new Pose(58,41),
-                                new Pose(42,35),
+                                new Pose(62,48),
+                                new Pose(41,33),
                                 linePose)
                 )
                 .setBrakingStrength(2)
@@ -233,6 +233,111 @@ public class AutoFarBlue9 extends OpMode{
                 }
                 break;
             case 9:
+                if(follower.getPose().getX()>20 && okf){
+                    r.i.pornit=false;
+                    r.s.latchdown();
+
+                    okf=false;
+                }
+                if(!follower.isBusy()) {
+                    if(okp){
+                        pathTimer.resetTimer();
+                        r.pids=true;
+                        r.i.pornit=true;
+                        r.aiming=true;
+                        okp=false;
+                    }
+                    if(pathTimer.getElapsedTimeSeconds()>1) {
+                        follower.followPath(humanGrab,true);
+                        r.intake();
+                        okp=true;
+                        r.aiming=false;
+                        nextPath();
+                    }
+                }
+                break;
+            case 10:
+                if(!follower.isBusy()) {
+                    r.aim=true;
+                    r.tu.face(r.getShootTarget(),scorePose);
+                    r.s.on();
+                    okf=true;
+                    okp=true;
+                    follower.followPath(humanScore,true);
+                    nextPath();
+                }
+                break;
+            case 11:
+                if(follower.getPose().getX()>20 && okf){
+                    r.i.pornit=false;
+                    r.s.latchdown();
+
+                    okf=false;
+                }
+                if(!follower.isBusy()) {
+                    if(okp){
+                        pathTimer.resetTimer();
+                        r.pids=true;
+                        r.i.pornit=true;
+                        r.aiming=true;
+                        okp=false;
+                    }
+                    if(pathTimer.getElapsedTimeSeconds()>1) {
+                        follower.followPath(humanGrab,true);
+                        r.intake();
+                        okp=true;
+                        r.aiming=false;
+                        nextPath();
+                    }
+                }
+                break;
+            case 12:
+                if(!follower.isBusy()) {
+                    r.aim=true;
+                    r.tu.face(r.getShootTarget(),scorePose);
+                    r.s.on();
+                    okf=true;
+                    okp=true;
+                    follower.followPath(humanScore,true);
+                    nextPath();
+                }
+                break;
+            case 13:
+                if(follower.getPose().getX()>20 && okf){
+                    r.i.pornit=false;
+                    r.s.latchdown();
+
+                    okf=false;
+                }
+                if(!follower.isBusy()) {
+                    if(okp){
+                        pathTimer.resetTimer();
+                        r.pids=true;
+                        r.i.pornit=true;
+                        r.aiming=true;
+                        okp=false;
+                    }
+                    if(pathTimer.getElapsedTimeSeconds()>1) {
+                        follower.followPath(humanGrab,true);
+                        r.intake();
+                        okp=true;
+                        r.aiming=false;
+                        nextPath();
+                    }
+                }
+                break;
+            case 14:
+                if(!follower.isBusy()) {
+                    r.aim=true;
+                    r.tu.face(r.getShootTarget(),scorePose);
+                    r.s.on();
+                    okf=true;
+                    okp=true;
+                    follower.followPath(humanScore,true);
+                    nextPath();
+                }
+                break;
+            case 15:
                 if(follower.getPose().getX()>20 && okf){
                     r.i.pornit=false;
                     r.s.latchdown();

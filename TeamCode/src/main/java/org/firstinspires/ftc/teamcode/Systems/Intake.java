@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.Systems;
 
+import static org.firstinspires.ftc.teamcode.Hardware.Robot.rumble;
+
 import android.graphics.Color;
 
 import com.bylazar.telemetry.TelemetryManager;
@@ -25,7 +27,7 @@ public class Intake {
     public Servo SVS,SVD;
     public Telemetry telemetry;
     public NormalizedRGBA colors;
-    public boolean pornit=false,looping=false;
+    public boolean pornit=false,looping=false,oki=true,third=false,second=false;
     public int pos,f1,f2;
     public double d1,d2,d3;
     public boolean[] full;
@@ -35,6 +37,8 @@ public class Intake {
         intake=hardwareMap.get(DcMotorEx.class, "i");
         intake.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         s1 = hardwareMap.get(RevColorSensorV3.class,"s1");
+        s2=hardwareMap.get(RevColorSensorV3.class,"s2");
+        s3=hardwareMap.get(RevColorSensorV3.class,"s3");
         full = new boolean[]{false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false};
 
         loopTimer=new Timer();
@@ -42,7 +46,6 @@ public class Intake {
     }
     public void periodic(){
         run();
-        //isFull();
     }
 
     public void run(){
@@ -53,7 +56,7 @@ public class Intake {
         }
     }
     public void isFull(){
-        if(!pornit)return;
+        if(!looping)return;
        /* if(loopTimer.getElapsedTimeSeconds()<0.6) {
                 if(readTimer.getElapsedTimeSeconds()<0.05) {
                     if(looping) {
@@ -103,7 +106,19 @@ public class Intake {
         d1 = s1.getDistance(DistanceUnit.MM);
         d2 = s2.getDistance(DistanceUnit.MM);
         d3 = s3.getDistance(DistanceUnit.MM);
-        if(d3<30 && d2<20 && d3<25)pornit=false;
+        if(d3<30)third=true;
+        if(third && d2<10)second=true;
+        if(third && second && d1<13){
+            if(oki) {
+                readTimer.resetTimer();
+                oki=false;
+            }
+        }
+        if(readTimer.getElapsedTimeSeconds()>0.4 && !oki) {
+            pornit = false;
+            looping = false;
+            rumble = true;
+        }
     }
 
     public double getVelocity(){

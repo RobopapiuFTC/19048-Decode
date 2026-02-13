@@ -38,7 +38,7 @@ public class Robot {
     public static Pose parkPose,endPose,startingPose,currentPose,futurePose,relocalization;
     public Gamepad g1,g2;
     public Follower f;
-    public static boolean a,shoot,oks,aim,auto,intake,oki,pids=false,aima=true,shooting=false,aiming=true;
+    public static boolean a,shoot,oks,aim,auto,intake,oki,pids=false,aima=true,shooting=false,aiming=true,rumble=false;
     public Timer iTimer,rTimer,rsTimer,sTimer,oTimer;
     public Timer looptimer;
     public int loops;
@@ -77,7 +77,9 @@ public class Robot {
         sequenceshoot();
         sequenceintake();
         isFull();
+        rumble();
         hood();
+        setLatch();
         if(shooting){
             shooting();
             sc();
@@ -90,6 +92,7 @@ public class Robot {
             }
         }
         else tu.setYaw(Math.toRadians(90));
+        i.isFull();
         i.periodic();
         s.periodic();
         tu.periodic();
@@ -108,6 +111,7 @@ public class Robot {
         hood();
         sequenceintake();
         turret();
+        setLatch();
         //sotm();
         if(shooting)shooting();
         //if(!aiming)tu.setTurretTarget(0);
@@ -133,6 +137,11 @@ public class Robot {
         tu.resetTurret();
         setTurretOffset();
     }
+    public void rumble(){
+        if(!rumble)return;
+        g1.rumble(1000);
+        rumble=false;
+    }
     public void dualControls(){
         if(g1.y){
             if(rTimer.getElapsedTimeSeconds()>0.3){
@@ -147,10 +156,7 @@ public class Robot {
             }
         }
         if(g1.b){
-            i.intake.setDirection(DcMotorSimple.Direction.REVERSE);
-            i.pornit=true;
-            intake=false;
-            oki=false;
+            f.setPose(relocalization);
         }
         if(g1.dpad_left && !g1.left_bumper){
             if(oTimer.getElapsedTimeSeconds()>0.3){
@@ -201,7 +207,12 @@ public class Robot {
                 rTimer.resetTimer();
             }
         }
-        if(g1.left_trigger > 0.3 && g1.right_bumper)f.setPose(relocalization);
+        if(g1.left_trigger > 0.3 && g1.right_bumper) {
+            i.intake.setDirection(DcMotorSimple.Direction.REVERSE);
+            i.pornit=true;
+            intake=false;
+            oki=false;
+        }
     }
     public void setRelocalization(Pose relocalization){
         this.relocalization=relocalization;
@@ -210,6 +221,8 @@ public class Robot {
         intake=true;
         oki=true;
         shooting=false;
+        i.third=false;
+        i.second=false;
     }
     public void shooter(){
         shoot=true;
@@ -241,6 +254,8 @@ public class Robot {
                 i.pornit = true;
                 intake=false;
                 oki=false;
+                i.oki=true;
+                i.looping=true;
             }
         }
     }
@@ -387,6 +402,14 @@ public class Robot {
         if(aiming){
             tu.face(getShootTarget(),currentPose);
             tu.automatic();
+        }
+    }
+    public void setLatch(){
+        if(auto){
+            s.latching=0.75;
+        }
+        else{
+            s.latching=0.63;
         }
     }
     public void setTurretOffset(){
