@@ -235,29 +235,30 @@ public class Robot {
         s.SVD.setPosition(s.hood);
     }
     public void sequenceintake(){
-        if(intake) {
-            if (oki) {
-                if(!auto){
-                    s.off();
+            if (intake) {
+                if (oki) {
+                    if (!auto) {
+                        s.off();
+                    }
+                    shooting = false;
+                    i.pornit = false;
+                    iTimer.resetTimer();
+                    oki = false;
                 }
-                shooting=false;
-                i.pornit=false;
-                iTimer.resetTimer();
-                oki = false;
+                if (iTimer.getElapsedTimeSeconds() < 0.6) {
+                    if (!auto) aim = false;
+                    s.latchup();
+                }
+                if (iTimer.getElapsedTimeSeconds() > 0.6 && iTimer.getElapsedTimeSeconds() < 1) {
+                    i.intake.setDirection(DcMotorSimple.Direction.FORWARD);
+                    i.pornit = true;
+                    intake = false;
+                    oki = false;
+                    i.oki = true;
+                    i.looping = true;
+                }
             }
-            if (iTimer.getElapsedTimeSeconds() < 0.6) {
-                if(!auto)aim = false;
-                s.latchup();
-            }
-            if (iTimer.getElapsedTimeSeconds() > 0.6 && iTimer.getElapsedTimeSeconds() < 1) {
-                i.intake.setDirection(DcMotorSimple.Direction.FORWARD);
-                i.pornit = true;
-                intake=false;
-                oki=false;
-                i.oki=true;
-                i.looping=true;
-            }
-        }
+
     }
     public void shooting(){
         if(shooting) {

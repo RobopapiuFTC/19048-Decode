@@ -180,12 +180,12 @@ public class AutoCloseBlue15 extends OpMode{
                 break;
 
             case 3:
-                if(follower.getPose().getX()>20 && okf){
+                if(follower.getPose().getX()>30 && okf){
                     r.i.pornit=false;
                     pathTimer.resetTimer();
                     okf=false;
                 }
-                if(follower.getPose().getX()>20 && pathTimer.getElapsedTimeSeconds()<0.2 && !okf)r.s.latchdown();
+                if(follower.getPose().getX()>30 && pathTimer.getElapsedTimeSeconds()<0.2 && !okf)r.s.latchdown();
                 if(!follower.isBusy()) {
 
                     doorPickup = follower
@@ -260,12 +260,12 @@ public class AutoCloseBlue15 extends OpMode{
                 }
                 break;
             case 6:
-                if(follower.getPose().getX()>20 && okf){
-                r.i.pornit=false;
-                pathTimer.resetTimer();
-                okf=false;
-            }
-                if(follower.getPose().getX()>20 && pathTimer.getElapsedTimeSeconds()<0.2 && !okf)r.s.latchdown();
+                if(follower.getPose().getX()>30 && okf){
+                    r.i.pornit=false;
+                    pathTimer.resetTimer();
+                    okf=false;
+                }
+                if(follower.getPose().getX()>30 && pathTimer.getElapsedTimeSeconds()<0.2 && !okf)r.s.latchdown();
                 if(!follower.isBusy()) {
                     if(okp){
                         pathTimer.resetTimer();
@@ -283,6 +283,7 @@ public class AutoCloseBlue15 extends OpMode{
                 }
                 break;
             case 7:
+                if(pathTimer.getElapsedTimeSeconds()>0.2)r.i.pornit=true;
                 if(!follower.isBusy()) {
                     r.aim=true;
                     r.aiming=true;
@@ -294,12 +295,12 @@ public class AutoCloseBlue15 extends OpMode{
                 }
                 break;
             case 8:
-                if(follower.getPose().getX()>20 && okf){
-                    r.i.pornit=false;
-                    pathTimer.resetTimer();
-                    okf=false;
-                }
-                if(follower.getPose().getX()>20 && pathTimer.getElapsedTimeSeconds()<0.2 && !okf)r.s.latchdown();
+                if(follower.getPose().getX()>30 && okf){
+                r.i.pornit=false;
+                pathTimer.resetTimer();
+                okf=false;
+            }
+                if(follower.getPose().getX()>30 && pathTimer.getElapsedTimeSeconds()<0.2 && !okf)r.s.latchdown();
                 if(!follower.isBusy()) {
                     if(okp){
                         pathTimer.resetTimer();
@@ -328,12 +329,12 @@ public class AutoCloseBlue15 extends OpMode{
                 }
                 break;
             case 10:
-                if(follower.getPose().getX()>20 && okf){
+                if(follower.getPose().getX()>30 && okf){
                     r.i.pornit=false;
                     pathTimer.resetTimer();
                     okf=false;
                 }
-                if(follower.getPose().getX()>20 && pathTimer.getElapsedTimeSeconds()<0.2 && !okf)r.s.latchdown();
+                if(follower.getPose().getX()>30 && pathTimer.getElapsedTimeSeconds()<0.2 && !okf)r.s.latchdown();
                 if(!follower.isBusy()) {
                     if(okp){
                         pathTimer.resetTimer();

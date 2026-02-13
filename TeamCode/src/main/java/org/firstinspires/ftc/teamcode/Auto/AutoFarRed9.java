@@ -130,7 +130,7 @@ public class AutoFarRed9 extends OpMode{
                 break;
 
             case 3:
-                if(follower.getPose().getX()>124 && okf){
+                if(follower.getPose().getX()>120 && okf){
                     r.i.pornit=false;
                     r.s.latchdown();
                     okf=false;
@@ -164,7 +164,7 @@ public class AutoFarRed9 extends OpMode{
                 }
                 break;
             case 5:
-                if(follower.getPose().getX()>124 && okf){
+                if(follower.getPose().getX()>120 && okf){
                     r.i.pornit=false;
                     r.s.latchdown();
                     okf=false;
@@ -198,10 +198,9 @@ public class AutoFarRed9 extends OpMode{
                 }
                 break;
             case 7:
-                if(follower.getPose().getX()>124 && okf){
+                if(follower.getPose().getX()>120 && okf){
                     r.i.pornit=false;
                     r.s.latchdown();
-
                     okf=false;
                 }
                 if(!follower.isBusy()) {
@@ -233,10 +232,9 @@ public class AutoFarRed9 extends OpMode{
                 }
                 break;
             case 9:
-                if(follower.getPose().getX()>124 && okf){
+                if(follower.getPose().getX()>120 && okf){
                     r.i.pornit=false;
                     r.s.latchdown();
-
                     okf=false;
                 }
                 if(!follower.isBusy()) {
@@ -268,10 +266,9 @@ public class AutoFarRed9 extends OpMode{
                 }
                 break;
             case 11:
-                if(follower.getPose().getX()>124 && okf){
+                if(follower.getPose().getX()>120 && okf){
                     r.i.pornit=false;
                     r.s.latchdown();
-
                     okf=false;
                 }
                 if(!follower.isBusy()) {
@@ -303,7 +300,41 @@ public class AutoFarRed9 extends OpMode{
                 }
                 break;
             case 13:
-                if(follower.getPose().getX()<124 && okf){
+                if(follower.getPose().getX()>120 && okf){
+                    r.i.pornit=false;
+                    r.s.latchdown();
+                    okf=false;
+                }
+                if(!follower.isBusy()) {
+                    if(okp){
+                        pathTimer.resetTimer();
+                        r.pids=true;
+                        r.i.pornit=true;
+                        r.aiming=true;
+                        okp=false;
+                    }
+                    if(pathTimer.getElapsedTimeSeconds()>1) {
+                        follower.followPath(humanGrab,true);
+                        r.intake();
+                        okp=true;
+                        r.aiming=false;
+                        nextPath();
+                    }
+                }
+                break;
+            case 14:
+                if(!follower.isBusy()) {
+                    r.aim=true;
+                    r.tu.face(r.getShootTarget(),scorePose);
+                    r.s.on();
+                    okf=true;
+                    okp=true;
+                    follower.followPath(humanScore,true);
+                    nextPath();
+                }
+                break;
+            case 15:
+                if(follower.getPose().getX()>120 && okf){
                     r.i.pornit=false;
                     r.s.latchdown();
                     okf=false;
