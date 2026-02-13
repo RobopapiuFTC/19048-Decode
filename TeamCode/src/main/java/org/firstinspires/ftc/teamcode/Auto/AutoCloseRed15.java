@@ -284,6 +284,7 @@ public class AutoCloseRed15 extends OpMode{
                 }
                 break;
             case 7:
+                if(pathTimer.getElapsedTimeSeconds()>0.2)r.i.pornit=true;
                 if(!follower.isBusy()) {
                     r.aim=true;
                     r.aiming=true;
