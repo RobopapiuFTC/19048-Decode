@@ -16,8 +16,8 @@ import org.firstinspires.ftc.teamcode.Hardware.HubBulkRead;
 import org.firstinspires.ftc.teamcode.Hardware.Robot;
 import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
 
-@Autonomous(name="Auto Far Red 9 HP", group="Red")
-public class AutoFarRed9 extends OpMode{
+@Autonomous(name="Auto Far Red 9 ALT", group="Red")
+public class AutoFarRed9A extends OpMode{
 
     public HubBulkRead bulk;
     private Follower follower;
@@ -32,8 +32,9 @@ public class AutoFarRed9 extends OpMode{
     private Pose humanPose = new Pose(12,8,Math.toRadians(180));
     private Pose linePose = new Pose(12,36,Math.toRadians(180));
     public Pose endPose = new Pose(40,14,Math.toRadians(180));
+    private Pose grabPose = new Pose(12,25,Math.toRadians(180));
 
-    private PathChain scorePreload,grabLine,scoreLine,humanGrab,humanScore,end;
+    private PathChain scorePreload,grabLine,scoreLine,humanGrab,humanScore,grabBall,scoreGrab,end;
     public void buildPaths() {
         scorePreload = follower
                 .pathBuilder()
@@ -77,6 +78,22 @@ public class AutoFarRed9 extends OpMode{
                 )
                 .setBrakingStrength(2)
                 .setLinearHeadingInterpolation(humanPose.getHeading(),scorePose.getHeading())
+                .build();
+        grabBall = follower
+                .pathBuilder()
+                .addPath(
+                        new BezierLine(follower::getPose, grabPose)
+                )
+                .setBrakingStrength(2)
+                .setLinearHeadingInterpolation(scorePose.getHeading(),grabPose.getHeading())
+                .build();
+        scoreGrab = follower
+                .pathBuilder()
+                .addPath(
+                        new BezierLine(follower::getPose, scorePose)
+                )
+                .setBrakingStrength(2)
+                .setLinearHeadingInterpolation(grabPose.getHeading(),scorePose.getHeading())
                 .build();
         end = follower
                 .pathBuilder()
@@ -178,7 +195,7 @@ public class AutoFarRed9 extends OpMode{
                         okp=false;
                     }
                     if(pathTimer.getElapsedTimeSeconds()>1) {
-                        follower.followPath(grabLine,true);
+                        follower.followPath(grabBall,true);
                         r.intake();
                         okp=true;
                         r.aiming=false;
@@ -193,7 +210,7 @@ public class AutoFarRed9 extends OpMode{
                     r.s.on();
                     okf=true;
                     okp=true;
-                    follower.followPath(humanScore,true);
+                    follower.followPath(scoreGrab,true);
                     nextPath();
                 }
                 break;
@@ -246,7 +263,7 @@ public class AutoFarRed9 extends OpMode{
                         okp=false;
                     }
                     if(pathTimer.getElapsedTimeSeconds()>1) {
-                        follower.followPath(humanGrab,true);
+                        follower.followPath(grabBall,true);
                         r.intake();
                         okp=true;
                         r.aiming=false;
@@ -261,7 +278,7 @@ public class AutoFarRed9 extends OpMode{
                     r.s.on();
                     okf=true;
                     okp=true;
-                    follower.followPath(humanScore,true);
+                    follower.followPath(scoreGrab,true);
                     nextPath();
                 }
                 break;
@@ -367,6 +384,7 @@ public class AutoFarRed9 extends OpMode{
         humanPose = humanPose.mirror();
         linePose = linePose.mirror();
         endPose = endPose.mirror();
+        grabPose=grabPose.mirror();
 
         follower = Constants.createFollower(hardwareMap);
         buildPaths();

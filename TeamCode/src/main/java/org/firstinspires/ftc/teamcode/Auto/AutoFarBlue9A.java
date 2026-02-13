@@ -16,8 +16,8 @@ import org.firstinspires.ftc.teamcode.Hardware.HubBulkRead;
 import org.firstinspires.ftc.teamcode.Hardware.Robot;
 import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
 
-@Autonomous(name="Auto Far Red 9 HP", group="Red")
-public class AutoFarRed9 extends OpMode{
+@Autonomous(name="Auto Far Blue 9 ALT", group="Blue")
+public class AutoFarBlue9A extends OpMode{
 
     public HubBulkRead bulk;
     private Follower follower;
@@ -32,8 +32,9 @@ public class AutoFarRed9 extends OpMode{
     private Pose humanPose = new Pose(12,8,Math.toRadians(180));
     private Pose linePose = new Pose(12,36,Math.toRadians(180));
     public Pose endPose = new Pose(40,14,Math.toRadians(180));
+    private Pose grabPose = new Pose(12,25,Math.toRadians(180));
 
-    private PathChain scorePreload,grabLine,scoreLine,humanGrab,humanScore,end;
+    private PathChain scorePreload,grabLine,scoreLine,humanGrab,humanScore,grabBall,scoreGrab,end;
     public void buildPaths() {
         scorePreload = follower
                 .pathBuilder()
@@ -47,8 +48,8 @@ public class AutoFarRed9 extends OpMode{
                 .pathBuilder()
                 .addPath(
                         new BezierCurve(follower::getPose,
-                                new Pose(62,48).mirror(),
-                                new Pose(41,33).mirror(),
+                                new Pose(62,48),
+                                new Pose(41,33),
                                 linePose)
                 )
                 .setBrakingStrength(2)
@@ -77,6 +78,22 @@ public class AutoFarRed9 extends OpMode{
                 )
                 .setBrakingStrength(2)
                 .setLinearHeadingInterpolation(humanPose.getHeading(),scorePose.getHeading())
+                .build();
+        grabBall = follower
+                .pathBuilder()
+                .addPath(
+                        new BezierLine(follower::getPose, grabPose)
+                )
+                .setBrakingStrength(2)
+                .setLinearHeadingInterpolation(scorePose.getHeading(),grabPose.getHeading())
+                .build();
+        scoreGrab = follower
+                .pathBuilder()
+                .addPath(
+                        new BezierLine(follower::getPose, scorePose)
+                )
+                .setBrakingStrength(2)
+                .setLinearHeadingInterpolation(grabPose.getHeading(),scorePose.getHeading())
                 .build();
         end = follower
                 .pathBuilder()
@@ -130,7 +147,7 @@ public class AutoFarRed9 extends OpMode{
                 break;
 
             case 3:
-                if(follower.getPose().getX()>120 && okf){
+                if(follower.getPose().getX()>20 && okf){
                     r.i.pornit=false;
                     r.s.latchdown();
                     okf=false;
@@ -164,7 +181,7 @@ public class AutoFarRed9 extends OpMode{
                 }
                 break;
             case 5:
-                if(follower.getPose().getX()>120 && okf){
+                if(follower.getPose().getX()>20 && okf){
                     r.i.pornit=false;
                     r.s.latchdown();
                     okf=false;
@@ -178,7 +195,7 @@ public class AutoFarRed9 extends OpMode{
                         okp=false;
                     }
                     if(pathTimer.getElapsedTimeSeconds()>1) {
-                        follower.followPath(grabLine,true);
+                        follower.followPath(grabBall,true);
                         r.intake();
                         okp=true;
                         r.aiming=false;
@@ -193,14 +210,15 @@ public class AutoFarRed9 extends OpMode{
                     r.s.on();
                     okf=true;
                     okp=true;
-                    follower.followPath(humanScore,true);
+                    follower.followPath(scoreGrab,true);
                     nextPath();
                 }
                 break;
             case 7:
-                if(follower.getPose().getX()>120 && okf){
+                if(follower.getPose().getX()>20 && okf){
                     r.i.pornit=false;
                     r.s.latchdown();
+
                     okf=false;
                 }
                 if(!follower.isBusy()) {
@@ -232,9 +250,10 @@ public class AutoFarRed9 extends OpMode{
                 }
                 break;
             case 9:
-                if(follower.getPose().getX()>120 && okf){
+                if(follower.getPose().getX()>20 && okf){
                     r.i.pornit=false;
                     r.s.latchdown();
+
                     okf=false;
                 }
                 if(!follower.isBusy()) {
@@ -246,7 +265,7 @@ public class AutoFarRed9 extends OpMode{
                         okp=false;
                     }
                     if(pathTimer.getElapsedTimeSeconds()>1) {
-                        follower.followPath(humanGrab,true);
+                        follower.followPath(grabBall,true);
                         r.intake();
                         okp=true;
                         r.aiming=false;
@@ -261,14 +280,15 @@ public class AutoFarRed9 extends OpMode{
                     r.s.on();
                     okf=true;
                     okp=true;
-                    follower.followPath(humanScore,true);
+                    follower.followPath(scoreGrab,true);
                     nextPath();
                 }
                 break;
             case 11:
-                if(follower.getPose().getX()>120 && okf){
+                if(follower.getPose().getX()>20 && okf){
                     r.i.pornit=false;
                     r.s.latchdown();
+
                     okf=false;
                 }
                 if(!follower.isBusy()) {
@@ -300,7 +320,7 @@ public class AutoFarRed9 extends OpMode{
                 }
                 break;
             case 13:
-                if(follower.getPose().getX()>120 && okf){
+                if(follower.getPose().getX()>20 && okf){
                     r.i.pornit=false;
                     r.s.latchdown();
                     okf=false;
@@ -362,19 +382,15 @@ public class AutoFarRed9 extends OpMode{
         pathTimer = new Timer();
         opmodeTimer = new Timer();
         opmodeTimer.resetTimer();
-        startPose = startPose.mirror();
-        scorePose = scorePose.mirror();
-        humanPose = humanPose.mirror();
-        linePose = linePose.mirror();
-        endPose = endPose.mirror();
+
 
         follower = Constants.createFollower(hardwareMap);
         buildPaths();
         follower.setStartingPose(startPose);
-        r = new Robot(hardwareMap,follower,t,gamepad1,gamepad2,false,true,startPose);
+        follower.usePredictiveBraking=true;
+        r = new Robot(hardwareMap,follower,t,gamepad1,gamepad2,true,true,startPose);
         r.aInit();
         r.setShootTargetFar();
-        r.s.shootc=950;
     }
     @Override
     public void init_loop() {}
