@@ -447,6 +447,10 @@ public class AutoCloseRed18 extends OpMode{
         }
     }
 
+    public void oktrue(){
+        okp=true;
+        okf=true;
+    }
     public void setPathState(int pState) {
         pathState = pState;
         pathTimer.resetTimer();

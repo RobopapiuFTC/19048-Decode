@@ -39,9 +39,9 @@ public class Intake {
         intake=hardwareMap.get(DcMotorEx.class, "i");
         intake.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         intake.setDirection(DcMotorSimple.Direction.REVERSE);
-        s1 = hardwareMap.get(RevColorSensorV3.class,"s1");
+      /*  s1 = hardwareMap.get(RevColorSensorV3.class,"s1");
         s2=hardwareMap.get(RevColorSensorV3.class,"s2");
-        s3=hardwareMap.get(RevColorSensorV3.class,"s3");
+        s3=hardwareMap.get(RevColorSensorV3.class,"s3"); */
         full = new boolean[]{false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false};
 
         loopTimer=new Timer();
@@ -69,9 +69,9 @@ public class Intake {
            intake.setPower(0);
         }
     }
-    public void isFull(){
-        if(!looping)return;
-       /* if(loopTimer.getElapsedTimeSeconds()<0.6) {
+    /*public void isFull(){
+       /* if(!looping)return;
+        if(loopTimer.getElapsedTimeSeconds()<0.6) {
                 if(readTimer.getElapsedTimeSeconds()<0.05) {
                     if(looping) {
                         distance = sensor.getDistance(DistanceUnit.MM);
@@ -103,8 +103,8 @@ public class Intake {
                     f1=0;
                     f2=0;
                 }
-            } */
-        /*if(readTimer.getElapsedTimeSeconds()<0.05) {
+            }
+       if(readTimer.getElapsedTimeSeconds()<0.05) {
             if(looping) {
                 d1 = s1.getDistance(DistanceUnit.MM);
                 d2 = s2.getDistance(DistanceUnit.MM);
@@ -116,8 +116,8 @@ public class Intake {
         else{
             looping=true;
             readTimer.resetTimer();
-        } */
-        d1 = s1.getDistance(DistanceUnit.MM);
+        }  */
+       /* d1 = s1.getDistance(DistanceUnit.MM);
         d2 = s2.getDistance(DistanceUnit.MM);
         d3 = s3.getDistance(DistanceUnit.MM);
         if(d3<30)third=true;
@@ -133,7 +133,7 @@ public class Intake {
             looping = false;
             rumble = true;
         }
-    }
+    } */
 
     public double getVelocity(){
         return intake.getVelocity();

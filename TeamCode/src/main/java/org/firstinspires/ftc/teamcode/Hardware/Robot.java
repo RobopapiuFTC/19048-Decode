@@ -94,7 +94,7 @@ public class Robot {
             }
         }
         else tu.setYaw(Math.toRadians(90));
-        if(!s.activated)i.isFull();
+       // if(!s.activated)i.isFull();
         i.periodic();
         s.periodic();
         tu.periodic();
@@ -120,6 +120,17 @@ public class Robot {
             s.periodic();
             tu.periodic();
         }
+        i.periodic();
+    }
+    public void aPeriodic2(){
+        poses();
+        shootTarget();
+        if(aiming){
+            tu.face(getShootTarget(),currentPose);
+            tu.automatic();
+        }
+        s.periodic();
+        tu.periodic();
         i.periodic();
     }
     public void tStart(){
@@ -311,6 +322,7 @@ public class Robot {
         }
     }
     public void poses(){
+        setShootTarget();
         currentPose=f.getPose();
         futurePose = new Pose(currentPose.getX()+f.getVelocity().getXComponent()*timing, currentPose.getY()+f.getVelocity().getYComponent()*timing,currentPose.getHeading());
     }
@@ -460,6 +472,12 @@ public class Robot {
             if (currentPose.getX() > 72) s.shootc = s.shootn;
             else s.shootc = s.shootn - 30;
         }
+    }
+    public void shootTarget(){
+        if(currentPose.getY()>40){
+            setShootTarget();
+        }
+        else setShootTargetFar();
     }
     public void setShootTargetFar(){
         if (a){

@@ -39,9 +39,9 @@ public class Shooter {
     public static double hood,angle=0.0005,anglemax=0.05;
 
     public static List<ShotSample> samples = Arrays.asList(
-            new ShotSample(50, 1230+20, 0.0005,0.05),
-            new ShotSample(55, 1240+20, 0.0005,0.05),
-            new ShotSample(60, 1250+20, 0.0005,0.05),
+            new ShotSample(50, 1230+20, 0.0005,0.2),
+            new ShotSample(55, 1240+20, 0.0005,0.2),
+            new ShotSample(60, 1250+20, 0.0005,0.2),
             new ShotSample(65, 1260+20, 0.0005,0.05),
             new ShotSample(70, 1270+20, 0.0005,0.05),
             new ShotSample(75, 1280+20, 0.0005,0.05),

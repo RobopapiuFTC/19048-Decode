@@ -25,7 +25,7 @@ public class Red extends OpMode {
     TelemetryManager t;
     public static Pose startingPose = new Pose(23, 128, Math.toRadians(234)).mirror();
     public static Pose parkPose = new Pose(111,40,Math.toRadians(270)).mirror();
-    public static Pose relocalization = new Pose(134,8,Math.toRadians(0)).mirror();
+    public static Pose relocalization = new Pose(132,8,Math.toRadians(0)).mirror();
     public static PathChain park;
     public HubBulkRead bulk;
 

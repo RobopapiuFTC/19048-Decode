@@ -25,7 +25,7 @@ public class BlueSpec extends OpMode {
     TelemetryManager t;
     public static Pose startingPose = new Pose(23, 128, Math.toRadians(234));
     public static Pose parkPose = new Pose(111,40,Math.toRadians(270));
-    public static Pose relocalization = new Pose(134,8,Math.toRadians(0));
+    public static Pose relocalization = new Pose(132,8,Math.toRadians(0));
     public static PathChain park;
     public HubBulkRead bulk;
 
@@ -86,9 +86,9 @@ public class BlueSpec extends OpMode {
         else if(gamepad1.share)follower.startTeleopDrive();
         r.dualControls();
         r.tPeriodic();
-        t.addData("D1",r.i.d1);
+       /* t.addData("D1",r.i.d1);
         t.addData("D2",r.i.d2);
-        t.addData("D3",r.i.d3);
+        t.addData("D3",r.i.d3); */
         t.addData("Velocity: ", r.s.getVelocity());
         t.addData("Dist: ", r.dist);
         t.addData("Shooter offset: ", r.s.offset);
