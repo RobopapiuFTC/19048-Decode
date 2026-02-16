@@ -1,6 +1,9 @@
 package org.firstinspires.ftc.teamcode.Systems;
 
+import static androidx.core.math.MathUtils.clamp;
 import static org.firstinspires.ftc.teamcode.Hardware.Robot.auto;
+import static org.firstinspires.ftc.teamcode.Hardware.Robot.batteryVoltage;
+import static org.firstinspires.ftc.teamcode.Hardware.Robot.nominalVoltage;
 
 import android.service.controls.Control;
 
@@ -30,32 +33,32 @@ public class Shooter {
     public Servo SVD,latch;
     private double t = 0;
     public static double kS = 0.08, kV = 0.00039, kP = 0.01;
-    private boolean activated = true;
+    public boolean activated = true;
 
     public double shootn=1000,shootc=1000,offset,latching=0.75;
-    public static double hood,angle=0.0005;
+    public static double hood,angle=0.0005,anglemax=0.05;
 
     public static List<ShotSample> samples = Arrays.asList(
-            new ShotSample(50, 1230, 0.0005),
-            new ShotSample(55, 1240, 0.0005),
-            new ShotSample(60, 1250, 0.0005),
-            new ShotSample(65, 1260, 0.0005),
-            new ShotSample(70, 1270, 0.0005),
-            new ShotSample(75, 1280, 0.0005),
-            new ShotSample(80, 1290, 0.0005),
-            new ShotSample(85, 1310, 0.0005),
-            new ShotSample(90, 1330, 0.0005),
-            new ShotSample(95, 1350, 0.0005),
-            new ShotSample(100, 1370, 0.0005),
-            new ShotSample(105, 1390, 0.0005),
-            new ShotSample(110, 1410, 0.0005),
-            new ShotSample(115, 1450, 0.0005),
-            new ShotSample(120, 1490, 0.0005),
-            new ShotSample(125, 1510, 0.0005),
-            new ShotSample(130, 1530, 0.0005),
-            new ShotSample(140, 1570, 0.0005),
-            new ShotSample(150, 1630, 0.0005),
-            new ShotSample(160, 1650, 0.0005)
+            new ShotSample(50, 1230+20, 0.0005,0.05),
+            new ShotSample(55, 1240+20, 0.0005,0.05),
+            new ShotSample(60, 1250+20, 0.0005,0.05),
+            new ShotSample(65, 1260+20, 0.0005,0.05),
+            new ShotSample(70, 1270+20, 0.0005,0.05),
+            new ShotSample(75, 1280+20, 0.0005,0.05),
+            new ShotSample(80, 1290+20, 0.0005,0.05),
+            new ShotSample(85, 1310+20, 0.0005,0.05),
+            new ShotSample(90, 1330+20, 0.0005,0.05),
+            new ShotSample(95, 1350+20, 0.0005,0.05),
+            new ShotSample(100, 1370+20, 0.0005,0.05),
+            new ShotSample(105, 1390+20, 0.0005,0.05),
+            new ShotSample(110, 1410+20, 0.0005,0.05),
+            new ShotSample(115, 1450+20, 0.0005,0.05),
+            new ShotSample(120, 1490+20, 0.0005,0.05),
+            new ShotSample(125, 1510+20, 0.0005,0.15),
+            new ShotSample(130, 1530+20, 0.0005,0.15),
+            new ShotSample(140, 1570+20, 0.0005,0.15),
+            new ShotSample(150, 1630+20, 0.0005,0.15),
+            new ShotSample(160, 1650+50, 0.0005,0.15)
     );
 
     public Shooter(HardwareMap hardwareMap, TelemetryManager telemetry){
@@ -73,6 +76,12 @@ public class Shooter {
     public void periodic(){
         if (activated)
             setPower((kV * getTarget()) + (kP * (getTarget() - getVelocity())) + kS);
+
+        hood();
+    }
+    public void hood(){
+        hood=clamp(anglemax+(getTarget()-getVelocity()-20)*angle,anglemax,0.5);
+        SVD.setPosition(hood);
     }
     public double getTarget() {
         return t;
@@ -122,7 +131,7 @@ public class Shooter {
         double power = lerp(before.power, after.power, t);
         angle = lerp(before.angle, after.angle, t);
 
-        return new ShotSample(d, power, angle);
+        return new ShotSample(d, power, angle,anglemax);
     }
 
     public void on() {
@@ -143,6 +152,7 @@ public class Shooter {
             setTarget(shoot.power + offset);
         } */
         ShotSample shoot = lookupShot(distance);
+        anglemax=shoot.anglemax;
         setTarget(shoot.power + offset);
     }
     public void hoodfar(){

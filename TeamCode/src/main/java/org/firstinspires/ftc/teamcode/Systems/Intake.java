@@ -29,6 +29,8 @@ public class Intake {
     public NormalizedRGBA colors;
     public boolean pornit=false,looping=false,oki=true,third=false,second=false;
     public int pos,f1,f2;
+    public static double t = 0;
+    public static double kS = 0.08, kV = 0.00039, kP = 0.01;
     public double d1,d2,d3;
     public boolean[] full;
     public Timer loopTimer,readTimer;
@@ -36,6 +38,7 @@ public class Intake {
 
         intake=hardwareMap.get(DcMotorEx.class, "i");
         intake.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        intake.setDirection(DcMotorSimple.Direction.REVERSE);
         s1 = hardwareMap.get(RevColorSensorV3.class,"s1");
         s2=hardwareMap.get(RevColorSensorV3.class,"s2");
         s3=hardwareMap.get(RevColorSensorV3.class,"s3");
@@ -46,13 +49,24 @@ public class Intake {
     }
     public void periodic(){
         run();
+        if(pornit)setPower((kV * getTarget()) + (kP * (getTarget() - getVelocity())) + kS);
     }
 
+    public double getTarget() {
+        return t;
+    }
+    public void setPower(double p) {
+        intake.setPower(p);
+    }
+
+    public void setTarget(double velocity) {
+        t = velocity;
+    }
     public void run(){
         if(pornit){
-            intake.setPower(1);
+            setTarget(3000);
         }else{
-            intake.setPower(0);
+           intake.setPower(0);
         }
     }
     public void isFull(){

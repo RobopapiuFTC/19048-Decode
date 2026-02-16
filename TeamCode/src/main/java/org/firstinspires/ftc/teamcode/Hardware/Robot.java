@@ -15,6 +15,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.VoltageSensor;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
@@ -33,11 +34,12 @@ public class Robot {
     public Intake i;
     private Movement m;
     public Turret tu;
-    public double dist;
+    public static double dist,offsetFar=0,offsetClose=0,batteryVoltage=0,nominalVoltage=12.5;
     public static Pose shootp = new Pose(0 ,144,0);
     public static Pose parkPose,endPose,startingPose,currentPose,futurePose,relocalization;
     public Gamepad g1,g2;
     public Follower f;
+    public VoltageSensor batteryVoltageSensor;
     public static boolean a,shoot,oks,aim,auto,intake,oki,pids=false,aima=true,shooting=false,aiming=true,rumble=false;
     public Timer iTimer,rTimer,rsTimer,sTimer,oTimer;
     public Timer looptimer;
@@ -73,12 +75,12 @@ public class Robot {
 
     public void tPeriodic() {
         poses();
+        offsets();
         setShootTarget();
         sequenceshoot();
         sequenceintake();
         isFull();
         rumble();
-        hood();
         setLatch();
         if(shooting){
             shooting();
@@ -92,7 +94,7 @@ public class Robot {
             }
         }
         else tu.setYaw(Math.toRadians(90));
-        i.isFull();
+        if(!s.activated)i.isFull();
         i.periodic();
         s.periodic();
         tu.periodic();
@@ -108,7 +110,6 @@ public class Robot {
     public void aPeriodic(){
         poses();
         sequenceshoot();
-        hood();
         sequenceintake();
         turret();
         setLatch();
@@ -160,25 +161,49 @@ public class Robot {
         }
         if(g1.dpad_left && !g1.left_bumper){
             if(oTimer.getElapsedTimeSeconds()>0.3){
-                tu.offset=tu.offset+0.0872665;
-                oTimer.resetTimer();
+                if(currentPose.getY()>40) {
+                    offsetClose = offsetClose + 0.0174533;
+                    oTimer.resetTimer();
+                }
+                else {
+                    offsetFar = offsetFar + 0.0174533;
+                    oTimer.resetTimer();
+                }
             }
         }
         if(g1.dpad_right && !g1.left_bumper){
             if(oTimer.getElapsedTimeSeconds()>0.3){
-                tu.offset=tu.offset-0.0872665;
-                oTimer.resetTimer();
+                if(currentPose.getY()>40) {
+                    offsetClose = offsetClose - 0.0174533;
+                    oTimer.resetTimer();
+                }
+                else {
+                    offsetFar = offsetFar - 0.0174533;
+                    oTimer.resetTimer();
+                }
             }
         }if(g1.dpad_left && g1.left_bumper){
             if(oTimer.getElapsedTimeSeconds()>0.3){
-                tu.offset=tu.offset+1.5707963268;
-                oTimer.resetTimer();
+                if(currentPose.getY()>40) {
+                    offsetClose = offsetClose + 1.5707963268;
+                    oTimer.resetTimer();
+                }
+                else {
+                    offsetFar = offsetFar + 1.5707963268;
+                    oTimer.resetTimer();
+                }
             }
         }
         if(g1.dpad_right && g1.left_bumper){
             if(oTimer.getElapsedTimeSeconds()>0.3){
-                tu.offset=tu.offset-1.5707963268;
-                oTimer.resetTimer();
+                if(currentPose.getY()>40) {
+                    offsetClose = offsetClose - 1.5707963268;
+                    oTimer.resetTimer();
+                }
+                else {
+                    offsetFar = offsetFar - 1.5707963268;
+                    oTimer.resetTimer();
+                }
             }
         }
         if(g1.dpad_up){
@@ -208,11 +233,15 @@ public class Robot {
             }
         }
         if(g1.left_trigger > 0.3 && g1.right_bumper) {
-            i.intake.setDirection(DcMotorSimple.Direction.REVERSE);
+            i.intake.setDirection(DcMotorSimple.Direction.FORWARD);
             i.pornit=true;
             intake=false;
             oki=false;
         }
+    }
+    public void offsets(){
+        if(currentPose.getY()<40)tu.offset=offsetFar;
+        else tu.offset=offsetClose;
     }
     public void setRelocalization(Pose relocalization){
         this.relocalization=relocalization;
@@ -230,10 +259,6 @@ public class Robot {
         aiming=true;
         tu.okt=true;
     }
-    public void hood(){
-        s.hood=clamp(0.05+(s.getTarget()-s.getVelocity()-20)*s.angle,0.05,0.5);
-        s.SVD.setPosition(s.hood);
-    }
     public void sequenceintake(){
             if (intake) {
                 if (oki) {
@@ -250,7 +275,7 @@ public class Robot {
                     s.latchup();
                 }
                 if (iTimer.getElapsedTimeSeconds() > 0.6 && iTimer.getElapsedTimeSeconds() < 1) {
-                    i.intake.setDirection(DcMotorSimple.Direction.FORWARD);
+                    i.intake.setDirection(DcMotorSimple.Direction.REVERSE);
                     i.pornit = true;
                     intake = false;
                     oki = false;
@@ -278,7 +303,7 @@ public class Robot {
             }
             if(sTimer.getElapsedTimeSeconds()>0.2 && sTimer.getElapsedTimeSeconds()<1){
                 i.pornit=false;
-                i.intake.setDirection(DcMotorSimple.Direction.FORWARD);
+                i.intake.setDirection(DcMotorSimple.Direction.REVERSE);
                 s.latchdown();
                 shoot=false;
                 oks=false;
@@ -410,7 +435,7 @@ public class Robot {
             s.latching=0.75;
         }
         else{
-            s.latching=0.63;
+            s.latching=0.75;
         }
     }
     public void setTurretOffset(){
@@ -456,7 +481,7 @@ public class Robot {
 
     public void isFull(){
         if(!i.pornit)return;
-        if(i.getVelocity()>-1200)g1.rumble(200);
+        if(i.getVelocity()<1300)g1.rumble(200);
     }
 
 
