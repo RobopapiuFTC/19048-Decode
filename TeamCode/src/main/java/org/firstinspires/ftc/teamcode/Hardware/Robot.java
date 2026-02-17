@@ -90,7 +90,7 @@ public class Robot {
            // if (aim) turret();
             if(aim)sotm();
             else {
-                tu.setYaw(0);
+                tu.setYaw(Math.toRadians(45));
             }
         }
         else tu.setYaw(Math.toRadians(90));

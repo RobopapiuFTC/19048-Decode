@@ -29,7 +29,7 @@ public class Constants {
             .useSecondaryDrivePIDF(true)
             .useSecondaryHeadingPIDF(true)
             .useSecondaryTranslationalPIDF(true); */
-   public static FollowerConstants followerConstants = new FollowerConstants()
+         public static FollowerConstants followerConstants = new FollowerConstants()
           .mass(10)
           .forwardZeroPowerAcceleration((-38.04 + (-32) + (-40.17)) / 3.0)
           .lateralZeroPowerAcceleration(((-70.57) + (-66.93) + (-67.08)) / 3.0)
@@ -46,7 +46,6 @@ public class Constants {
           .secondaryDrivePIDFCoefficients(
                   new FilteredPIDFCoefficients(0.02, 0, 0.0008, 0.6, 0)
           );
-
 
     public static PathConstraints pathConstraints = new PathConstraints(0.95,100 , 1, 1);
 
@@ -67,7 +66,7 @@ public class Constants {
 
     public static PinpointConstants localizerConstants = new PinpointConstants()
             .forwardPodY(0)
-            .strafePodX(-4.33071)
+            .strafePodX(-4.198622047)
             .distanceUnit(DistanceUnit.INCH)
             .hardwareMapName("pinpoint")
             .encoderResolution(GoBildaPinpointDriver.GoBildaOdometryPods.goBILDA_SWINGARM_POD)
