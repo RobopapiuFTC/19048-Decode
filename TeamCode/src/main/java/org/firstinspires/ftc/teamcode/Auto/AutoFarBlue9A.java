@@ -16,7 +16,7 @@ import org.firstinspires.ftc.teamcode.Hardware.HubBulkRead;
 import org.firstinspires.ftc.teamcode.Hardware.Robot;
 import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
 
-@Autonomous(name="Auto Far Blue 9 ALT", group="Blue")
+@Autonomous(name="Auto Far Blue 9", group="Blue")
 public class AutoFarBlue9A extends OpMode{
 
     public HubBulkRead bulk;
