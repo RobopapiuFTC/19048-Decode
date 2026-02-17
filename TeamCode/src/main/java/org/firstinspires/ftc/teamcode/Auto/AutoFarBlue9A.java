@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.Auto;
 import com.bylazar.telemetry.TelemetryManager;
 import com.pedropathing.geometry.BezierCurve;
+import com.pedropathing.paths.HeadingInterpolator;
 import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.pedropathing.follower.Follower;
@@ -16,7 +17,7 @@ import org.firstinspires.ftc.teamcode.Hardware.HubBulkRead;
 import org.firstinspires.ftc.teamcode.Hardware.Robot;
 import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
 
-@Autonomous(name="Auto Far Blue 9", group="Blue")
+@Autonomous(name="Auto Far Blue 9 Tangent", group="Blue")
 public class AutoFarBlue9A extends OpMode{
 
     public HubBulkRead bulk;
@@ -25,17 +26,32 @@ public class AutoFarBlue9A extends OpMode{
     private boolean okp,okf;
     private Robot r;
     private TelemetryManager t;
+    private double latchT=0.5,XPlace=30;
+    private Timer latchTimer;
 
     private int pathState;
     private Pose startPose = new Pose(56, 6, Math.toRadians(90));
     private Pose scorePose = new Pose(52, 10, Math.toRadians(180));
-    private Pose humanPose = new Pose(10,8,Math.toRadians(180));
+    private Pose humanPose = new Pose(12,8,Math.toRadians(180));
     private Pose linePose = new Pose(10,36,Math.toRadians(180));
     public Pose endPose = new Pose(40,14,Math.toRadians(180));
-    private Pose grabPose = new Pose(10,25,Math.toRadians(180));
+    private Pose grabPose = new Pose(12,25,Math.toRadians(180));
 
     private PathChain scorePreload,grabLine,scoreLine,humanGrab,humanScore,grabBall,scoreGrab,end;
     public void buildPaths() {
+
+        HeadingInterpolator grab = HeadingInterpolator.piecewise(
+                new HeadingInterpolator.PiecewiseNode(
+                        0,
+                        0.8,
+                        HeadingInterpolator.tangent
+                ),
+                new HeadingInterpolator.PiecewiseNode(
+                        0.8,
+                        1,
+                        HeadingInterpolator.linear(Math.toRadians(160),grabPose.getHeading())
+                )
+        );
         scorePreload = follower
                 .pathBuilder()
                 .addPath(
@@ -85,7 +101,7 @@ public class AutoFarBlue9A extends OpMode{
                         new BezierLine(follower::getPose, grabPose)
                 )
                 .setBrakingStrength(2)
-                .setLinearHeadingInterpolation(scorePose.getHeading(),grabPose.getHeading())
+                .setHeadingInterpolation(grab)
                 .build();
         scoreGrab = follower
                 .pathBuilder()
@@ -109,12 +125,11 @@ public class AutoFarBlue9A extends OpMode{
             case 0:
                 follower.setMaxPower(1);
                 follower.followPath(scorePreload,true);
-                r.pids=true;
-                okp=true;
-                okf=true;
-                r.shoot=true;
-                r.oks=true;
-                r.tu.face(r.getShootTarget(),new Pose(scorePose.getX(),scorePose.getY(),Math.toRadians(90)));
+                oktrue();
+                r.tu.face(r.getShootTarget(), scorePreload.endPose());
+                r.s.on();
+                r.s.forDistance(r.getShootTarget().distanceFrom(scorePreload.endPose()));
+                r.s.latchdown();
                 nextPath();
                 break;
             case 1:
@@ -127,9 +142,8 @@ public class AutoFarBlue9A extends OpMode{
                     }
                     if(pathTimer.getElapsedTimeSeconds()>1) {
                         follower.followPath(grabLine, true);
-                        r.intake();
-                        okp=true;
-                        okf=true;
+                        intake();
+                        oktrue();
                         r.aiming=false;
                         nextPath();
                     }
@@ -137,82 +151,76 @@ public class AutoFarBlue9A extends OpMode{
                 break;
             case 2:
                 if(!follower.isBusy()) {
-                    r.aim=true;
-                    r.tu.face(r.getShootTarget(),scorePose);
-                    r.s.on();
-                    okf=true;
                     follower.followPath(scoreLine,true);
+                    r.tu.face(r.getShootTarget(), scoreLine.endPose());
+                    r.s.on();
+                    r.s.forDistance(r.getShootTarget().distanceFrom(scoreLine.endPose()));
+                    oktrue();
                     nextPath();
                 }
                 break;
 
             case 3:
-                if(follower.getPose().getX()>20 && okf){
+                if(follower.getPose().getX()>XPlace && okf){
                     r.i.pornit=false;
-                    r.s.latchdown();
                     okf=false;
+                    latchTimer.resetTimer();
                 }
+                if(!okf && latchTimer.getElapsedTimeSeconds()>latchT)r.s.latchdown();
                 if(!follower.isBusy()) {
                     if(okp){
                         pathTimer.resetTimer();
-                        r.pids=true;
                         r.aiming=true;
                         r.i.pornit=true;
                         okp=false;
                     }
                     if(pathTimer.getElapsedTimeSeconds()>1) {
                         follower.followPath(humanGrab,true);
-                        r.intake();
-                        okp=true;
-                        r.aiming=false;
+                        intake();
+                        oktrue();
                         nextPath();
                     }
                 }
                 break;
             case 4:
-                if(pathTimer.getElapsedTimeSeconds()>0.2)r.i.pornit=true;
                 if(!follower.isBusy()) {
                     if(okp){
                         pathTimer.resetTimer();
-                        r.pids=true;
                         okp=false;
                     }
                     if(pathTimer.getElapsedTimeSeconds()>0.4) {
-                        r.aim = true;
-                        r.tu.face(r.getShootTarget(), scorePose);
-                        r.s.on();
-                        okf = true;
-                        okp = true;
                         follower.followPath(humanScore, true);
+                        r.tu.face(r.getShootTarget(), humanScore.endPose());
+                        r.s.on();
+                        r.s.forDistance(r.getShootTarget().distanceFrom(humanScore.endPose()));
+                        oktrue();
                         nextPath();
                     }
                 }
                 break;
             case 5:
-                if(follower.getPose().getX()>20 && okf){
+                if(follower.getPose().getX()>XPlace && okf){
                     r.i.pornit=false;
-                    r.s.latchdown();
                     okf=false;
+                    latchTimer.resetTimer();
                 }
+                if(!okf && latchTimer.getElapsedTimeSeconds()>latchT)r.s.latchdown();
                 if(!follower.isBusy()) {
                     if(okp){
                         pathTimer.resetTimer();
-                        r.pids=true;
                         r.aiming=true;
                         r.i.pornit=true;
                         okp=false;
                     }
                     if(pathTimer.getElapsedTimeSeconds()>1) {
                         follower.followPath(grabBall,true);
-                        r.intake();
-                        okp=true;
-                        r.aiming=false;
+                        intake();
+                        oktrue();
                         nextPath();
                     }
                 }
                 break;
             case 6:
-                if(pathTimer.getElapsedTimeSeconds()>0.2)r.i.pornit=true;
                 if(!follower.isBusy()) {
                     if(okp){
                         pathTimer.resetTimer();
@@ -220,171 +228,164 @@ public class AutoFarBlue9A extends OpMode{
                         okp=false;
                     }
                     if(pathTimer.getElapsedTimeSeconds()>0.4) {
-                        r.aim = true;
-                        r.tu.face(r.getShootTarget(), scorePose);
-                        r.s.on();
-                        okf = true;
-                        okp = true;
                         follower.followPath(scoreGrab, true);
+                        r.tu.face(r.getShootTarget(), scoreGrab.endPose());
+                        r.s.on();
+                        r.s.forDistance(r.getShootTarget().distanceFrom(scoreGrab.endPose()));
+                        oktrue();
                         nextPath();
                     }
                 }
                 break;
             case 7:
-                if(follower.getPose().getX()>20 && okf){
+                if(follower.getPose().getX()>XPlace && okf){
                     r.i.pornit=false;
-                    r.s.latchdown();
-
                     okf=false;
+                    latchTimer.resetTimer();
                 }
+                if(!okf && latchTimer.getElapsedTimeSeconds()>latchT)r.s.latchdown();
                 if(!follower.isBusy()) {
                     if(okp){
                         pathTimer.resetTimer();
-                        r.pids=true;
                         r.i.pornit=true;
                         r.aiming=true;
                         okp=false;
                     }
                     if(pathTimer.getElapsedTimeSeconds()>1) {
                         follower.followPath(humanGrab,true);
-                        r.intake();
-                        okp=true;
+                        intake();
+                        oktrue();
                         r.aiming=false;
                         nextPath();
                     }
                 }
                 break;
             case 8:
-                if(pathTimer.getElapsedTimeSeconds()>0.2)r.i.pornit=true;
                 if(!follower.isBusy()) {
                     if(okp){
                         pathTimer.resetTimer();
-                        r.pids=true;
                         okp=false;
                     }
                     if(pathTimer.getElapsedTimeSeconds()>0.4) {
-                        r.aim = true;
-                        r.tu.face(r.getShootTarget(), scorePose);
-                        r.s.on();
-                        okf = true;
-                        okp = true;
                         follower.followPath(humanScore, true);
+                        r.tu.face(r.getShootTarget(), humanScore.endPose());
+                        r.s.on();
+                        r.s.forDistance(r.getShootTarget().distanceFrom(humanScore.endPose()));
+                        oktrue();
                         nextPath();
                     }
                 }
                 break;
             case 9:
-                if(follower.getPose().getX()>20 && okf){
+                if(follower.getPose().getX()>XPlace && okf){
                     r.i.pornit=false;
-                    r.s.latchdown();
-
                     okf=false;
+                    latchTimer.resetTimer();
                 }
+                if(!okf && latchTimer.getElapsedTimeSeconds()>latchT)r.s.latchdown();
                 if(!follower.isBusy()) {
                     if(okp){
                         pathTimer.resetTimer();
-                        r.pids=true;
                         r.i.pornit=true;
                         r.aiming=true;
                         okp=false;
                     }
                     if(pathTimer.getElapsedTimeSeconds()>1) {
                         follower.followPath(grabBall,true);
-                        r.intake();
-                        okp=true;
+                        intake();
+                        oktrue();
                         r.aiming=false;
                         nextPath();
                     }
                 }
                 break;
             case 10:
-                if(pathTimer.getElapsedTimeSeconds()>0.2)r.i.pornit=true;
                 if(!follower.isBusy()) {
                     if(okp){
                         pathTimer.resetTimer();
-                        r.pids=true;
                         okp=false;
                     }
                     if(pathTimer.getElapsedTimeSeconds()>0.4) {
-                        r.aim = true;
-                        r.tu.face(r.getShootTarget(), scorePose);
-                        r.s.on();
-                        okf = true;
-                        okp = true;
                         follower.followPath(scoreGrab, true);
+                        r.tu.face(r.getShootTarget(), scoreGrab.endPose());
+                        r.s.on();
+                        r.s.forDistance(r.getShootTarget().distanceFrom(scoreGrab.endPose()));
+                        oktrue();
                         nextPath();
                     }
                 }
                 break;
             case 11:
-                if(follower.getPose().getX()>20 && okf){
+                if(follower.getPose().getX()>XPlace && okf){
                     r.i.pornit=false;
-                    r.s.latchdown();
-
                     okf=false;
+                    latchTimer.resetTimer();
                 }
+                if(!okf && latchTimer.getElapsedTimeSeconds()>latchT)r.s.latchdown();
                 if(!follower.isBusy()) {
                     if(okp){
                         pathTimer.resetTimer();
-                        r.pids=true;
                         r.i.pornit=true;
                         r.aiming=true;
                         okp=false;
                     }
                     if(pathTimer.getElapsedTimeSeconds()>1) {
                         follower.followPath(humanGrab,true);
-                        r.intake();
-                        okp=true;
+                        intake();
+                        oktrue();
                         r.aiming=false;
                         nextPath();
                     }
                 }
                 break;
             case 12:
-                if(pathTimer.getElapsedTimeSeconds()>0.2)r.i.pornit=true;
                 if(!follower.isBusy()) {
                     if(okp){
                         pathTimer.resetTimer();
-                        r.pids=true;
                         okp=false;
                     }
                     if(pathTimer.getElapsedTimeSeconds()>0.4) {
-                        r.aim = true;
-                        r.tu.face(r.getShootTarget(), scorePose);
-                        r.s.on();
-                        okf = true;
-                        okp = true;
                         follower.followPath(humanScore, true);
+                        r.tu.face(r.getShootTarget(), humanScore.endPose());
+                        r.s.on();
+                        r.s.forDistance(r.getShootTarget().distanceFrom(humanScore.endPose()));
+                        oktrue();
                         nextPath();
                     }
                 }
                 break;
             case 13:
-                if(follower.getPose().getX()>20 && okf){
+                if(follower.getPose().getX()>XPlace && okf){
                     r.i.pornit=false;
-                    r.s.latchdown();
                     okf=false;
+                    latchTimer.resetTimer();
                 }
+                if(!okf && latchTimer.getElapsedTimeSeconds()>latchT)r.s.latchdown();
                 if(!follower.isBusy()) {
                     if(okp){
                         pathTimer.resetTimer();
-                        r.pids=true;
                         r.aiming=true;
                         r.i.pornit=true;
                         okp=false;
                     }
                     if(pathTimer.getElapsedTimeSeconds()>1) {
                         follower.followPath(end,true);
-                        r.shooting=false;
-                        r.i.pornit=false;
-                        r.aim=false;
-                        okp=true;
                         r.aiming=false;
+                        r.i.pornit=false;
+                        r.tu.setYaw(0);
                         endPath();
                     }
                 }
                 break;
         }
+    }
+    public void oktrue(){
+        okp=true;
+        okf=true;
+    }
+    public void intake(){
+        r.i.pornit=true;
+        r.s.latchup();
     }
 
     public void setPathState(int pState) {
@@ -404,7 +405,7 @@ public class AutoFarBlue9A extends OpMode{
     public void loop() {
         bulk.clearCache(HubBulkRead.Hubs.ALL);
         follower.update();
-        r.aPeriodic();
+        r.aPeriodic2();
         autonomousPathUpdate();
         telemetry.addData("Follower Pose: ",follower.getPose().toString());
         telemetry.addData("Dist: ", r.dist);
@@ -422,6 +423,8 @@ public class AutoFarBlue9A extends OpMode{
         pathTimer = new Timer();
         opmodeTimer = new Timer();
         opmodeTimer.resetTimer();
+        latchTimer=new Timer();
+        latchTimer.resetTimer();
 
 
         follower = Constants.createFollower(hardwareMap);
