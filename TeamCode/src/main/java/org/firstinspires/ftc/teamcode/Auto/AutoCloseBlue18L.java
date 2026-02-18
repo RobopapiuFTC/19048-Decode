@@ -97,8 +97,9 @@ public class AutoCloseBlue18L extends OpMode{
         scorePickup2 = follower
                 .pathBuilder()
                 .addPath(
-                        new BezierLine(
+                        new BezierCurve(
                                 follower::getPose,
+                                new Pose(47,73),
                                 scorePose
                         )
                 )
