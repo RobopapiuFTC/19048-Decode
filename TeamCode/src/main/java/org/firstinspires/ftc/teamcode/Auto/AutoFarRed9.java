@@ -16,7 +16,7 @@ import org.firstinspires.ftc.teamcode.Hardware.HubBulkRead;
 import org.firstinspires.ftc.teamcode.Hardware.Robot;
 import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
 
-@Autonomous(name="Auto Far Red 9 HP", group="Red")
+@Autonomous(name="Auto Far Red 9", group="Red")
 public class AutoFarRed9 extends OpMode{
 
     public HubBulkRead bulk;

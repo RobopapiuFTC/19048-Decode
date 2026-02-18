@@ -10,13 +10,14 @@ import com.pedropathing.geometry.BezierLine;
 import com.pedropathing.geometry.Pose;
 import com.pedropathing.paths.PathChain;
 import com.pedropathing.util.Timer;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import  com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
 import org.firstinspires.ftc.teamcode.Hardware.HubBulkRead;
 import org.firstinspires.ftc.teamcode.Hardware.Robot;
 
 import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
-
+@Disabled
 @Autonomous(name="Auto Close Blue 18 No Line Stay", group="Blue")
 public class AutoCloseBlue18S extends OpMode{
 

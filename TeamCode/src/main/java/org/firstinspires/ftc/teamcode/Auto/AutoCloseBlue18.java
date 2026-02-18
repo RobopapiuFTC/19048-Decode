@@ -42,7 +42,7 @@ public class AutoCloseBlue18 extends OpMode{
         scorePreload = follower
                 .pathBuilder()
                 .addPath(
-                        new BezierLine(follower::getPose, new Pose(scorePose.getX(),scorePose.getY(),Math.toRadians(270)))
+                        new BezierLine(follower::getPose, scorePose)
                 )
                 .setBrakingStrength(2)
                 .setLinearHeadingInterpolation(startPose.getHeading(),Math.toRadians(270))
@@ -87,7 +87,7 @@ public class AutoCloseBlue18 extends OpMode{
                         new BezierCurve(
                                 follower::getPose,
                                 new Pose(36, 67),
-                                new Pose(scorePose.getX(),scorePose.getY(),Math.toRadians(222))
+                                scorePose
                         )
                 )
                 .setBrakingStrength(2)
@@ -221,7 +221,7 @@ public class AutoCloseBlue18 extends OpMode{
                             .pathBuilder()
                             .addPath(
                                     new BezierLine(follower::getPose,
-                                            new Pose(scorePose.getX(),scorePose.getY(),Math.toRadians(222)))
+                                            scorePose)
                             )
                             .setBrakingStrength(2)
                             .setTangentHeadingInterpolation().setReversed()
@@ -303,7 +303,7 @@ public class AutoCloseBlue18 extends OpMode{
                             .pathBuilder()
                             .addPath(
                                     new BezierLine(follower::getPose,
-                                            new Pose(scorePose.getX(),scorePose.getY(),Math.toRadians(180)))
+                                            scorePose)
                             )
                             .setBrakingStrength(2)
                             .setTangentHeadingInterpolation().setReversed()
