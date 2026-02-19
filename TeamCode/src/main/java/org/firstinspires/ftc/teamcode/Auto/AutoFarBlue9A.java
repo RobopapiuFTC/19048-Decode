@@ -135,7 +135,7 @@ public class AutoFarBlue9A extends OpMode{
             case 1:
                 if(!follower.isBusy()) {
                     if(okp){
-                        r.aiming=true;
+                        
                         pathTimer.resetTimer();
                         r.i.pornit=true;
                         okp=false;
@@ -170,7 +170,7 @@ public class AutoFarBlue9A extends OpMode{
                 if(!follower.isBusy()) {
                     if(okp){
                         pathTimer.resetTimer();
-                        r.aiming=true;
+                        
                         r.i.pornit=true;
                         okp=false;
                     }
@@ -208,7 +208,7 @@ public class AutoFarBlue9A extends OpMode{
                 if(!follower.isBusy()) {
                     if(okp){
                         pathTimer.resetTimer();
-                        r.aiming=true;
+                        
                         r.i.pornit=true;
                         okp=false;
                     }
@@ -248,7 +248,7 @@ public class AutoFarBlue9A extends OpMode{
                     if(okp){
                         pathTimer.resetTimer();
                         r.i.pornit=true;
-                        r.aiming=true;
+                        
                         okp=false;
                     }
                     if(pathTimer.getElapsedTimeSeconds()>1) {
@@ -287,7 +287,7 @@ public class AutoFarBlue9A extends OpMode{
                     if(okp){
                         pathTimer.resetTimer();
                         r.i.pornit=true;
-                        r.aiming=true;
+                        
                         okp=false;
                     }
                     if(pathTimer.getElapsedTimeSeconds()>1) {
@@ -326,7 +326,7 @@ public class AutoFarBlue9A extends OpMode{
                     if(okp){
                         pathTimer.resetTimer();
                         r.i.pornit=true;
-                        r.aiming=true;
+                        
                         okp=false;
                     }
                     if(pathTimer.getElapsedTimeSeconds()>1) {
@@ -364,7 +364,7 @@ public class AutoFarBlue9A extends OpMode{
                 if(!follower.isBusy()) {
                     if(okp){
                         pathTimer.resetTimer();
-                        r.aiming=true;
+                        
                         r.i.pornit=true;
                         okp=false;
                     }

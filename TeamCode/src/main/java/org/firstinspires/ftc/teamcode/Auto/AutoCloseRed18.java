@@ -135,7 +135,7 @@ public class AutoCloseRed18 extends OpMode{
             case 1:
                 if(!follower.isBusy()) {
                     if(okp){
-                        r.aiming=true;
+                        
                         pathTimer.resetTimer();
                         r.i.pornit=true;
                         okp=false;
@@ -179,7 +179,7 @@ public class AutoCloseRed18 extends OpMode{
                             .setLinearHeadingInterpolation(follower.getPose().getHeading(), doorPose.getHeading(),0.5)
                             .build();
                     if(okp){
-                        r.aiming=true;
+                        
                         pathTimer.resetTimer();
                         r.i.pornit=true;
                         okp=false;
@@ -261,7 +261,7 @@ public class AutoCloseRed18 extends OpMode{
                             .setLinearHeadingInterpolation(follower.getPose().getHeading(), doorPose.getHeading(),0.5)
                             .build();
                     if(okp){
-                        r.aiming=true;
+                        
                         pathTimer.resetTimer();
                         r.i.pornit=true;
                         okp=false;
@@ -332,7 +332,7 @@ public class AutoCloseRed18 extends OpMode{
                 if(!okf && latchTimer.getElapsedTimeSeconds()>latchT)r.s.latchdown();
                 if(!follower.isBusy()) {
                     if(okp){
-                        r.aiming=true;
+                        
                         pathTimer.resetTimer();
                         r.i.pornit=true;
                         okp=false;
@@ -366,7 +366,7 @@ public class AutoCloseRed18 extends OpMode{
                 if(!okf && latchTimer.getElapsedTimeSeconds()>latchT)r.s.latchdown();
                 if(!follower.isBusy()) {
                     if(okp){
-                        r.aiming=true;
+                        
                         pathTimer.resetTimer();
                         r.i.pornit=true;
                         okp=false;
@@ -399,7 +399,7 @@ public class AutoCloseRed18 extends OpMode{
                 if(!okf && latchTimer.getElapsedTimeSeconds()>latchT)r.s.latchdown();
                 if(!follower.isBusy()) {
                     if(okp){
-                        r.aiming=true;
+                        
                         pathTimer.resetTimer();
                         r.i.pornit=true;
                         okp=false;
