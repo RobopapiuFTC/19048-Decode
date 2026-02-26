@@ -24,15 +24,10 @@ import com.pedropathing.util.Timer;
 public class Intake {
     public DcMotorEx intake,transfer;
     public RevColorSensorV3 s1,s2,s3;
-    public Servo SVS,SVD;
     public Telemetry telemetry;
-    public NormalizedRGBA colors;
-    public boolean pornit=false,pornitt=false,looping=false,oki=true,third=false,second=false;
-    public int pos,f1,f2;
+    public boolean pornit=false,looping=false,oki=true,third=false,second=false;
     public static double t = 0;
-    public static double kS = 0.08, kV = 0.00039, kP = 0.01;
     public double d1,d2,d3;
-    public boolean[] full;
     public Timer loopTimer,readTimer;
     public Intake(HardwareMap hardwareMap, TelemetryManager telemetry){
 
@@ -40,10 +35,9 @@ public class Intake {
         transfer=hardwareMap.get(DcMotorEx.class,"t");
         transfer.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         transfer.setDirection(DcMotorSimple.Direction.REVERSE);
-      /*  s1 = hardwareMap.get(RevColorSensorV3.class,"s1");
+        s1 = hardwareMap.get(RevColorSensorV3.class,"s1");
         s2=hardwareMap.get(RevColorSensorV3.class,"s2");
-        s3=hardwareMap.get(RevColorSensorV3.class,"s3"); */
-        full = new boolean[]{false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false};
+        s3=hardwareMap.get(RevColorSensorV3.class,"s3");
 
         loopTimer=new Timer();
         readTimer=new Timer();
@@ -71,55 +65,9 @@ public class Intake {
            intake.setPower(0);
         }
     }
-    /*public void isFull(){
-       /* if(!looping)return;
-        if(loopTimer.getElapsedTimeSeconds()<0.6) {
-                if(readTimer.getElapsedTimeSeconds()<0.05) {
-                    if(looping) {
-                        distance = sensor.getDistance(DistanceUnit.MM);
-                        if (distance < 25) {
-                            full[pos]=true;
-                        } else {
-                            full[pos]=false;
-                        }
-                        looping=false;
-                    }
-                }
-                else{
-                    looping=true;
-                    pos++;
-                    readTimer.resetTimer();
-                }
-            }
-            else{
-                for(int i=1; i<pos; i++) {
-                    if(full[i])f1++;
-                    else f2++;
-                    full[i]=false;
-                }
-                pos=1;
-                looping=true;
-                loopTimer.resetTimer();
-                if(f1>f2){
-                    pornit=false;
-                    f1=0;
-                    f2=0;
-                }
-            }
-       if(readTimer.getElapsedTimeSeconds()<0.05) {
-            if(looping) {
-                d1 = s1.getDistance(DistanceUnit.MM);
-                d2 = s2.getDistance(DistanceUnit.MM);
-                d3 = s3.getDistance(DistanceUnit.MM);
-                if(d3<30)if(d2<20)if(d1<25)pornit=false;
-                looping=false;
-            }
-        }
-        else{
-            looping=true;
-            readTimer.resetTimer();
-        }  */
-       /* d1 = s1.getDistance(DistanceUnit.MM);
+    public void isFull(){
+        if(!looping)return;
+        d1 = s1.getDistance(DistanceUnit.MM);
         d2 = s2.getDistance(DistanceUnit.MM);
         d3 = s3.getDistance(DistanceUnit.MM);
         if(d3<30)third=true;
@@ -135,7 +83,7 @@ public class Intake {
             looping = false;
             rumble = true;
         }
-    } */
+    }
 
     public double getVelocity(){
         return transfer.getVelocity();

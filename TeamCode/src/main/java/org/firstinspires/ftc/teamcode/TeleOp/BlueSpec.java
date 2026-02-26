@@ -95,7 +95,6 @@ public class BlueSpec extends OpMode {
         t.addData("Follower Pose: ", r.f.getPose().toString());
         t.addData("Loop time: ", r.getLoopTimeMs());
         t.addData("Loop time hz: ", r.getLoopTimeHz());
-        t.addData("Intake Velocity: ", r.i.getVelocity());
         t.update(telemetry);
     }
     @Override
