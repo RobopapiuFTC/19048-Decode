@@ -31,8 +31,8 @@ public class AutoCloseRed18 extends OpMode{
     private int pathState;
     private Pose startPose = new Pose(23, 128, Math.toRadians(234));
     private Pose scorePose = new Pose(57, 90, Math.toRadians(210));
-    private Pose doorPose = new Pose(19,61,Math.toRadians(153));
-    private Pose doorM = new Pose(19,54,Math.toRadians(153));
+    private Pose doorPose = new Pose(18,58,Math.toRadians(153));
+    private Pose doorM = new Pose(18,51,Math.toRadians(153));
     private Pose line1Pose = new Pose(21, 84, Math.toRadians(180));
     private Pose line2Pose = new Pose(17, 60, Math.toRadians(180));
     private Pose line3Pose = new Pose(17, 35, Math.toRadians(180));
@@ -44,7 +44,7 @@ public class AutoCloseRed18 extends OpMode{
                 .addPath(
                         new BezierLine(follower::getPose, scorePose)
                 )
-                .setBrakingStrength(2)
+                 .setBrakingStrength(2)
                 .setLinearHeadingInterpolation(startPose.getHeading(),Math.toRadians(360+180-270))
                 .build();
 
@@ -55,7 +55,7 @@ public class AutoCloseRed18 extends OpMode{
                                 new Pose(41,85).mirror(),
                                 line1Pose)
                 )
-                .setBrakingStrength(2)
+                 .setBrakingStrength(2)
                 .setLinearHeadingInterpolation(Math.toRadians(360-222+180),line1Pose.getHeading(),0.3)
                 .build();
         scorePickup1 = follower
@@ -63,7 +63,8 @@ public class AutoCloseRed18 extends OpMode{
                 .addPath(
                         new BezierLine(follower::getPose, scorePose)
                 )
-                .setBrakingStrength(2)
+                
+                 .setBrakingStrength(2)
                 .setLinearHeadingInterpolation(line1Pose.getHeading(),Math.toRadians(360-270+180))
                 .build();
 
@@ -77,7 +78,8 @@ public class AutoCloseRed18 extends OpMode{
                                 line2Pose
                         )
                 )
-                .setBrakingStrength(2)
+                
+                 .setBrakingStrength(2)
                 .setLinearHeadingInterpolation(Math.toRadians(360-270+180),line2Pose.getHeading(),0.3)
                 .build();
 
@@ -90,7 +92,8 @@ public class AutoCloseRed18 extends OpMode{
                                 scorePose
                         )
                 )
-                .setBrakingStrength(2)
+                
+                 .setBrakingStrength(2)
                 .setLinearHeadingInterpolation(line2Pose.getHeading(),Math.toRadians(360-222+180),0.3)
                 .build();
 
@@ -104,7 +107,8 @@ public class AutoCloseRed18 extends OpMode{
                                 line3Pose
                         )
                 )
-                .setBrakingStrength(2)
+                
+                 .setBrakingStrength(2)
                 .setLinearHeadingInterpolation(Math.toRadians(360-270+180),line3Pose.getHeading(),0.4)
                 .build();
 
@@ -115,7 +119,7 @@ public class AutoCloseRed18 extends OpMode{
                         new BezierLine(follower::getPose,
                                 endPose)
                 )
-                .setBrakingStrength(2)
+                
                 .setTangentHeadingInterpolation().setReversed()
                 .build();
 
@@ -175,8 +179,9 @@ public class AutoCloseRed18 extends OpMode{
                                             new Pose(40,60).mirror(),
                                             doorPose)
                             )
-                            .setBrakingStrength(2)
-                            .setLinearHeadingInterpolation(follower.getPose().getHeading(), doorPose.getHeading(),0.5)
+                            
+                             .setBrakingStrength(2)
+                .setLinearHeadingInterpolation(follower.getPose().getHeading(), doorPose.getHeading(),0.5)
                             .build();
                     if(okp){
                         
@@ -200,8 +205,9 @@ public class AutoCloseRed18 extends OpMode{
                             .addPath(
                                     new BezierLine(follower::getPose, doorM)
                             )
-                            .setBrakingStrength(2)
-                            .setLinearHeadingInterpolation(follower.getPose().getHeading(), doorM.getHeading())
+                            
+                             .setBrakingStrength(2)
+                .setLinearHeadingInterpolation(follower.getPose().getHeading(), doorM.getHeading())
                             .build();
                     if(okp){
                         pathTimer.resetTimer();
@@ -223,7 +229,7 @@ public class AutoCloseRed18 extends OpMode{
                                     new BezierLine(follower::getPose,
                                             scorePose)
                             )
-                            .setBrakingStrength(2)
+                            
                             .setTangentHeadingInterpolation().setReversed()
                             .build();
                     if(okp){
@@ -257,8 +263,9 @@ public class AutoCloseRed18 extends OpMode{
                                             new Pose(40,60).mirror(),
                                             doorPose)
                             )
-                            .setBrakingStrength(2)
-                            .setLinearHeadingInterpolation(follower.getPose().getHeading(), doorPose.getHeading(),0.5)
+                            
+                             .setBrakingStrength(2)
+                .setLinearHeadingInterpolation(follower.getPose().getHeading(), doorPose.getHeading(),0.5)
                             .build();
                     if(okp){
                         
@@ -282,8 +289,9 @@ public class AutoCloseRed18 extends OpMode{
                             .addPath(
                                     new BezierLine(follower::getPose, doorM)
                             )
-                            .setBrakingStrength(2)
-                            .setLinearHeadingInterpolation(follower.getPose().getHeading(), doorM.getHeading())
+                            
+                             .setBrakingStrength(2)
+                .setLinearHeadingInterpolation(follower.getPose().getHeading(), doorM.getHeading())
                             .build();
                     if(okp){
                         pathTimer.resetTimer();
@@ -305,7 +313,7 @@ public class AutoCloseRed18 extends OpMode{
                                     new BezierLine(follower::getPose,
                                             scorePose)
                             )
-                            .setBrakingStrength(2)
+                            
                             .setTangentHeadingInterpolation().setReversed()
                             .build();
                     if(okp){

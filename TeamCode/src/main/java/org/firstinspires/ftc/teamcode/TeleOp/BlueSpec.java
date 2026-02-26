@@ -60,9 +60,9 @@ public class BlueSpec extends OpMode {
         follower.update();
         if(r.slowmode){
             follower.setTeleOpDrive(
-                    -gamepad1.left_stick_y*0.5,
-                    -gamepad1.left_stick_x*0.5,
-                    -gamepad1.right_stick_x*0.5,
+                    -gamepad1.left_stick_y*0.3,
+                    -gamepad1.left_stick_x*0.3,
+                    -gamepad1.right_stick_x*0.3,
                     true
             );
         }
@@ -86,13 +86,12 @@ public class BlueSpec extends OpMode {
         else if(gamepad1.share)follower.startTeleopDrive();
         r.dualControls();
         r.tPeriodic();
-       /* t.addData("D1",r.i.d1);
-        t.addData("D2",r.i.d2);
-        t.addData("D3",r.i.d3); */
+        t.addData("Turret Ticks", r.tu.t);
+        t.addData("Turret Position", r.tu.target);
+        t.addData("Turret Angle",r.tu.target*355);
         t.addData("Velocity: ", r.s.getVelocity());
         t.addData("Dist: ", r.dist);
         t.addData("Shooter offset: ", r.s.offset);
-        t.addData("Turret Ticks: ", r.tu.getTurret());
         t.addData("Follower Pose: ", r.f.getPose().toString());
         t.addData("Loop time: ", r.getLoopTimeMs());
         t.addData("Loop time hz: ", r.getLoopTimeHz());

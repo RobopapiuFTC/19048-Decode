@@ -34,31 +34,32 @@ public class Shooter {
     private double t = 0;
     public static double kS = 0.08, kV = 0.00039, kP = 0.01;
     public boolean activated = true;
+    public static double sv = 355/270;
 
-    public double shootn=1000,shootc=1000,offset,latching=0.75;
-    public static double hood,angle=0.0005,anglemax=0.05;
+    public double shootn=1000,shootc=1000,offset,latching=0.7;
+    public static double hood,angle=0.0005*sv,anglemax=0.05;
 
     public static List<ShotSample> samples = Arrays.asList(
-            new ShotSample(50, 1230, 0.0005,0.3),
-            new ShotSample(55, 1240, 0.0005,0.3),
-            new ShotSample(60, 1250, 0.0005,0.2),
-            new ShotSample(65, 1260+20, 0.0005,0.05),
-            new ShotSample(70, 1270+20, 0.0005,0.05),
-            new ShotSample(75, 1280+20, 0.0005,0.05),
-            new ShotSample(80, 1290+20, 0.0005,0.05),
-            new ShotSample(85, 1310+20, 0.0005,0.05),
-            new ShotSample(90, 1330+20, 0.0005,0.05),
-            new ShotSample(95, 1350+20, 0.0005,0.05),
-            new ShotSample(100, 1370+20, 0.0005,0.05),
-            new ShotSample(105, 1390+20, 0.0005,0.05),
-            new ShotSample(110, 1410+20, 0.0005,0.05),
-            new ShotSample(115, 1450+20, 0.0005,0.05),
-            new ShotSample(120, 1490+20, 0.0005,0.05),
-            new ShotSample(125, 1510+20, 0.0005,0.15),
-            new ShotSample(130, 1530+20, 0.0005,0.15),
-            new ShotSample(140, 1570+20, 0.0005,0.15),
-            new ShotSample(150, 1630+20, 0.0005,0.15),
-            new ShotSample(160, 1650+50, 0.0005,0.15)
+            new ShotSample(50, 1230, 0.0005*sv,0.44),
+            new ShotSample(55, 1240, 0.0005*sv,0.44),
+            new ShotSample(60, 1250, 0.0005*sv,0.5),
+            new ShotSample(65, 1260+20, 0.0005*sv,0.7),
+            new ShotSample(70, 1270+20, 0.0005*sv,0.7),
+            new ShotSample(75, 1280+20, 0.0005*sv,0.7),
+            new ShotSample(80, 1290+20, 0.0005*sv,0.7),
+            new ShotSample(85, 1310+20, 0.0005*sv,0.7),
+            new ShotSample(90, 1330+20, 0.0005*sv,0.7),
+            new ShotSample(95, 1350+20, 0.0005*sv,0.7),
+            new ShotSample(100, 1370+20, 0.0005*sv,0.7),
+            new ShotSample(105, 1390+20, 0.0005*sv,0.7),
+            new ShotSample(110, 1410+20, 0.0005*sv,0.7),
+            new ShotSample(115, 1450+20, 0.0005*sv,0.7),
+            new ShotSample(120, 1490+20, 0.0005*sv,0.7),
+            new ShotSample(125, 1510+20, 0.0005*sv,0.55),
+            new ShotSample(130, 1530+20, 0.0005*sv,0.55),
+            new ShotSample(140, 1570+20, 0.0005*sv,0.55),
+            new ShotSample(150, 1630+20, 0.0005*sv,0.55),
+            new ShotSample(160, 1650+50, 0.0005*sv,0.55)
     );
 
     public Shooter(HardwareMap hardwareMap, TelemetryManager telemetry){
@@ -69,7 +70,7 @@ public class Shooter {
         latch=hardwareMap.get(Servo.class,"latch");
 
         SD.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        SVD.setPosition(0.5);
+        SVD.setPosition(0.1);
         SD.setDirection(DcMotorSimple.Direction.REVERSE);
         latch.setPosition(0.7);
     }
@@ -80,7 +81,7 @@ public class Shooter {
         hood();
     }
     public void hood(){
-        hood=clamp(anglemax+(getTarget()-getVelocity()-20)*angle,anglemax,0.5);
+        hood=clamp(anglemax-(getTarget()-getVelocity()-20)*angle,0.1,anglemax);
         SVD.setPosition(hood);
     }
     public double getTarget() {

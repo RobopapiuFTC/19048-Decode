@@ -40,7 +40,7 @@ public class Robot {
     public Gamepad g1,g2;
     public Follower f;
     public VoltageSensor batteryVoltageSensor;
-    public static boolean a,shoot,oks,aim,auto,intake,oki,pids=false,aima=true,shooting=false,aiming=true,rumble=false;
+    public static boolean a,shoot,oks,aim,auto,intake,oki,pids=false,aima=true,shooting=false,aiming=true,rumble=false,turret45=false;
     public Timer iTimer,rTimer,rsTimer,sTimer,oTimer;
     public Timer looptimer;
     public int loops;
@@ -90,7 +90,7 @@ public class Robot {
            // if (aim) turret();
             if(aim)sotm();
             else {
-                tu.setYaw(Math.toRadians(45));
+                if(!turret45)tu.setYaw(Math.toRadians(0));
             }
         }
         else tu.setYaw(Math.toRadians(90));
@@ -232,19 +232,19 @@ public class Robot {
         if(g1.a && !g1.left_bumper){
             shooting=false;
             i.pornit=true;
+            i.pornitt=true;
         }
         if(g1.a && g1.left_bumper){
             shooting=true;
         }
         slowmode = g1.right_trigger > 0.3;
         if(g1.options){
-            if(rTimer.getElapsedTimeSeconds()>0.3){
-                tu.manual=!tu.manual;
-                rTimer.resetTimer();
-            }
+            turret45=true;
+               i.pornit=false;
+               tu.setYaw(Math.toRadians(45));
         }
         if(g1.left_trigger > 0.3 && g1.right_bumper) {
-            i.intake.setDirection(DcMotorSimple.Direction.FORWARD);
+            i.transfer.setDirection(DcMotorSimple.Direction.FORWARD);
             i.pornit=true;
             intake=false;
             oki=false;
@@ -276,8 +276,10 @@ public class Robot {
                     if (!auto) {
                         s.off();
                     }
+                    turret45=false;
                     shooting = false;
                     i.pornit = false;
+                    i.pornitt=false;
                     iTimer.resetTimer();
                     oki = false;
                 }
@@ -286,7 +288,7 @@ public class Robot {
                     s.latchup();
                 }
                 if (iTimer.getElapsedTimeSeconds() > 0.6 && iTimer.getElapsedTimeSeconds() < 1) {
-                    i.intake.setDirection(DcMotorSimple.Direction.REVERSE);
+                    i.transfer.setDirection(DcMotorSimple.Direction.REVERSE);
                     i.pornit = true;
                     intake = false;
                     oki = false;
@@ -311,10 +313,11 @@ public class Robot {
                 aim=true;
                 sTimer.resetTimer();
                 oks=false;
+                turret45=false;
             }
             if(sTimer.getElapsedTimeSeconds()>0.2 && sTimer.getElapsedTimeSeconds()<1){
                 i.pornit=false;
-                i.intake.setDirection(DcMotorSimple.Direction.REVERSE);
+                i.transfer.setDirection(DcMotorSimple.Direction.REVERSE);
                 s.latchdown();
                 shoot=false;
                 oks=false;
@@ -444,10 +447,10 @@ public class Robot {
     }
     public void setLatch(){
         if(auto){
-            s.latching=0.75;
+            s.latching=0.7;
         }
         else{
-            s.latching=0.75;
+            s.latching=0.7;
         }
     }
     public void setTurretOffset(){

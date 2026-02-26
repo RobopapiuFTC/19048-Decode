@@ -22,12 +22,12 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
 import com.pedropathing.util.Timer;
 public class Intake {
-    public DcMotorEx intake;
+    public DcMotorEx intake,transfer;
     public RevColorSensorV3 s1,s2,s3;
     public Servo SVS,SVD;
     public Telemetry telemetry;
     public NormalizedRGBA colors;
-    public boolean pornit=false,looping=false,oki=true,third=false,second=false;
+    public boolean pornit=false,pornitt=false,looping=false,oki=true,third=false,second=false;
     public int pos,f1,f2;
     public static double t = 0;
     public static double kS = 0.08, kV = 0.00039, kP = 0.01;
@@ -37,8 +37,9 @@ public class Intake {
     public Intake(HardwareMap hardwareMap, TelemetryManager telemetry){
 
         intake=hardwareMap.get(DcMotorEx.class, "i");
-        intake.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        intake.setDirection(DcMotorSimple.Direction.REVERSE);
+        transfer=hardwareMap.get(DcMotorEx.class,"t");
+        transfer.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        transfer.setDirection(DcMotorSimple.Direction.REVERSE);
       /*  s1 = hardwareMap.get(RevColorSensorV3.class,"s1");
         s2=hardwareMap.get(RevColorSensorV3.class,"s2");
         s3=hardwareMap.get(RevColorSensorV3.class,"s3"); */
@@ -49,14 +50,13 @@ public class Intake {
     }
     public void periodic(){
         run();
-        if(pornit)setPower((kV * getTarget()) + (kP * (getTarget() - getVelocity())) + kS);
     }
 
     public double getTarget() {
         return t;
     }
     public void setPower(double p) {
-        intake.setPower(p);
+        transfer.setPower(p);
     }
 
     public void setTarget(double velocity) {
@@ -64,8 +64,10 @@ public class Intake {
     }
     public void run(){
         if(pornit){
-            setTarget(3000);
+                transfer.setPower(1);
+                intake.setPower(1);
         }else{
+           transfer.setPower(0);
            intake.setPower(0);
         }
     }
@@ -136,6 +138,6 @@ public class Intake {
     } */
 
     public double getVelocity(){
-        return intake.getVelocity();
+        return transfer.getVelocity();
     }
 }
