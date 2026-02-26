@@ -60,9 +60,9 @@ public class Red extends OpMode {
         follower.update();
         if(r.slowmode){
             follower.setTeleOpDrive(
-                    -gamepad1.left_stick_y*0.5,
-                    -gamepad1.left_stick_x*0.5,
-                    -gamepad1.right_stick_x*0.5,
+                    -gamepad1.left_stick_y*0.3,
+                    -gamepad1.left_stick_x*0.3,
+                    -gamepad1.right_stick_x*0.3,
                     true
             );
         }
