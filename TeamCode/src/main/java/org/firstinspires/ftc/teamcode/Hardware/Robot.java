@@ -169,6 +169,8 @@ public class Robot {
         }
         if(g1.b){
             f.setPose(relocalization);
+            offsetClose=0;
+            offsetFar=0;
         }
         if(g1.dpad_left && !g1.left_bumper){
             if(oTimer.getElapsedTimeSeconds()>0.3){
@@ -232,7 +234,6 @@ public class Robot {
         if(g1.a && !g1.left_bumper){
             shooting=false;
             i.pornit=true;
-            i.pornitt=true;
         }
         if(g1.a && g1.left_bumper){
             shooting=true;
@@ -279,7 +280,6 @@ public class Robot {
                     turret45=false;
                     shooting = false;
                     i.pornit = false;
-                    i.pornitt=false;
                     iTimer.resetTimer();
                     oki = false;
                 }
