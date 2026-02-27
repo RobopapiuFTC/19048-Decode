@@ -36,7 +36,7 @@ public class Robot {
     public Turret tu;
     public static double dist,offsetFar=0,offsetClose=0,batteryVoltage=0,nominalVoltage=12.5;
     public static Pose shootp = new Pose(0 ,144,0);
-    public static Pose parkPose,endPose,startingPose,currentPose,futurePose,relocalization;
+    public static Pose parkPose,endPose,startingPose,currentPose,futurePose,relocalization,relocalization2;
     public Gamepad g1,g2;
     public Follower f;
     public VoltageSensor batteryVoltageSensor;
@@ -167,8 +167,13 @@ public class Robot {
                 rTimer.resetTimer();
             }
         }
-        if(g1.b){
+        if(g1.b && !g1.left_bumper){
             f.setPose(relocalization);
+            offsetClose=0;
+            offsetFar=0;
+        }
+        if(g1.b && g1.left_bumper){
+            f.setPose(relocalization2);
             offsetClose=0;
             offsetFar=0;
         }
@@ -255,8 +260,9 @@ public class Robot {
         if(currentPose.getY()<40)tu.offset=offsetFar;
         else tu.offset=offsetClose;
     }
-    public void setRelocalization(Pose relocalization){
+    public void setRelocalization(Pose relocalization, Pose relocalization2){
         this.relocalization=relocalization;
+        this.relocalization2=relocalization2;
     }
     public void intake(){
         intake=true;
