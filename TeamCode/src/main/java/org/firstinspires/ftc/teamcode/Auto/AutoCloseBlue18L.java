@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.Auto;
 
 import com.bylazar.telemetry.TelemetryManager;
 import com.pedropathing.geometry.BezierCurve;
+import com.pedropathing.paths.HeadingInterpolator;
 import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.pedropathing.follower.Follower;
@@ -38,7 +39,20 @@ public class AutoCloseBlue18L extends OpMode{
     private  Pose line3Pose = new Pose(17, 35, Math.toRadians(180));
     public  Pose endPose = new Pose(58,110,Math.toRadians(241));
     private PathChain scorePreload,doorPickup,grabPickup1,doorOpen1, scorePickup1, grabPickup2, scorePickup2, grabPickup3, scorePickup3,end,scoreDoor,doorMove;
+    private HeadingInterpolator score;
     public void buildPaths() {
+        score = HeadingInterpolator.piecewise(
+                new HeadingInterpolator.PiecewiseNode(
+                        0,
+                        0.8,
+                        HeadingInterpolator.tangent.reverse()
+                ),
+                new HeadingInterpolator.PiecewiseNode(
+                        0.8,
+                        1,
+                        HeadingInterpolator.constant(Math.toRadians(180))
+                )
+        );
         scorePreload = follower
                 .pathBuilder()
                 .addPath(
@@ -149,7 +163,8 @@ public class AutoCloseBlue18L extends OpMode{
             case 1:
                 if(!follower.isBusy()) {
                     if(okp){
-                        
+
+                        r.aiming=true;
                         pathTimer.resetTimer();
                         r.i.pornit=true;
                         okp=false;
@@ -200,7 +215,8 @@ public class AutoCloseBlue18L extends OpMode{
                             .setLinearHeadingInterpolation(follower.getPose().getHeading(), doorPose.getHeading(),0.5)
                             .build();
                     if(okp){
-                        
+
+                        r.aiming=true;
                         pathTimer.resetTimer();
                         r.i.pornit=true;
                         okp=false;
@@ -245,7 +261,7 @@ public class AutoCloseBlue18L extends OpMode{
                                             scorePose)
                             )
                             .setBrakingStrength(2)
-                            .setTangentHeadingInterpolation().setReversed()
+                            .setHeadingInterpolation(score)
                             .build();
                     if(okp){
                         pathTimer.resetTimer();
@@ -271,7 +287,8 @@ public class AutoCloseBlue18L extends OpMode{
                 if(!okf && latchTimer.getElapsedTimeSeconds()>latchT)r.s.latchdown();
                 if(!follower.isBusy()) {
                     if(okp){
-                        
+
+                        r.aiming=true;
                         pathTimer.resetTimer();
                         r.i.pornit=true;
                         okp=false;
@@ -315,7 +332,8 @@ public class AutoCloseBlue18L extends OpMode{
                             .setLinearHeadingInterpolation(follower.getPose().getHeading(), doorPose.getHeading(),0.5)
                             .build();
                     if(okp){
-                        
+
+                        r.aiming=true;
                         pathTimer.resetTimer();
                         r.i.pornit=true;
                         okp=false;
@@ -360,7 +378,7 @@ public class AutoCloseBlue18L extends OpMode{
                                             scorePose)
                             )
                             .setBrakingStrength(2)
-                            .setTangentHeadingInterpolation().setReversed()
+                            .setHeadingInterpolation(score)
                             .build();
                     if(okp){
                         pathTimer.resetTimer();
@@ -396,7 +414,8 @@ public class AutoCloseBlue18L extends OpMode{
                             .setLinearHeadingInterpolation(follower.getPose().getHeading(), doorPose.getHeading(),0.5)
                             .build();
                     if(okp){
-                        
+
+                        r.aiming=true;
                         pathTimer.resetTimer();
                         r.i.pornit=true;
                         okp=false;
@@ -441,7 +460,7 @@ public class AutoCloseBlue18L extends OpMode{
                                             endPose)
                             )
                             .setBrakingStrength(2)
-                            .setTangentHeadingInterpolation().setReversed()
+                            .setHeadingInterpolation(score)
                             .build();
                     if(okp){
                         pathTimer.resetTimer();
@@ -467,7 +486,8 @@ public class AutoCloseBlue18L extends OpMode{
                 if(!okf && latchTimer.getElapsedTimeSeconds()>latchT)r.s.latchdown();
                 if(!follower.isBusy()) {
                     if(okp){
-                        
+
+                        r.aiming=true;
                         pathTimer.resetTimer();
                         r.i.pornit=true;
                         okp=false;

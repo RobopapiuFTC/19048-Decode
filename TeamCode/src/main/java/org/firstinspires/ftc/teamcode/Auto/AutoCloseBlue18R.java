@@ -149,7 +149,7 @@ public class AutoCloseBlue18R extends OpMode{
             case 1:
                 if(!follower.isBusy()) {
                     if(okp){
-
+                        r.aiming=true;
                         pathTimer.resetTimer();
                         r.i.pornit=true;
                         okp=false;
@@ -201,6 +201,7 @@ public class AutoCloseBlue18R extends OpMode{
                             .build();
                     if(okp){
 
+                        r.aiming=true;
                         pathTimer.resetTimer();
                         r.i.pornit=true;
                         okp=false;
@@ -282,6 +283,7 @@ public class AutoCloseBlue18R extends OpMode{
                             .build();
                     if(okp){
 
+                        r.aiming=true;
                         pathTimer.resetTimer();
                         r.i.pornit=true;
                         okp=false;
@@ -363,6 +365,7 @@ public class AutoCloseBlue18R extends OpMode{
                             .build();
                     if(okp){
 
+                        r.aiming=true;
                         pathTimer.resetTimer();
                         r.i.pornit=true;
                         okp=false;
@@ -434,6 +437,7 @@ public class AutoCloseBlue18R extends OpMode{
                 if(!follower.isBusy()) {
                     if(okp){
 
+                        r.aiming=true;
                         pathTimer.resetTimer();
                         r.i.pornit=true;
                         okp=false;
@@ -468,6 +472,7 @@ public class AutoCloseBlue18R extends OpMode{
                 if(!follower.isBusy()) {
                     if(okp){
 
+                        r.aiming=true;
                         pathTimer.resetTimer();
                         r.i.pornit=true;
                         okp=false;

@@ -145,13 +145,6 @@ public class Shooter {
         return Math.abs((getTarget()- getVelocity())) < 50;
     }
     public void forDistance(double distance) {
-       /* if(auto) {
-            setTarget((0.00180088*Math.pow(distance, 2))+(4.14265*distance)+shootc+offset);
-        }
-        else{
-            ShotSample shoot = lookupShot(distance);
-            setTarget(shoot.power + offset);
-        } */
         ShotSample shoot = lookupShot(distance);
         anglemax=shoot.anglemax;
         setTarget(shoot.power + offset);
@@ -163,7 +156,6 @@ public class Shooter {
         SVD.setPosition(0.15);
     }
     public void latchdown(){latch.setPosition(0.24);}
-    public void latchup(){//latch.setPosition(0.7);
-        latch.setPosition(latching); }
+    public void latchup(){latch.setPosition(latching); }
 
 }

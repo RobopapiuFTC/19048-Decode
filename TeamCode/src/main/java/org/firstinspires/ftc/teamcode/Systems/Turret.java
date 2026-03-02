@@ -25,7 +25,6 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 public class Turret {
     public Camera c;
-    public static double error = 0, power = 0, manualPower = 0;
     public static double rpt = 6.28319/1900;
     public static double gear = 1900/360,target;
     public double tti,tpc=0;
@@ -38,16 +37,12 @@ public class Turret {
     public static double t = 0, cameraerror=0;
     public static double pidfSwitch = 30;
     public static double kp = 0.01, kf = 0.0, kd = 0.000, sp = .013, sf = 0, sd = 0.0001;
-    //public static double kp = 0.003, kf = 0.0, kd = 0.000, sp = .005, sf = 0, sd = 0.0001;
     public Timer cameraTimer;
     public boolean okt=false;
 
     public static boolean on = true, manual = false;
 
     public Turret(HardwareMap hardwareMap, TelemetryManager telemetry, boolean a) {
-        /*turret = hardwareMap.get(DcMotorEx.class, "turret");
-        turret.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        turret.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT); */
         t1=hardwareMap.get(Servo.class, "t1");
         t2=hardwareMap.get(Servo.class, "t2");
         t1.setPosition(0);
@@ -71,55 +66,10 @@ public class Turret {
     }
 
     public double getTurret() {
-       // return turret.getCurrentPosition();
-        return 0;
+       return target;
     }
 
     public void periodic() {
-       /* if (on) {
-            if(!auto) {
-                if (okt) {
-                    if (getTurret() >= getTurretTarget() - 3 && getTurret() <= getTurretTarget() + 3) {
-                        c.detect();
-                        if (c.result != null && c.result.isValid()) {
-                            if (a) {
-                                tpc = -c.tx * 5.27777777778;
-                                cameraerror = cameraerror + tpc;
-
-                            } else {
-                                tpc = c.tx * 5.27777777778;
-                                cameraerror = cameraerror + tpc;
-                            }
-                            c.result = null;
-                            okt = false;
-                        }
-                    }
-                }
-            }
-            if (manual) {
-                turret.setPower(manualPower);
-                return;
-            }
-            p.setCoefficients(new PIDFCoefficients(kp, 0, kd, kf));
-            s.setCoefficients(new PIDFCoefficients(sp, 0, sd, sf));
-            error = getTurretTarget() - getTurret();
-
-            s.updateError(error);
-            s.updateFeedForwardInput(Math.signum(error));
-            power = s.run();
-            *//* if (error > pidfSwitch) {
-                p.updateError(error);
-                p.updateFeedForwardInput(Math.signum(error));
-                power = p.run();
-            } else {
-                s.updateError(error);
-                power = s.run();
-            }
-
-            turret.setPower(power);
-        } else {
-            turret.setPower(0);
-        }*/
         if(on){
             target=clamp(t/gear/355,0,1);
             t1.setPosition(target);
@@ -165,8 +115,6 @@ public class Turret {
     }
 
     public void resetTurret() {
-       // turret.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        //turret.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         setTurretTarget(0);
     }
 
