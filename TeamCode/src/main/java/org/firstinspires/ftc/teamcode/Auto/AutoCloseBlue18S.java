@@ -178,6 +178,7 @@ public class AutoCloseBlue18S extends OpMode{
                 break;
             case 2:
                 if(!follower.isBusy()) {
+                    r.i.looping=true;
                     follower.followPath(doorOpen1,true);
                     oktrue();
                     nextPath();
@@ -242,6 +243,7 @@ public class AutoCloseBlue18S extends OpMode{
 
                     }
                     if(pathTimer.getElapsedTimeSeconds()>1.5 || !r.i.pornit) {
+                        r.i.looping=true;
                         follower.followPath(scoreDoor, true);
                         r.tu.face(r.getShootTarget(), scoreDoor.endPose());
                         r.s.on();
@@ -276,6 +278,7 @@ public class AutoCloseBlue18S extends OpMode{
             case 7:
                 if(!follower.isBusy()) {
                     // r.tu.face(r.getShootTarget(), new Pose(scorePose.getX(),scorePose.getY(),Math.toRadians(270)));
+                    r.i.looping=true;
                     follower.followPath(scorePickup1,true);
                     r.tu.face(r.getShootTarget(), scorePickup1.endPose());
                     r.s.on();
@@ -333,6 +336,7 @@ public class AutoCloseBlue18S extends OpMode{
 
                     }
                     if(pathTimer.getElapsedTimeSeconds()>1.5 || !r.i.pornit) {
+                        r.i.looping=true;
                         follower.followPath(scoreDoor, true);
                         r.tu.face(r.getShootTarget(), scoreDoor.endPose());
                         r.s.on();
@@ -391,6 +395,7 @@ public class AutoCloseBlue18S extends OpMode{
 
                     }
                     if(pathTimer.getElapsedTimeSeconds()>1.5 || !r.i.pornit) {
+                        r.i.looping=true;
                         follower.followPath(scoreDoor, true);
                         r.tu.face(r.getShootTarget(), scoreDoor.endPose());
                         r.s.on();
@@ -449,6 +454,7 @@ public class AutoCloseBlue18S extends OpMode{
 
                     }
                     if(pathTimer.getElapsedTimeSeconds()>1.5 || !r.i.pornit) {
+                        r.i.looping=true;
                         follower.followPath(scoreDoor, true);
                         r.tu.face(r.getShootTarget(), scoreDoor.endPose());
                         r.s.on();
