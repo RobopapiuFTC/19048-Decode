@@ -129,6 +129,18 @@ public class Robot {
         tu.periodic();
         i.periodic();
     }
+    public void aPeriodicTest(){
+        poses();
+        shootTarget();
+        i.isFull();
+        if(aiming){
+            tu.face(getShootTarget(),currentPose);
+            tu.automatic();
+        }
+        s.periodic();
+        tu.periodic();
+        i.periodic();
+    }
     public void tStart(){
         setShootTarget();
         setTurretOffset();
@@ -175,49 +187,25 @@ public class Robot {
         }
         if(g1.dpad_left && !g1.left_bumper){
             if(oTimer.getElapsedTimeSeconds()>0.3){
-                if(currentPose.getY()>40) {
-                    offsetClose = offsetClose + Math.toRadians(1);
-                    oTimer.resetTimer();
-                }
-                else {
-                    offsetFar = offsetFar + Math.toRadians(1);
-                    oTimer.resetTimer();
-                }
+                offset(Math.toRadians(1));
+                oTimer.resetTimer();
             }
         }
         if(g1.dpad_right && !g1.left_bumper){
             if(oTimer.getElapsedTimeSeconds()>0.3){
-                if(currentPose.getY()>40) {
-                    offsetClose = offsetClose - Math.toRadians(1);
-                    oTimer.resetTimer();
-                }
-                else {
-                    offsetFar = offsetFar - Math.toRadians(1);
-                    oTimer.resetTimer();
-                }
+                offset(-Math.toRadians(1));
+                oTimer.resetTimer();
             }
         }if(g1.dpad_left && g1.left_bumper){
             if(oTimer.getElapsedTimeSeconds()>0.3){
-                if(currentPose.getY()>40) {
-                    offsetClose = offsetClose + Math.toRadians(90);
-                    oTimer.resetTimer();
-                }
-                else {
-                    offsetFar = offsetFar + Math.toRadians(90);
-                    oTimer.resetTimer();
-                }
+                offset(Math.toRadians(90));
+                oTimer.resetTimer();
             }
         }
         if(g1.dpad_right && g1.left_bumper){
             if(oTimer.getElapsedTimeSeconds()>0.3){
-                if(currentPose.getY()>40) {
-                    offsetClose = offsetClose - Math.toRadians(90);
-                    oTimer.resetTimer();
-                }
-                else {
-                    offsetFar = offsetFar - Math.toRadians(90);
-                    oTimer.resetTimer();
-                }
+                offset(-Math.toRadians(90));
+                oTimer.resetTimer();
             }
         }
         if(g1.dpad_up){
@@ -253,9 +241,13 @@ public class Robot {
             oki=false;
         }
     }
+    public void offset(double offset){
+        if(currentPose.getY()>40)offsetClose += offset;
+        else offsetFar += offset;
+    }
     public void offsets(){
-        if(currentPose.getY()<40)tu.offset=offsetFar;
-        else tu.offset=offsetClose;
+        if(currentPose.getY()>40)tu.offset = offsetClose;
+        else tu.offset=offsetFar;
     }
     public void setRelocalization(Pose relocalization, Pose relocalization2){
         this.relocalization=relocalization;
