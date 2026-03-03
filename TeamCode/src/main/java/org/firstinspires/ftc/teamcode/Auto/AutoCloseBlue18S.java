@@ -287,7 +287,7 @@ public class AutoCloseBlue18S extends OpMode{
                     nextPath();
                 }
                 break;
-            case 9:
+            case 8:
                 if(follower.getPose().getX()>XPlace && okf){
                     r.i.pornit=false;
                     okf=false;
@@ -315,70 +315,70 @@ public class AutoCloseBlue18S extends OpMode{
                         intake();
                         oktrue();
                         r.aiming=false;
+                        nextPath();
+                    }
+                }
+                break;
+            case 9:
+                if(!follower.isBusy()) {
+                    scoreDoor = follower
+                            .pathBuilder()
+                            .addPath(
+                                    new BezierLine(follower::getPose,
+                                            scorePose)
+                            )
+                            .setBrakingStrength(2)
+                            .setHeadingInterpolation(score)
+                            .build();
+                    if(okp){
+                        pathTimer.resetTimer();
+                        okp=false;
+
+                    }
+                    if(pathTimer.getElapsedTimeSeconds()>1.5 || !r.i.pornit) {
+                        r.i.looping=true;
+                        follower.followPath(scoreDoor, true);
+                        r.tu.face(r.getShootTarget(), scoreDoor.endPose());
+                        r.s.on();
+                        r.s.forDistance(r.getShootTarget().distanceFrom(scoreDoor.endPose()));
+                        oktrue();
                         nextPath();
                     }
                 }
                 break;
             case 10:
+                if(follower.getPose().getX()>XPlace && okf){
+                    r.i.pornit=false;
+                    okf=false;
+                    latchTimer.resetTimer();
+                }
+                if(!okf && latchTimer.getElapsedTimeSeconds()>latchT)r.s.latchdown();
                 if(!follower.isBusy()) {
-                    scoreDoor = follower
+                    doorPickup = follower
                             .pathBuilder()
                             .addPath(
-                                    new BezierLine(follower::getPose,
-                                            scorePose)
+                                    new BezierCurve(follower::getPose,
+                                            new Pose(40,60),
+                                            doorPose)
                             )
                             .setBrakingStrength(2)
-                            .setHeadingInterpolation(score)
+                            .setLinearHeadingInterpolation(follower.getPose().getHeading(), doorPose.getHeading(),0.5)
                             .build();
                     if(okp){
+                        shooting();
                         pathTimer.resetTimer();
                         okp=false;
-
                     }
-                    if(pathTimer.getElapsedTimeSeconds()>1.5 || !r.i.pornit) {
-                        r.i.looping=true;
-                        follower.followPath(scoreDoor, true);
-                        r.tu.face(r.getShootTarget(), scoreDoor.endPose());
-                        r.s.on();
-                        r.s.forDistance(r.getShootTarget().distanceFrom(scoreDoor.endPose()));
+                    if(pathTimer.getElapsedTimeSeconds()>1) {
+                        follower.followPath(doorPickup, true);
+                        intake();
                         oktrue();
+                        r.aiming=false;
                         nextPath();
                     }
                 }
                 break;
             case 11:
-                if(follower.getPose().getX()>XPlace && okf){
-                    r.i.pornit=false;
-                    okf=false;
-                    latchTimer.resetTimer();
-                }
-                if(!okf && latchTimer.getElapsedTimeSeconds()>latchT)r.s.latchdown();
-                if(!follower.isBusy()) {
-                    doorPickup = follower
-                            .pathBuilder()
-                            .addPath(
-                                    new BezierCurve(follower::getPose,
-                                            new Pose(40,60),
-                                            doorPose)
-                            )
-                            .setBrakingStrength(2)
-                            .setLinearHeadingInterpolation(follower.getPose().getHeading(), doorPose.getHeading(),0.5)
-                            .build();
-                    if(okp){
-                        shooting();
-                        pathTimer.resetTimer();
-                        okp=false;
-                    }
-                    if(pathTimer.getElapsedTimeSeconds()>1) {
-                        follower.followPath(doorPickup, true);
-                        intake();
-                        oktrue();
-                        r.aiming=false;
-                        nextPath();
-                    }
-                }
-                break;
-            case 12:
                 if(!follower.isBusy()) {
                     scoreDoor = follower
                             .pathBuilder()
@@ -405,7 +405,7 @@ public class AutoCloseBlue18S extends OpMode{
                     }
                 }
                 break;
-            case 13:
+            case 12:
                 if(follower.getPose().getX()>XPlace && okf){
                     r.i.pornit=false;
                     okf=false;
@@ -437,7 +437,7 @@ public class AutoCloseBlue18S extends OpMode{
                     }
                 }
                 break;
-            case 14:
+            case 13:
                 if(!follower.isBusy()) {
                     scoreDoor = follower
                             .pathBuilder()
@@ -464,7 +464,7 @@ public class AutoCloseBlue18S extends OpMode{
                     }
                 }
                 break;
-            case 15:
+            case 14:
                 if(follower.getPose().getX()>XPlace && okf){
                     r.i.pornit=false;
                     okf=false;

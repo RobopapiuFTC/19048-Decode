@@ -76,10 +76,10 @@ public class Robot {
     public void tPeriodic() {
         poses();
         offsets();
-        setShootTarget();
+        shootTarget();
         sequenceshoot();
         sequenceintake();
-        isFull();
+        i.isFull();
         rumble();
         setLatch();
         if(shooting){
@@ -355,7 +355,7 @@ public class Robot {
         }
     }
     public void setTurretOffset(){
-        tu.tti=-Math.toRadians(80);
+        tu.tti=-Math.toRadians(88);
     }
     public void setShootTarget() {
         if (a){
