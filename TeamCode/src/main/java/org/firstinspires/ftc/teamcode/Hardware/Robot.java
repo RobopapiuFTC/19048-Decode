@@ -226,6 +226,7 @@ public class Robot {
         }
         if(g1.a && g1.left_bumper){
             shooting=true;
+            i.looping=false;
         }
         slowmode = g1.right_trigger > 0.3;
         if(g1.options){
