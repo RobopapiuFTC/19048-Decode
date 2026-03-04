@@ -14,7 +14,9 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.PwmControl;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.ServoImplEx;
 import com.seattlesolvers.solverslib.command.Command;
 import com.seattlesolvers.solverslib.command.CommandBase;
 import com.seattlesolvers.solverslib.command.InstantCommand;
@@ -30,7 +32,7 @@ public class Turret {
     public double tti,tpc=0;
     public static double offset=0;
     public boolean a;
-    public final Servo t1,t2;
+    public final ServoImplEx t1,t2;
 
    // public final DcMotorEx turret;
     private PIDFController p, s;
@@ -43,10 +45,12 @@ public class Turret {
     public static boolean on = true, manual = false;
 
     public Turret(HardwareMap hardwareMap, TelemetryManager telemetry, boolean a) {
-        t1=hardwareMap.get(Servo.class, "t1");
-        t2=hardwareMap.get(Servo.class, "t2");
-        t1.setPosition(0);
-        t2.setPosition(0);
+        t1=hardwareMap.get(ServoImplEx.class, "t1");
+        t2=hardwareMap.get(ServoImplEx.class, "t2");
+        t1.setPwmRange(new PwmControl.PwmRange(505,2495));
+        t2.setPwmRange(new PwmControl.PwmRange(505,2495));
+        t1.setPosition(0.05);
+        t2.setPosition(0.05);
         this.a=a;
         c = new Camera(hardwareMap,telemetry,a);
         c.start();
@@ -55,7 +59,11 @@ public class Turret {
         s = new PIDFController(new PIDFCoefficients(sp, 0, sd, sf));
         cameraTimer = new Timer();
     }
-
+    public void servoTarget(double radians){
+        if(radians>=Math.toRadians(360))radians=radians-Math.toRadians(360);
+        if(radians<Math.toRadians(0))radians=radians+Math.toRadians(360);
+        t=clamp(radians,Math.toRadians(5),Math.toRadians(350));
+    }
     public void setTurretTarget(double ticks) {
         if(ticks>=1900)ticks=ticks-1900;
         if(ticks<0)ticks=ticks+1900;
@@ -71,13 +79,13 @@ public class Turret {
 
     public void periodic() {
         if(on){
-            target=clamp(t/gear/355,0,1);
+            target=clamp(t/Math.toRadians(355),0,1);
             t1.setPosition(target);
             t2.setPosition(target);
         }
         else{
-            t1.setPosition(0);
-            t2.setPosition(0);
+            t1.setPosition(0.05);
+            t2.setPosition(0.05);
         }
 
     }
@@ -100,7 +108,8 @@ public class Turret {
 
     public void setYaw(double radians) {
         radians = normalizeAngle(radians);
-        setTurretTarget(radians/rpt+cameraerror);
+        servoTarget(radians);
+       // setTurretTarget(radians/rpt+cameraerror);
     }
 
     public void face(Pose targetPose, Pose robotPose) {
@@ -115,7 +124,7 @@ public class Turret {
     }
 
     public void resetTurret() {
-        setTurretTarget(0);
+        servoTarget(0);
     }
 
 

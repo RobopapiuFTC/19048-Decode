@@ -356,7 +356,7 @@ public class Robot {
         }
     }
     public void setTurretOffset(){
-        tu.tti=-Math.toRadians(88);
+        tu.tti=-Math.toRadians(90);
     }
     public void setShootTarget() {
         if (a){
