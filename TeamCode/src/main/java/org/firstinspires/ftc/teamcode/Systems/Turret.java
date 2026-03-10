@@ -62,7 +62,7 @@ public class Turret {
     public void servoTarget(double radians){
         if(radians>=Math.toRadians(360))radians=radians-Math.toRadians(360);
         if(radians<Math.toRadians(0))radians=radians+Math.toRadians(360);
-        t=clamp(radians,Math.toRadians(5),Math.toRadians(350));
+        t=clamp(radians,Math.toRadians(10),Math.toRadians(350));
     }
     public void setTurretTarget(double ticks) {
         if(ticks>=1900)ticks=ticks-1900;

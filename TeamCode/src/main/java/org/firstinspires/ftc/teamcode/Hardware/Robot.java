@@ -79,20 +79,14 @@ public class Robot {
         shootTarget();
         sequenceshoot();
         sequenceintake();
-        i.isFull();
+        if(!aim)i.isFull();
         rumble();
         setLatch();
         if(shooting){
             shooting();
             sc();
         }
-        if(!tu.manual) {
-            if(aim)sotm();
-            else {
-                if(!turret45)tu.setYaw(Math.toRadians(0));
-            }
-        }
-        else tu.setYaw(Math.toRadians(90));
+        if(!turret45)sotm();
         i.periodic();
         s.periodic();
         tu.periodic();
@@ -169,9 +163,16 @@ public class Robot {
                 rTimer.resetTimer();
             }
         }
-        if(g1.x){
+        if(g1.x && g1.left_trigger<0.3){
             if(rTimer.getElapsedTimeSeconds()>0.3){
                 shooter();
+                rTimer.resetTimer();
+            }
+        }
+        if(g1.x && g1.left_trigger>0.3){
+            if(rTimer.getElapsedTimeSeconds()>0.3){
+                i.pornit=false;
+                s.setPower(-1);
                 rTimer.resetTimer();
             }
         }
@@ -222,6 +223,7 @@ public class Robot {
         }
         if(g1.a && !g1.left_bumper){
             shooting=false;
+            i.looping=false;
             i.pornit=true;
         }
         if(g1.a && g1.left_bumper){
@@ -271,7 +273,7 @@ public class Robot {
             if (intake) {
                 if (oki) {
                     if (!auto) {
-                        s.off();
+                       // s.off();
                     }
                     turret45=false;
                     shooting = false;
@@ -332,10 +334,12 @@ public class Robot {
             else setShootTargetFar();
             dist = shootp.distanceFrom(futurePose);
             s.forDistance(dist);
-            if(aiming){
+           /* if(aiming){
                 tu.face(getShootTarget(),futurePose);
                 tu.automatic();
-            }
+            } */
+        tu.face(getShootTarget(),futurePose);
+        tu.automatic();
     }
     public void turret() {
         if(currentPose.getY()>40)setShootTarget();

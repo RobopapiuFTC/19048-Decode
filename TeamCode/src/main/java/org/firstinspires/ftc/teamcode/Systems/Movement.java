@@ -12,6 +12,7 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 public class Movement {
     public DcMotorEx leftFront,leftRear,rightFront,rightRear;
+    public double x,y;
 
     public Movement(HardwareMap hardwareMap, TelemetryManager telemetry){
         leftFront = hardwareMap.get(DcMotorEx.class, "lf");
@@ -28,8 +29,12 @@ public class Movement {
         movement(gamepad);
     }
     public void movement(Gamepad gamepad1){
-        double y = -gamepad1.left_stick_y;
-        double x = gamepad1.left_stick_x * 1.1;
+        if(gamepad1.left_stick_y>0.7)y = -1;
+        else if (gamepad1.left_stick_y<-0.7)y=1;
+        else y=-gamepad1.left_stick_y;
+        if(gamepad1.left_stick_x>0.7)x = 1*1.1;
+        else if (gamepad1.left_stick_x<-0.7)x=-1*1.1;
+        else x=-gamepad1.left_stick_x*1.1;
         double rx = gamepad1.right_stick_x;
         double denominator = Math.max(Math.abs(y) + Math.abs(x) + Math.abs(rx), 1);
         double frontLeftPower = (y + x + rx) / denominator;

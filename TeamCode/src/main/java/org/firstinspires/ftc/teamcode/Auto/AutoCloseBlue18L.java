@@ -261,7 +261,7 @@ public class AutoCloseBlue18L extends OpMode{
                                             scorePose)
                             )
                             .setBrakingStrength(2)
-                            .setHeadingInterpolation(score)
+                            .setTangentHeadingInterpolation().setReversed()
                             .build();
                     if(okp){
                         pathTimer.resetTimer();
@@ -378,7 +378,7 @@ public class AutoCloseBlue18L extends OpMode{
                                             scorePose)
                             )
                             .setBrakingStrength(2)
-                            .setHeadingInterpolation(score)
+                            .setTangentHeadingInterpolation().setReversed()
                             .build();
                     if(okp){
                         pathTimer.resetTimer();
@@ -460,7 +460,7 @@ public class AutoCloseBlue18L extends OpMode{
                                             endPose)
                             )
                             .setBrakingStrength(2)
-                            .setHeadingInterpolation(score)
+                            .setTangentHeadingInterpolation().setReversed()
                             .build();
                     if(okp){
                         pathTimer.resetTimer();

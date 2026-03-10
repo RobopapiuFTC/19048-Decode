@@ -84,7 +84,6 @@ public class BlueSpec extends OpMode {
                     .build();
             follower.followPath(park,true);
         }
-        else if(gamepad1.share)follower.startTeleopDrive();
         r.dualControls();
         r.tPeriodic();
         t.addData("Turret Ticks", r.tu.t);
