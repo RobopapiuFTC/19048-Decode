@@ -84,17 +84,17 @@ public class Red extends OpMode {
                     .build();
             follower.followPath(park,true);
         }
-        else if(gamepad1.share)follower.startTeleopDrive();
         r.dualControls();
         r.tPeriodic();
+        t.addData("Turret Ticks", r.tu.t);
+        t.addData("Turret Position", r.tu.target);
+        t.addData("Turret Angle",r.tu.target*355);
         t.addData("Velocity: ", r.s.getVelocity());
         t.addData("Dist: ", r.dist);
         t.addData("Shooter offset: ", r.s.offset);
-        t.addData("Turret Ticks: ", r.tu.getTurret());
         t.addData("Follower Pose: ", r.f.getPose().toString());
         t.addData("Loop time: ", r.getLoopTimeMs());
         t.addData("Loop time hz: ", r.getLoopTimeHz());
-        t.addData("Intake Velocity: ", r.i.getVelocity());
         t.update(telemetry);
     }
     @Override
